@@ -1,3 +1,7 @@
+import sys
+import platform
+import time
+import flask
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from routes.auth_routes import admin_required
 from database import query_db, execute_db
@@ -52,4 +56,52 @@ def reports():
         expenses=all_expenses,
         ai_logs=all_ai_logs,
         inv_recs=all_inv_recs
+    )
+
+@admin_bp.route('/health', methods=['GET'])
+@admin_required
+def health():
+    """
+    Dedicated Admin System Health & Diagnostic Console.
+    Visualizes server vitals, database latency, table record counts, and environment metrics.
+    """
+    start_time = time.time()
+    db_status = "Disconnected"
+    db_latency = 0.0
+    try:
+        res = query_db("SELECT 1 as ping", one=True)
+        if res and res.get('ping') == 1:
+            db_status = "Connected"
+            db_latency = round((time.time() - start_time) * 1000, 2)
+    except Exception as e:
+        db_status = f"Error: {str(e)}"
+
+    tables_telemetry = {}
+    table_names = [
+        'users', 'incomes', 'expenses', 'financial_goals',
+        'risk_profiles', 'stocks', 'ai_conversations', 'watchlist'
+    ]
+    for t in table_names:
+        try:
+            row = query_db(f"SELECT COUNT(*) as count FROM {t}", one=True)
+            tables_telemetry[t] = row['count'] if row else 0
+        except Exception:
+            tables_telemetry[t] = 0
+
+    system_info = {
+        "python_version": sys.version.split()[0],
+        "flask_version": flask.__version__,
+        "platform": platform.platform(),
+        "db_engine": "MySQL 8.0 (mysql-connector-python)",
+        "db_latency_ms": db_latency,
+        "server_status": "Operational" if db_status == "Connected" else "Degraded",
+        "timestamp": time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime())
+    }
+
+    return render_template(
+        'admin/health.html',
+        db_status=db_status,
+        db_latency=db_latency,
+        tables_telemetry=tables_telemetry,
+        system_info=system_info
     )

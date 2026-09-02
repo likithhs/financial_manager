@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% block title %}FinAI Admin - System Health & Diagnostics Console{% endblock %}
+{% block page_title %}
+<div style="display: flex; align-items: center; gap: 12px;">
+  <span>System Health & Diagnostics Console</span>
+  <span style="font-size: 0.72rem; padding: 4px 10px; border-radius: 999px; background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #34d399; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;">
+    <i class="fa-solid fa-circle-check"></i> System Operational
+  </span>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- System Health Overview Banner -->
+<div class="card" style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 27, 75, 0.8) 100%); border: 1px solid rgba(245, 158, 11, 0.35); margin-bottom: 24px; padding: 22px 26px; border-radius: var(--radius-lg); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);">
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+    <div>
+      <div style="font-size: 0.8rem; font-weight: 700; color: #fbbf24; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px;">
+        <i class="fa-solid fa-heart-pulse"></i> Service Diagnostics & Telemetry
+      </div>
+      <h2 style="font-size: 1.45rem; font-weight: 800; color: #ffffff; margin: 0;">FinAI Infrastructure Health & Connectivity</h2>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; margin-bottom: 0;">
+        Real-time telemetry monitoring database connection latency, service state, table integrity, and environment specs.
+      </p>
+    </div>
+    <div style="display: flex; gap: 10px; align-items: center;">
+      <a href="{{ url_for('admin.health') }}" class="btn btn-sm btn-secondary" style="border-color: var(--cyan-accent); color: var(--cyan-bright);">
+        <i class="fa-solid fa-rotate-right"></i> Refresh Telemetry
+      </a>
+      <a href="{{ url_for('main.health_check') }}" target="_blank" class="btn btn-sm" style="background: rgba(37, 99, 235, 0.2); border: 1px solid var(--cyan-accent); color: var(--cyan-bright); font-weight: 600;">
+        <i class="fa-solid fa-code"></i> Inspect Raw JSON (/health)
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Primary Vitals 4-Card Grid -->
+<div class="grid-4" style="margin-bottom: 24px;">
+  <!-- Service State -->
+  <div class="stat-card" style="background: var(--bg-card); border-left: 4px solid #10b981;">
+    <div class="stat-label">Service Architecture</div>
+    <div class="stat-value" style="color: #34d399; font-size: 1.5rem;">
+      <i class="fa-solid fa-circle-check" style="font-size: 1.2rem;"></i> {{ system_info.server_status }}
+    </div>
+    <div class="stat-desc">Flask {{ system_info.flask_version }} (Debug: Active)</div>
+  </div>
+
+  <!-- Database Engine -->
+  <div class="stat-card" style="background: var(--bg-card); border-left: 4px solid #38bdf8;">
+    <div class="stat-label">Database Connection</div>
+    <div class="stat-value" style="color: #38bdf8; font-size: 1.5rem;">
+      <i class="fa-solid fa-database" style="font-size: 1.2rem;"></i> {{ db_status }}
+    </div>
+    <div class="stat-desc">MySQL 8.0 on Port 3306</div>
+  </div>
+
+  <!-- Database Latency -->
+  <div class="stat-card" style="background: var(--bg-card); border-left: 4px solid #fbbf24;">
+    <div class="stat-label">Database Ping Latency</div>
+    <div class="stat-value" style="color: #fbbf24; font-size: 1.5rem;">
+      <i class="fa-solid fa-bolt" style="font-size: 1.2rem;"></i> {{ db_latency }} ms
+    </div>
+    <div class="stat-desc">SELECT 1 Query Roundtrip</div>
+  </div>
+
+  <!-- Security Protocol -->
+  <div class="stat-card" style="background: var(--bg-card); border-left: 4px solid #a855f7;">
+    <div class="stat-label">Security & Access</div>
+    <div class="stat-value" style="color: #c084fc; font-size: 1.5rem;">
+      <i class="fa-solid fa-shield-halved" style="font-size: 1.2rem;"></i> Active RBAC
+    </div>
+    <div class="stat-desc">Scrypt Hashing & Session Guard</div>
+  </div>
+</div>
+
+<!-- Database Partition Table Telemetry -->
+<div class="card" style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); padding: 24px; margin-bottom: 24px;">
+  <div class="card-header" style="padding: 0 0 16px 0; border-bottom: 1px solid var(--border-subtle); margin-bottom: 20px;">
+    <div class="card-title" style="font-size: 1.15rem; color: #ffffff;">
+      <i class="fa-solid fa-table-cells" style="color: var(--cyan-accent); margin-right: 8px;"></i>
+      MySQL Table Partition Record Counts
+    </div>
+    <span style="font-size: 0.8rem; color: var(--text-muted);">Database: financial_manager</span>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+    <div style="background: rgba(5, 8, 17, 0.65); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 18px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">users</span>
+        <span style="color: var(--cyan-bright);"><i class="fa-solid fa-users"></i></span>
+      </div>
+      <div style="font-size: 1.6rem; font-weight: 800; color: #fff;">{{ tables_telemetry['users'] }}</div>
+      <div style="font-size: 0.72rem; color: var(--text-muted);">Registered Accounts</div>
+    </div>
+
+    <div style="background: rgba(5, 8, 17, 0.65); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 18px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">stocks</span>
+        <span style="color: #34d399;"><i class="fa-solid fa-arrow-trend-up"></i></span>
+      </div>
+      <div style="font-size: 1.6rem; font-weight: 800; color: #fff;">{{ tables_telemetry['stocks'] }}</div>
+      <div style="font-size: 0.72rem; color: var(--text-muted);">Indian Equities Catalog</div>
+    </div>
+
+    <div style="background: rgba(5, 8, 17, 0.65); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 18px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">incomes</span>
+        <span style="color: #38bdf8;"><i class="fa-solid fa-wallet"></i></span>
+      </div>
+      <div style="font-size: 1.6rem; font-weight: 800; color: #fff;">{{ tables_telemetry['incomes'] }}</div>
+      <div style="font-size: 0.72rem; color: var(--text-muted);">Inflow Transactions</div>
+    </div>
+
+    <div style="background: rgba(5, 8, 17, 0.65); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 18px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">expenses</span>
+        <span style="color: #fb7185;"><i class="fa-solid fa-receipt"></i></span>
+      </div>
+      <div style="font-size: 1.6rem; font-weight: 800; color: #fff;">{{ tables_telemetry['expenses'] }}</div>
+      <div style="font-size: 0.72rem; color: var(--text-muted);">Categorized Outlays</div>
+    </div>
+
+    <div style="background: rgba(5, 8, 17, 0.65); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 18px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">financial_goals</span>
+        <span style="color: #fbbf24;"><i class="fa-solid fa-bullseye"></i></span>
+      </div>
+      <div style="font-size: 1.6rem; font-weight: 800; color: #fff;">{{ tables_telemetry['financial_goals'] }}</div>
+      <div style="font-size: 0.72rem; color: var(--text-muted);">Milestone Targets</div>
+    </div>
+
+    <div style="background: rgba(5, 8, 17, 0.65); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 18px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">risk_profiles</span>
+        <span style="color: #c084fc;"><i class="fa-solid fa-scale-balanced"></i></span>
+      </div>
+      <div style="font-size: 1.6rem; font-weight: 800; color: #fff;">{{ tables_telemetry['risk_profiles'] }}</div>
+      <div style="font-size: 0.72rem; color: var(--text-muted);">Psychometric Records</div>
+    </div>
+
+    <div style="background: rgba(5, 8, 17, 0.65); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 18px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">ai_conversations</span>
+        <span style="color: var(--cyan-bright);"><i class="fa-solid fa-robot"></i></span>
+      </div>
+      <div style="font-size: 1.6rem; font-weight: 800; color: #fff;">{{ tables_telemetry['ai_conversations'] }}</div>
+      <div style="font-size: 0.72rem; color: var(--text-muted);">Logged AI Chats</div>
+    </div>
+
+    <div style="background: rgba(5, 8, 17, 0.65); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 18px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">watchlist</span>
+        <span style="color: #fbbf24;"><i class="fa-solid fa-star"></i></span>
+      </div>
+      <div style="font-size: 1.6rem; font-weight: 800; color: #fff;">{{ tables_telemetry['watchlist'] }}</div>
+      <div style="font-size: 0.72rem; color: var(--text-muted);">Securities Tracked</div>
+    </div>
+  </div>
+</div>
+
+<!-- System Specifications & JSON Endpoint Documentation Grid -->
+<div class="grid-2">
+  <!-- System Architecture Specs -->
+  <div class="card" style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); padding: 24px;">
+    <div class="card-header" style="padding: 0 0 14px 0; border-bottom: 1px solid var(--border-subtle); margin-bottom: 16px;">
+      <div class="card-title" style="font-size: 1.1rem; color: #ffffff;">
+        <i class="fa-solid fa-microchip" style="color: #a855f7; margin-right: 8px;"></i>
+        Environment & Runtime Specifications
+      </div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 12px; font-size: 0.88rem;">
+      <div style="display: flex; justify-content: space-between; padding: 10px 14px; background: rgba(5, 8, 17, 0.6); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <span style="color: var(--text-muted);">Python Runtime:</span>
+        <span style="font-weight: 700; color: #ffffff;">{{ system_info.python_version }}</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; padding: 10px 14px; background: rgba(5, 8, 17, 0.6); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <span style="color: var(--text-muted);">Web Framework:</span>
+        <span style="font-weight: 700; color: #ffffff;">Flask v{{ system_info.flask_version }}</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; padding: 10px 14px; background: rgba(5, 8, 17, 0.6); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <span style="color: var(--text-muted);">Host Operating System:</span>
+        <span style="font-weight: 700; color: #ffffff;">{{ system_info.platform }}</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; padding: 10px 14px; background: rgba(5, 8, 17, 0.6); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <span style="color: var(--text-muted);">Relational Connector:</span>
+        <span style="font-weight: 700; color: #ffffff;">mysql-connector-python</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; padding: 10px 14px; background: rgba(5, 8, 17, 0.6); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <span style="color: var(--text-muted);">Telemetry Check Timestamp:</span>
+        <span style="font-weight: 700; color: var(--cyan-bright); font-family: monospace;">{{ system_info.timestamp }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- What is /health & Production Explanation Card -->
+  <div class="card" style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); padding: 24px;">
+    <div class="card-header" style="padding: 0 0 14px 0; border-bottom: 1px solid var(--border-subtle); margin-bottom: 16px;">
+      <div class="card-title" style="font-size: 1.1rem; color: #ffffff;">
+        <i class="fa-solid fa-code" style="color: var(--cyan-accent); margin-right: 8px;"></i>
+        Why Does `/health` Exist in Software?
+      </div>
+    </div>
+    <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 14px;">
+      In enterprise web platforms and cloud deployments (AWS, Docker, Kubernetes), automated monitoring systems continuously ping a lightweight <strong>`/health`</strong> endpoint to verify whether the server and database are alive without loading full HTML web pages.
+    </p>
+
+    <!-- Raw JSON Preview -->
+    <div style="background: rgba(5, 8, 17, 0.9); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 14px 18px; font-family: monospace; font-size: 0.84rem; margin-bottom: 14px;">
+      <span style="color: var(--text-muted);">// Response from GET /health (HTTP 200 OK)</span><br>
+      {<br>
+      &nbsp;&nbsp;<span style="color: #38bdf8;">"status"</span>: <span style="color: #34d399;">"ok"</span>,<br>
+      &nbsp;&nbsp;<span style="color: #38bdf8;">"service"</span>: <span style="color: #fbbf24;">"FinAI Financial Manager"</span>,<br>
+      &nbsp;&nbsp;<span style="color: #38bdf8;">"database"</span>: <span style="color: #34d399;">"connected"</span><br>
+      }
+    </div>
+
+    <a href="{{ url_for('main.health_check') }}" target="_blank" class="btn btn-sm btn-secondary" style="width: 100%; text-align: center; justify-content: center;">
+      <i class="fa-solid fa-arrow-up-right-from-square"></i> Test `/health` in New Tab
+    </a>
+  </div>
+</div>
+{% endblock %}

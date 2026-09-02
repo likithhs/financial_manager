@@ -57,8 +57,8 @@
         <a href="{{ url_for('market.market') }}" class="nav-link {% if 'market' in request.endpoint or 'stock' in request.endpoint %}active{% endif %}">
           <i class="fa-solid fa-arrow-trend-up"></i> <span>Securities Catalog</span>
         </a>
-        <a href="{{ url_for('main.health_check') }}" target="_blank" class="nav-link">
-          <i class="fa-solid fa-server"></i> <span>System Health JSON</span>
+        <a href="{{ url_for('admin.health') }}" class="nav-link {% if 'admin.health' in request.endpoint %}active{% endif %}">
+          <i class="fa-solid fa-heart-pulse"></i> <span>System Health & Diagnostics</span>
         </a>
 
         {% else %}
