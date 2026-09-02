@@ -30,7 +30,7 @@ def market():
 @market_bp.route('/market/<symbol>')
 @login_required
 def stock_detail(symbol):
-    stock = query_db("SELECT * FROM stocks WHERE symbol = %s", (symbol.upper(),), one=True)
+    stock = StockService.get_stock_by_symbol(symbol)
     if not stock:
         return render_template('base.html', error_message="Security Not Found"), 404
     return render_template('stock_detail.html', stock=stock)
