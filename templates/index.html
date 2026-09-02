@@ -1,0 +1,430 @@
+{% extends "base.html" %}
+
+{% block title %}FinAI - Your Money. Your Goals. Smarter Decisions.{% endblock %}
+
+{% block public_content %}
+<div class="finai-landing">
+  <!-- 1. NAVBAR (Real-world Product Nav) -->
+  <header class="finai-nav">
+    <div class="nav-container">
+      <a href="{{ url_for('index') }}" class="brand-logo">
+        <div class="brand-icon">
+          <i class="fa-solid fa-bolt"></i>
+        </div>
+        <div class="brand-info">
+          <span class="brand-title">Fin<span>AI</span></span>
+          <span class="brand-tagline">AI-Powered Financial Platform</span>
+        </div>
+      </a>
+
+      <nav>
+        <ul class="nav-links" id="navLinks">
+          <li><a href="#home" class="nav-link-item active"><i class="fa-solid fa-house" style="font-size: 0.82rem;"></i> <span>Home</span></a></li>
+          <li><a href="#features" class="nav-link-item"><i class="fa-solid fa-shapes" style="font-size: 0.82rem;"></i> <span>Features</span></a></li>
+          <li><a href="#how-it-works" class="nav-link-item"><i class="fa-solid fa-route" style="font-size: 0.82rem;"></i> <span>How It Works</span></a></li>
+          <li><a href="#ai" class="nav-link-item"><i class="fa-solid fa-robot" style="font-size: 0.82rem;"></i> <span>AI Assistant</span></a></li>
+          <li><a href="#security" class="nav-link-item"><i class="fa-solid fa-shield-halved" style="font-size: 0.82rem;"></i> <span>Security</span></a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="{{ url_for('auth.login') }}" class="btn btn-ghost btn-sm">
+          <i class="fa-regular fa-user"></i> Sign In
+        </a>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-sm">
+          Get Started <i class="fa-solid fa-arrow-right"></i>
+        </a>
+        <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle Navigation">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 2. LARGE CENTERED HERO SECTION -->
+  <section class="hero-centered" id="home">
+    <div class="container">
+      <div class="hero-pill">
+        <span class="badge badge-ai">
+          <i class="fa-solid fa-shield-halved"></i> AI-Powered Personal Finance & Wealth Intelligence
+        </span>
+      </div>
+
+      <h1 class="hero-headline">
+        Your Money. Your Goals. <span class="gradient-text-cyan">Smarter Decisions.</span>
+      </h1>
+
+      <p class="hero-subtext">
+        Track cashflow, diagnose your financial health score, evaluate investment readiness, and build sustainable wealth with your personal AI financial assistant.
+      </p>
+
+      <div class="hero-actions">
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">
+          <i class="fa-solid fa-bolt"></i> Get Started Free
+        </a>
+        <a href="{{ url_for('auth.login') }}" class="btn btn-secondary btn-lg">
+          <i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In to Account
+        </a>
+      </div>
+
+      <!-- Hero Fintech Console Card -->
+      <div class="hero-mockup-wrap">
+        <div class="mockup-main-panel">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border-subtle); flex-wrap: wrap; gap: 14px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 42px; height: 42px; border-radius: var(--radius-sm); background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.1rem; box-shadow: 0 0 20px rgba(6, 182, 212, 0.35);">
+                <i class="fa-solid fa-chart-line"></i>
+              </div>
+              <div style="text-align: left;">
+                <h4 style="font-size: 1.05rem; font-weight: 700;">Financial Intelligence Cockpit</h4>
+                <p style="font-size: 0.78rem; color: var(--text-muted);">Real-time cashflow telemetry & risk allocation</p>
+              </div>
+            </div>
+
+            <!-- Health Score & Security Badges in Header -->
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="display: flex; align-items: center; gap: 8px; background: rgba(16, 185, 129, 0.12); border: 1px solid var(--success-border); padding: 6px 14px; border-radius: var(--radius-full);">
+                <span style="width: 22px; height: 22px; border-radius: 50%; background: var(--success); color: #000; font-weight: 800; font-size: 0.72rem; display: flex; align-items: center; justify-content: center;">84</span>
+                <span style="font-size: 0.78rem; font-weight: 700; color: var(--success);">Health Score: Excellent</span>
+              </div>
+              <span class="badge badge-ai" style="padding: 7px 14px;">
+                <i class="fa-solid fa-shield-halved"></i> 256-Bit Encrypted
+              </span>
+            </div>
+          </div>
+
+          <!-- 4 Stat Metrics Grid -->
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; text-align: left;">
+            <div class="mock-stat">
+              <div class="mock-stat-label">Monthly Inflows</div>
+              <div class="mock-stat-val">₹85,000</div>
+              <div class="mock-stat-sub up"><i class="fa-solid fa-arrow-trend-up"></i> +14.2% Growth</div>
+            </div>
+            <div class="mock-stat">
+              <div class="mock-stat-label">Living Outflows</div>
+              <div class="mock-stat-val">₹46,350</div>
+              <div class="mock-stat-sub safe"><i class="fa-solid fa-check"></i> Controlled Burn</div>
+            </div>
+            <div class="mock-stat">
+              <div class="mock-stat-label">Net Savings</div>
+              <div class="mock-stat-val" style="color: var(--cyan-bright);">₹38,650</div>
+              <div class="mock-stat-sub up"><i class="fa-solid fa-leaf"></i> 45.4% Savings Rate</div>
+            </div>
+            <div class="mock-stat">
+              <div class="mock-stat-label">Investment Surplus</div>
+              <div class="mock-stat-val" style="color: var(--success);">₹25,000</div>
+              <div class="mock-stat-sub up"><i class="fa-solid fa-circle-check"></i> Gatekeeper Cleared</div>
+            </div>
+          </div>
+
+          <!-- Glowing Wealth Chart Visual -->
+          <div style="background: rgba(5, 8, 17, 0.7); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px; text-align: left;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <span style="font-size: 0.88rem; font-weight: 700; color: var(--text-subtle);">Simulated Wealth Growth & Asset Allocation</span>
+              <span style="font-size: 0.78rem; color: var(--cyan-accent); font-weight: 600;"><i class="fa-solid fa-microchip"></i> AI Engine Active</span>
+            </div>
+            <svg viewBox="0 0 500 110" style="width: 100%; height: 110px; overflow: visible;">
+              <defs>
+                <linearGradient id="cyanBlueGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.45"/>
+                  <stop offset="100%" stop-color="#2563eb" stop-opacity="0.0"/>
+                </linearGradient>
+              </defs>
+              <path d="M0,90 Q70,75 140,60 T280,45 T420,20 T500,10 L500,110 L0,110 Z" fill="url(#cyanBlueGrad)"/>
+              <path d="M0,90 Q70,75 140,60 T280,45 T420,20 T500,10" fill="none" stroke="#22d3ee" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="140" cy="60" r="4" fill="#fff" stroke="#06b6d4" stroke-width="2"/>
+              <circle cx="280" cy="45" r="4" fill="#fff" stroke="#06b6d4" stroke-width="2"/>
+              <circle cx="420" cy="20" r="4" fill="#fff" stroke="#06b6d4" stroke-width="2"/>
+              <circle cx="500" cy="10" r="5" fill="#10b981" stroke="#fff" stroke-width="2"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. PRODUCT FEATURES -->
+  <section class="section" id="features" style="background: rgba(10, 15, 29, 0.5); border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);">
+    <div class="container">
+      <div class="section-header">
+        <span class="badge badge-ai section-pill">
+          <i class="fa-solid fa-microchip"></i> Intelligent Capabilities
+        </span>
+        <h2 class="section-title">Engineered for Smart Wealth Building</h2>
+        <p class="section-subtitle">
+          FinAI combines automated cashflow tracking, medical-grade financial health diagnostics, and behavioral risk profiling into one seamless experience.
+        </p>
+      </div>
+
+      <div class="features-grid">
+        <!-- 1 -->
+        <div class="feature-card">
+          <div class="feature-icon-box"><i class="fa-solid fa-wallet"></i></div>
+          <h3 class="feature-title">Smart Cashflow Tracking</h3>
+          <p class="feature-desc">Multi-channel earnings tracking, automated spending breakdown, and dynamic savings rate calculations in real time.</p>
+          <div style="margin-top: 18px; font-size: 0.84rem; font-weight: 600; color: var(--cyan-bright);">
+            <i class="fa-solid fa-check-circle" style="color: var(--success);"></i> Instant Categorization
+          </div>
+        </div>
+
+        <!-- 2 -->
+        <div class="feature-card">
+          <div class="feature-icon-box"><i class="fa-solid fa-heart-pulse"></i></div>
+          <h3 class="feature-title">6-Pillar Health Score</h3>
+          <p class="feature-desc">A comprehensive 0–100 stability index evaluating emergency runway, expense ratios, debt tolerance, and liquidity buffers.</p>
+          <div style="margin-top: 18px; font-size: 0.84rem; font-weight: 600; color: var(--cyan-bright);">
+            <i class="fa-solid fa-check-circle" style="color: var(--success);"></i> Objective Scoring
+          </div>
+        </div>
+
+        <!-- 3 -->
+        <div class="feature-card">
+          <div class="feature-icon-box"><i class="fa-solid fa-bullseye"></i></div>
+          <h3 class="feature-title">Goal Planning & SIPs</h3>
+          <p class="feature-desc">Target milestone modeling (Emergency Fund, Higher Education, Travel) with automated monthly SIP calculations.</p>
+          <div style="margin-top: 18px; font-size: 0.84rem; font-weight: 600; color: var(--cyan-bright);">
+            <i class="fa-solid fa-check-circle" style="color: var(--success);"></i> Progress Telemetry
+          </div>
+        </div>
+
+        <!-- 4 -->
+        <div class="feature-card">
+          <div class="feature-icon-box"><i class="fa-solid fa-chart-pie"></i></div>
+          <h3 class="feature-title">AI Asset Allocation</h3>
+          <p class="feature-desc">Objective portfolio distribution across Mutual Funds, Index Funds, ETFs, and Fixed Deposits matched to your risk tolerance.</p>
+          <div style="margin-top: 18px; font-size: 0.84rem; font-weight: 600; color: var(--cyan-bright);">
+            <i class="fa-solid fa-check-circle" style="color: var(--success);"></i> Explainable Horizons
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. HOW IT WORKS (3 Simple Steps) -->
+  <section class="section" id="how-it-works">
+    <div class="container">
+      <div class="section-header">
+        <span class="badge badge-ai section-pill">
+          <i class="fa-solid fa-route"></i> Streamlined Workflow
+        </span>
+        <h2 class="section-title">How FinAI Empowers Your Financial Future</h2>
+        <p class="section-subtitle">
+          Three simple steps to achieve complete clarity and control over your personal finances.
+        </p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
+        <div class="card" style="padding: 30px; text-align: left; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);">
+          <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--gradient-primary); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">1</div>
+          <h4 style="font-size: 1.2rem; margin-bottom: 10px;">Record Your Baseline</h4>
+          <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">
+            Log your regular income sources, living expenses, and target milestones to initialize your personalized financial model.
+          </p>
+        </div>
+
+        <div class="card" style="padding: 30px; text-align: left; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);">
+          <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--gradient-cyan); color: #000; font-weight: 800; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">2</div>
+          <h4 style="font-size: 1.2rem; margin-bottom: 10px;">Get Instant Diagnostics</h4>
+          <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">
+            The 6-Pillar diagnostic engine computes your financial health score and verifies your Investment Readiness before taking market risks.
+          </p>
+        </div>
+
+        <div class="card" style="padding: 30px; text-align: left; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);">
+          <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--gradient-primary); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">3</div>
+          <h4 style="font-size: 1.2rem; margin-bottom: 10px;">Grow With AI Guidance</h4>
+          <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">
+            Receive risk-calibrated asset allocations, track virtual portfolios, and chat with your dedicated AI strategist anytime.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. AI ASSISTANT SHOWCASE -->
+  <section class="section" id="ai" style="background: rgba(10, 15, 29, 0.5); border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);">
+    <div class="container">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;">
+        <!-- Left Column -->
+        <div>
+          <span class="badge badge-ai section-pill">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Context-Aware Assistant
+          </span>
+          <h2 class="section-title" style="font-size: 2.3rem; margin-bottom: 18px;">
+            Meet FinAI, Your Personal Financial Strategist
+          </h2>
+          <p style="font-size: 1rem; color: var(--text-subtle); line-height: 1.7; margin-bottom: 24px;">
+            FinAI analyzes your live database numbers — verifying your active income, expense ratios, and emergency reserves before offering personalized financial answers.
+          </p>
+
+          <div style="display: flex; flex-direction: column; gap: 14px; margin-bottom: 30px;">
+            <div style="display: flex; align-items: center; gap: 12px; font-size: 0.92rem;">
+              <i class="fa-solid fa-circle-check" style="color: var(--success);"></i> Natural language expense queries and budgeting advice
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; font-size: 0.92rem;">
+              <i class="fa-solid fa-circle-check" style="color: var(--success);"></i> Investment Readiness gatekeeper preventing premature market risks
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; font-size: 0.92rem;">
+              <i class="fa-solid fa-circle-check" style="color: var(--success);"></i> Explainable stock suitability diagnostics
+            </div>
+          </div>
+
+          <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">
+            <i class="fa-solid fa-bolt"></i> Try FinAI Assistant Free
+          </a>
+        </div>
+
+        <!-- Right Column: Interactive Chat Mockup -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-medium); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg), var(--shadow-glow-cyan); overflow: hidden;">
+          <div style="background: rgba(8, 13, 26, 0.9); padding: 16px 20px; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="width: 34px; height: 34px; border-radius: var(--radius-sm); background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.9rem;">
+                <i class="fa-solid fa-robot"></i>
+              </div>
+              <div>
+                <h5 style="font-size: 0.9rem; font-weight: 700;">FinAI Conversational Engine</h5>
+                <span style="font-size: 0.72rem; color: var(--success);"><i class="fa-solid fa-circle" style="font-size: 0.5rem;"></i> Active & Connected</span>
+              </div>
+            </div>
+            <span class="badge badge-ai" style="font-size: 0.68rem;">v2.4</span>
+          </div>
+
+          <div style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+            <!-- AI Message -->
+            <div style="display: flex; gap: 10px;">
+              <div style="background: rgba(19, 31, 56, 0.85); border: 1px solid var(--border-subtle); padding: 12px 16px; border-radius: var(--radius-md); font-size: 0.88rem; max-width: 85%;">
+                Hi! I'm FinAI. How can I help optimize your finances and investment horizons today?
+              </div>
+            </div>
+
+            <!-- User Message -->
+            <div style="display: flex; justify-content: flex-end;">
+              <div style="background: var(--gradient-primary); color: #fff; padding: 12px 16px; border-radius: var(--radius-md); font-size: 0.88rem; max-width: 85%;">
+                Can I afford to invest in Mutual Funds this month?
+              </div>
+            </div>
+
+            <!-- AI Message 2 -->
+            <div style="display: flex; gap: 10px;">
+              <div style="background: rgba(19, 31, 56, 0.85); border: 1px solid var(--border-subtle); padding: 12px 16px; border-radius: var(--radius-md); font-size: 0.88rem; max-width: 88%;">
+                Based on your current income (₹85,000), living costs (₹46,350), and savings surplus (₹38,650), you can safely invest <strong>₹15,000</strong> without impacting your emergency runway.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. SECURITY SECTION -->
+  <section class="section" id="security">
+    <div class="container">
+      <div style="background: var(--bg-card); border: 1px solid var(--border-medium); border-radius: var(--radius-xl); padding: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: center;">
+        <div>
+          <span class="badge badge-success" style="margin-bottom: 12px;">
+            <i class="fa-solid fa-shield-halved"></i> Bank-Grade Privacy
+          </span>
+          <h3 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 14px;">Your Financial Data Stays Yours</h3>
+          <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">
+            We use end-to-end encrypted databases, zero data selling, and isolated user records. Financial insights are generated strictly for your private dashboard.
+          </p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div style="display: flex; align-items: center; gap: 12px; font-size: 0.92rem; color: var(--text-light);">
+            <i class="fa-solid fa-lock" style="color: var(--cyan-accent); font-size: 1.1rem;"></i> 256-Bit SSL/TLS Encryption
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; font-size: 0.92rem; color: var(--text-light);">
+            <i class="fa-solid fa-database" style="color: var(--cyan-accent); font-size: 1.1rem;"></i> Isolated Database Partitioning
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; font-size: 0.92rem; color: var(--text-light);">
+            <i class="fa-solid fa-user-shield" style="color: var(--cyan-accent); font-size: 1.1rem;"></i> Role-Based Access Control
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. FINAL CTA -->
+  <section class="section" style="padding: 60px 0 90px;">
+    <div class="container">
+      <div class="cta-banner">
+        <span class="badge badge-ai" style="margin-bottom: 16px;">
+          <i class="fa-solid fa-rocket"></i> Take Charge of Your Financial Future
+        </span>
+        <h2>Start Building Better Financial Habits Today</h2>
+        <p>
+          Experience intelligent cashflow management, automated health scores, and personalized investment guidance.
+        </p>
+        <div class="cta-buttons">
+          <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">
+            <i class="fa-solid fa-user-plus"></i> Create Free Account
+          </a>
+          <a href="{{ url_for('auth.login') }}" class="btn btn-secondary btn-lg">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In to Account
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. FOOTER -->
+  <footer class="finai-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="brand-logo">
+            <div class="brand-icon">
+              <i class="fa-solid fa-bolt"></i>
+            </div>
+            <div class="brand-info">
+              <span class="brand-title">Fin<span>AI</span></span>
+              <span class="brand-tagline">AI-Powered Financial Platform</span>
+            </div>
+          </div>
+          <p>
+            An AI personal financial manager and investment recommendation platform built with precision intelligence.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h5>Product</h5>
+          <ul class="footer-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#how-it-works">How It Works</a></li>
+            <li><a href="#ai">AI Assistant</a></li>
+            <li><a href="#security">Security</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Platform Access</h5>
+          <ul class="footer-links">
+            <li><a href="{{ url_for('auth.login') }}">Sign In</a></li>
+            <li><a href="{{ url_for('auth.register') }}">Create Account</a></li>
+            <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Trust & Compliance</h5>
+          <ul class="footer-links">
+            <li><a href="#security">Privacy Protection</a></li>
+            <li><a href="#security">Bank-Grade Encryption</a></li>
+            <li><a href="#">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          &copy; 2026 FinAI Platform. All rights reserved.
+        </div>
+        <div style="display: flex; gap: 16px;">
+          <span><i class="fa-solid fa-shield-halved"></i> 256-Bit SSL Encrypted</span>
+          <span><i class="fa-solid fa-microchip"></i> AI Decision Engine</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+{% endblock %}

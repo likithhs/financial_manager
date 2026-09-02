@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Recommendation History - FinAI System{% endblock %}
+{% block page_title %}AI Recommendation & Analysis History{% endblock %}
+
+{% block content %}
+<div class="grid-2">
+  <!-- General Investment Recommendations History -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">🏛️ Investment Asset Allocation History</div>
+      <span class="badge badge-neutral">{{ history.investment_history | length }} Logs</span>
+    </div>
+    <div class="card-body" style="padding: 0;">
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Primary Strategy</th>
+              <th>Risk Level</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for rec in history.investment_history %}
+            <tr>
+              <td style="font-size: 0.82rem; color: var(--text-muted);">{{ rec.evaluated_at }}</td>
+              <td>
+                <strong style="color: var(--primary);">{{ rec.primary_category }}</strong>
+                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">{{ rec.rationale[:80] }}...</div>
+              </td>
+              <td><span class="badge badge-neutral">{{ rec.risk_level }}</span></td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="3" style="text-align: center; color: var(--text-muted); padding: 24px;">No investment recommendation history found.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stock Analysis History -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">📈 Stock Suitability Analysis History</div>
+      <span class="badge badge-neutral">{{ history.stock_history | length }} Logs</span>
+    </div>
+    <div class="card-body" style="padding: 0;">
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Stock</th>
+              <th>Suitability Verdict</th>
+              <th>Score</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for st in history.stock_history %}
+            <tr>
+              <td>
+                <strong>{{ st.symbol }}</strong>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">{{ st.company_name }}</div>
+              </td>
+              <td>
+                <span class="badge badge-{% if 'Suitable' in st.suitability_status %}success{% elif 'Watchlist' in st.suitability_status %}warning{% else %}danger{% endif %}">
+                  {{ st.suitability_status }}
+                </span>
+              </td>
+              <td>{{ st.suitability_score }}%</td>
+              <td style="font-size: 0.82rem; color: var(--text-muted);">{{ st.evaluated_at }}</td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 24px;">No stock evaluation history recorded yet.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

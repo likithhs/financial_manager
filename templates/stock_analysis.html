@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}AI Stock Suitability Analysis - FinAI System{% endblock %}
+{% block page_title %}AI Stock Analysis & Suitability Recommendation{% endblock %}
+
+{% block content %}
+<!-- Stock Selector Form -->
+<div class="card">
+  <div class="card-body" style="padding: 16px 20px;">
+    <form action="{{ url_for('stock.stock_analysis') }}" method="GET" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+      <label class="form-label" style="margin-bottom: 0; font-weight: 700;">Select Stock to Analyze:</label>
+      <select name="symbol" class="form-select" style="max-width: 320px;" onchange="this.form.submit()">
+        {% for s in all_stocks %}
+          <option value="{{ s.symbol }}" {% if s.symbol == current_symbol %}selected{% endif %}>
+            {{ s.symbol }} - {{ s.name }} (₹{{ s.price }})
+          </option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn btn-primary">Run AI Evaluation</button>
+    </form>
+  </div>
+</div>
+
+<!-- AI Suitability Verdict Card -->
+<div class="card" style="border-left: 6px solid {% if 'Suitable' in analysis.suitability_status %}var(--success){% elif 'Watchlist' in analysis.suitability_status %}var(--warning){% elif 'Higher Risk' in analysis.suitability_status %}var(--warning){% else %}var(--danger){% endif %};">
+  <div class="card-body">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+      <div>
+        <span class="stat-label">AI Suitability Verdict for {{ analysis.company_name }} ({{ analysis.symbol }})</span>
+        <div style="display: flex; align-items: center; gap: 12px; margin-top: 4px;">
+          <span style="font-size: 1.8rem; font-weight: 800; color: var(--dark);">{{ analysis.suitability_status }}</span>
+          <span class="badge badge-{% if 'Suitable' in analysis.suitability_status %}success{% elif 'Watchlist' in analysis.suitability_status %}warning{% else %}danger{% endif %}" style="font-size: 0.9rem; padding: 6px 14px;">
+            Compatibility: {{ analysis.suitability_score }}%
+          </span>
+        </div>
+      </div>
+
+      <div style="text-align: right;">
+        <div style="font-size: 1.6rem; font-weight: 800; color: var(--primary);">₹{{ "{:,.2f}".format(analysis.stock.price) }}</div>
+        <span style="font-size: 0.85rem; color: {% if analysis.stock.change >= 0 %}var(--success){% else %}var(--danger){% endif %}; font-weight: 600;">
+          {{ "{:+0.2f}".format(analysis.stock.change) }} ({{ "{:+0.2f}".format(analysis.stock.pct_change) }}%)
+        </span>
+      </div>
+    </div>
+
+    <!-- Suitability Score Bar -->
+    <div class="progress-bar-container" style="height: 12px; margin: 16px 0 10px;">
+      <div class="progress-bar-fill fill-{% if analysis.suitability_score >= 70 %}success{% elif analysis.suitability_score >= 50 %}warning{% else %}danger{% endif %}" style="width: {{ analysis.suitability_score }}%;"></div>
+    </div>
+
+    <!-- Comparative Profile Match -->
+    <div class="grid-3" style="margin-top: 16px;">
+      <div style="background: rgba(5, 8, 17, 0.7); padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+        <div class="stat-label">Your Risk Profile</div>
+        <div style="font-size: 1.1rem; font-weight: 700; color: var(--cyan-bright);">{{ analysis.user_risk_level }}</div>
+      </div>
+      <div style="background: rgba(5, 8, 17, 0.7); padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+        <div class="stat-label">Stock Volatility Rating</div>
+        <div style="font-size: 1.1rem; font-weight: 700; color: #ffffff;">{{ analysis.stock_risk_level }} Risk</div>
+      </div>
+      <div style="background: rgba(5, 8, 17, 0.7); padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+        <div class="stat-label">Readiness Status</div>
+        <div style="font-size: 1.1rem; font-weight: 700; color: {% if 'READY' in analysis.readiness_status %}var(--success){% else %}var(--danger){% endif %};">
+          {{ analysis.readiness_status }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Detailed Rationale & Actionable Guidance -->
+<div class="grid-2">
+  <div class="card" style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl);">
+    <div class="card-header">
+      <div class="card-title"><i class="fa-solid fa-magnifying-glass-chart" style="color: var(--cyan-accent); margin-right: 6px;"></i> AI Evaluation Factors & Rationale</div>
+    </div>
+    <div class="card-body">
+      <ul style="list-style: none; display: flex; flex-direction: column; gap: 12px;">
+        {% for r in analysis.reasons %}
+        <li style="display: flex; align-items: flex-start; gap: 10px; font-size: 0.9rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 10px; color: var(--text-light);">
+          <span style="color: var(--cyan-bright); font-weight: bold;">•</span>
+          <span>{{ r }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl);">
+    <div class="card-header">
+      <div class="card-title"><i class="fa-solid fa-lightbulb" style="color: #fbbf24; margin-right: 6px;"></i> Strategic Recommendation</div>
+    </div>
+    <div class="card-body">
+      <div style="background: rgba(5, 8, 17, 0.7); border: 1px solid var(--border-subtle); padding: 18px; border-radius: var(--radius-md); font-size: 0.92rem; line-height: 1.6; color: var(--text-light);">
+        {{ analysis.guidance }}
+      </div>
+
+      <div style="margin-top: 20px; display: flex; gap: 10px;">
+        <form action="{{ url_for('portfolio.add_watchlist') }}" method="POST" style="display:inline;">
+          <input type="hidden" name="symbol" value="{{ analysis.symbol }}">
+          <input type="hidden" name="company_name" value="{{ analysis.company_name }}">
+          <button type="submit" class="btn btn-outline btn-sm">⭐ Add to Watchlist</button>
+        </form>
+        <a href="{{ url_for('portfolio.portfolio') }}" class="btn btn-primary btn-sm">+ Add to Virtual Portfolio</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Mandatory Disclaimer -->
+<div class="disclaimer-box">
+  {{ analysis.disclaimer }}
+</div>
+{% endblock %}

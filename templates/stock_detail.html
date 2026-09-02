@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}{{ stock.name }} ({{ stock.symbol }}) - FinAI System{% endblock %}
+{% block page_title %}{{ stock.name }} ({{ stock.symbol }}){% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <div>
+      <div class="card-title">{{ stock.name }} ({{ stock.symbol }})</div>
+      <span style="font-size: 0.82rem; color: var(--text-muted);">Exchange: {{ stock.market }} | Sector: {{ stock.sector }}</span>
+    </div>
+    <div>
+      <span class="badge badge-neutral">{{ stock.mode }}</span>
+    </div>
+  </div>
+  <div class="card-body">
+    <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; margin-bottom: 20px;">
+      <div>
+        <div style="font-size: 2.2rem; font-weight: 800; color: var(--dark);">₹{{ "{:,.2f}".format(stock.price) }}</div>
+        <div style="font-size: 1rem; font-weight: 600; color: {% if stock.change >= 0 %}var(--success){% else %}var(--danger){% endif %};">
+          {{ "{:+0.2f}".format(stock.change) }} ({{ "{:+0.2f}".format(stock.pct_change) }}%)
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <a href="{{ url_for('stock.stock_analysis', symbol=stock.symbol) }}" class="btn btn-primary">
+          Run AI Suitability Analysis ➔
+        </a>
+        <form action="{{ url_for('portfolio.add_watchlist') }}" method="POST" style="display:inline;">
+          <input type="hidden" name="symbol" value="{{ stock.symbol }}">
+          <input type="hidden" name="company_name" value="{{ stock.name }}">
+          <button type="submit" class="btn btn-outline">⭐ Add to Watchlist</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Key Metrics Grid -->
+    <div class="grid-4" style="margin-bottom: 20px;">
+      <div class="stat-card">
+        <div class="stat-label">Market Capitalization</div>
+        <div style="font-size: 1.1rem; font-weight: 700;">{{ stock.market_cap }}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">P/E Ratio</div>
+        <div style="font-size: 1.1rem; font-weight: 700;">{{ stock.pe }}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">52-Week High / Low</div>
+        <div style="font-size: 1.1rem; font-weight: 700;">₹{{ "{:,.0f}".format(stock.high_52w) }} / ₹{{ "{:,.0f}".format(stock.low_52w) }}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Risk & Volatility Rating</div>
+        <div style="font-size: 1.1rem; font-weight: 700;">{{ stock.risk_rating }}</div>
+      </div>
+    </div>
+
+    <!-- Company Description -->
+    <div style="background: rgba(5, 8, 17, 0.7); border: 1px solid var(--border-subtle); padding: 18px; border-radius: var(--radius-md); margin-bottom: 20px;">
+      <strong style="color: #ffffff;"><i class="fa-solid fa-circle-info" style="color: var(--cyan-accent); margin-right: 6px;"></i> About Company:</strong>
+      <p style="font-size: 0.92rem; color: var(--text-subtle); margin-top: 6px; line-height: 1.6; margin-bottom: 0;">
+        {{ stock.description }}
+      </p>
+    </div>
+
+    <!-- Recent Trend Points -->
+    <div style="background: rgba(5, 8, 17, 0.7); border: 1px solid var(--border-subtle); padding: 18px; border-radius: var(--radius-md);">
+      <strong style="color: #ffffff; font-size: 0.9rem;"><i class="fa-solid fa-chart-line" style="color: var(--cyan-accent); margin-right: 6px;"></i> Recent Price Trend (5-Day):</strong>
+      <div style="display: flex; gap: 12px; margin-top: 12px; font-size: 0.88rem; flex-wrap: wrap;">
+        {% for pt in stock.trend %}
+          <div style="background: rgba(13, 21, 39, 0.8); border: 1px solid var(--border-subtle); padding: 6px 14px; border-radius: var(--radius-sm); color: var(--text-light);">
+            Day {{ loop.index }}: <strong style="color: var(--cyan-bright);">₹{{ "{:,.2f}".format(pt) }}</strong>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

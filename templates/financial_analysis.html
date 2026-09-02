@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block title %}Financial Health Diagnostic - FinAI Platform{% endblock %}
+{% block page_title %}6-Pillar Financial Health & Diagnostic Intelligence{% endblock %}
+
+{% block content %}
+<!-- 1. Top Circular Health Scorecard & AI Explanation -->
+<div class="card" style="background: var(--bg-card); border: 1px solid var(--border-medium); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg), var(--shadow-glow-cyan); margin-bottom: 28px;">
+  <div class="card-body" style="padding: 32px;">
+    <div style="display: grid; grid-template-columns: 200px 1fr; gap: 36px; align-items: center;">
+      
+      <!-- Circular Progress Ring -->
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
+        <svg viewBox="0 0 160 160" style="width: 160px; height: 160px; transform: rotate(-90deg);">
+          <circle cx="80" cy="80" r="68" fill="none" stroke="rgba(255, 255, 255, 0.08)" stroke-width="12" />
+          <circle cx="80" cy="80" r="68" fill="none" 
+                  stroke="url(#healthRingGrad)" 
+                  stroke-width="12" 
+                  stroke-dasharray="427.26" 
+                  stroke-dashoffset="{{ 427.26 - (427.26 * health.score / 100) }}" 
+                  stroke-linecap="round" 
+                  style="transition: stroke-dashoffset 1s ease-in-out;" />
+          <defs>
+            <linearGradient id="healthRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#2563eb" />
+              <stop offset="100%" stop-color="#06b6d4" />
+            </linearGradient>
+          </defs>
+        </svg>
+
+        <div style="position: absolute; text-align: center;">
+          <div style="font-size: 2.5rem; font-weight: 800; color: #fff; line-height: 1;">{{ health.score }}</div>
+          <div style="font-size: 0.75rem; font-weight: 700; color: var(--cyan-bright); text-transform: uppercase; letter-spacing: 0.05em;">out of 100</div>
+        </div>
+
+        <span class="badge badge-{{ health.health_status | lower | replace(' ', '-') }}" style="margin-top: 14px; font-size: 0.8rem; padding: 6px 16px;">
+          Grade: {{ health.health_status }}
+        </span>
+      </div>
+
+      <!-- Health Context & Explainability -->
+      <div>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+          <h2 style="font-size: 1.6rem; font-weight: 800; color: #fff;">
+            Diagnostic Stability Matrix: <span class="gradient-text-cyan">{{ health.health_status }}</span>
+          </h2>
+          <span class="badge badge-ai" style="padding: 6px 14px;">
+            <i class="fa-solid fa-robot"></i> Algorithmic Evaluation
+          </span>
+        </div>
+
+        <p style="font-size: 0.95rem; color: var(--text-subtle); line-height: 1.6; margin-bottom: 20px;">
+          Your Financial Health Score is computed objectively using mathematical weights across 6 fundamental pillars: Active Cashflow, Savings Rate, Burn Ratio, Emergency Runway, Debt Capacity, and Investment Capital Readiness.
+        </p>
+
+        <!-- AI Explainability Paragraph Box -->
+        <div style="background: rgba(5, 8, 17, 0.75); border: 1px solid var(--border-bright); border-radius: var(--radius-md); padding: 18px 20px; box-shadow: var(--shadow-glow);">
+          <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--cyan-bright); font-size: 0.88rem; margin-bottom: 6px;">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> AI Health Diagnosis:
+          </div>
+          <p style="font-size: 0.9rem; color: #fff; line-height: 1.6;">
+            "{{ health.explanation }}"
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 2. Four Core Financial Pillar Metric Cards -->
+<div class="grid-4" style="margin-bottom: 28px;">
+  <!-- Savings Rate -->
+  <div class="stat-card">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+      <div class="stat-label">Savings Rate</div>
+      <i class="fa-solid fa-piggy-bank" style="color: var(--cyan-bright); font-size: 1.1rem;"></i>
+    </div>
+    <div class="stat-value" style="color: {% if health.savings_rate >= 20 %}var(--success){% elif health.savings_rate > 0 %}var(--warning){% else %}var(--danger){% endif %};">
+      {{ health.savings_rate }}%
+    </div>
+    <div class="progress-bar-container" style="height: 6px; margin: 8px 0;">
+      <div class="progress-bar-fill" style="width: {{ [health.savings_rate, 100] | min }}%;"></div>
+    </div>
+    <div class="stat-desc">Target: &gt; 20% healthy surplus</div>
+  </div>
+
+  <!-- Expense Ratio -->
+  <div class="stat-card">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+      <div class="stat-label">Expense Ratio</div>
+      <i class="fa-solid fa-receipt" style="color: var(--danger); font-size: 1.1rem;"></i>
+    </div>
+    <div class="stat-value" style="color: {% if health.expense_ratio <= 70 %}var(--success){% elif health.expense_ratio <= 85 %}var(--warning){% else %}var(--danger){% endif %};">
+      {{ health.expense_ratio }}%
+    </div>
+    <div class="progress-bar-container" style="height: 6px; margin: 8px 0;">
+      <div class="progress-bar-fill" style="width: {{ [health.expense_ratio, 100] | min }}%; background: {% if health.expense_ratio <= 70 %}var(--success){% else %}var(--danger){% endif %};"></div>
+    </div>
+    <div class="stat-desc">Target: &le; 70% of monthly earnings</div>
+  </div>
+
+  <!-- Emergency Runway -->
+  <div class="stat-card">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+      <div class="stat-label">Emergency Safety Net</div>
+      <i class="fa-solid fa-shield-heart" style="color: var(--blue-light); font-size: 1.1rem;"></i>
+    </div>
+    <div class="stat-value" style="color: #fff;">
+      {{ health.emergency_fund_ratio }} <span style="font-size: 0.95rem; font-weight: 500; color: var(--text-muted);">months</span>
+    </div>
+    <div class="progress-bar-container" style="height: 6px; margin: 8px 0;">
+      <div class="progress-bar-fill" style="width: {{ [(health.emergency_fund_ratio / 6.0 * 100), 100] | min }}%;"></div>
+    </div>
+    <div class="stat-desc">Target: 3 to 6 months expenses</div>
+  </div>
+
+  <!-- Risk Tolerance -->
+  <div class="stat-card">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+      <div class="stat-label">Risk Tolerance Tier</div>
+      <i class="fa-solid fa-scale-balanced" style="color: var(--cyan-accent); font-size: 1.1rem;"></i>
+    </div>
+    <div class="stat-value" style="font-size: 1.4rem; color: var(--cyan-bright); padding-top: 4px;">
+      {{ risk_level }}
+    </div>
+    <div class="stat-desc" style="margin-top: 14px;">Assessed volatility profile</div>
+  </div>
+</div>
+
+<!-- 3. Scoring Factors & Actionable AI Suggestions -->
+<div class="grid-2">
+  <!-- Detailed Scoring Factors -->
+  <div class="card" style="margin-bottom: 0;">
+    <div class="card-header">
+      <div class="card-title">
+        <i class="fa-solid fa-list-check" style="color: var(--cyan-accent); margin-right: 6px;"></i> 
+        Diagnostic Scoring Breakdown
+      </div>
+      <span class="badge badge-ai">6 Pillars</span>
+    </div>
+    <div class="card-body">
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        {% for factor in health.factors %}
+        <div style="display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; background: rgba(5, 8, 17, 0.6); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);">
+          <div style="width: 26px; height: 26px; border-radius: 50%; background: var(--success-bg); border: 1px solid var(--success-border); display: flex; align-items: center; justify-content: center; color: var(--success); font-size: 0.75rem; flex-shrink: 0; margin-top: 2px;">
+            <i class="fa-solid fa-check"></i>
+          </div>
+          <span style="font-size: 0.9rem; color: var(--text-light); line-height: 1.5;">{{ factor }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Actionable AI Smart Suggestions -->
+  <div class="card" style="margin-bottom: 0;">
+    <div class="card-header">
+      <div class="card-title">
+        <i class="fa-solid fa-robot" style="color: var(--cyan-accent); margin-right: 6px;"></i> 
+        Actionable AI Recommendations
+      </div>
+      <a href="{{ url_for('ai.ai_assistant') }}" class="btn btn-sm btn-secondary" style="border-color: var(--cyan-accent); color: var(--cyan-bright);">
+        Discuss with AI
+      </a>
+    </div>
+    <div class="card-body">
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        {% for sug in suggestions %}
+        <div style="background: rgba(5, 8, 17, 0.7); border: 1px solid var(--border-subtle); border-left: 4px solid {% if sug.priority == 'Critical' %}var(--danger){% elif sug.priority == 'High' %}var(--warning){% else %}var(--cyan-accent){% endif %}; padding: 16px; border-radius: var(--radius-md);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <strong style="color: #fff; font-size: 0.95rem;">{{ sug.title }}</strong>
+            <span class="badge badge-{% if sug.priority == 'Critical' %}danger{% elif sug.priority == 'High' %}warning{% else %}ai{% endif %}">
+              {{ sug.priority }} Priority
+            </span>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+            {{ sug.description }}
+          </p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}Stock Market Telemetry - FinAI Platform{% endblock %}
+{% block page_title %}Market Telemetry & Equity Intelligence{% endblock %}
+
+{% block content %}
+<!-- Market Benchmark Overview Ticker Strip -->
+<div class="grid-3" style="margin-bottom: 24px;">
+  <div class="stat-card" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(13, 21, 39, 0.8) 100%);">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+      <div class="stat-label">NIFTY 50 Benchmark</div>
+      <span class="badge badge-success">+0.58%</span>
+    </div>
+    <div class="stat-value" style="color: #fff;">24,852.10</div>
+    <div class="stat-desc" style="color: var(--success);"><i class="fa-solid fa-arrow-trend-up"></i> +142.30 pts today</div>
+  </div>
+
+  <div class="stat-card" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(13, 21, 39, 0.8) 100%);">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+      <div class="stat-label">SENSEX Benchmark</div>
+      <span class="badge badge-success">+0.52%</span>
+    </div>
+    <div class="stat-value" style="color: #fff;">81,438.45</div>
+    <div class="stat-desc" style="color: var(--success);"><i class="fa-solid fa-arrow-trend-up"></i> +419.20 pts today</div>
+  </div>
+
+  <div class="stat-card">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+      <div class="stat-label">Market Volatility (India VIX)</div>
+      <span class="badge badge-ai">Stable</span>
+    </div>
+    <div class="stat-value" style="color: var(--cyan-bright);">13.42</div>
+    <div class="stat-desc">Low volatility • Favorable for SIPs</div>
+  </div>
+</div>
+
+<!-- Search & Sector Filter Card -->
+<div class="card" style="background: var(--bg-card); border: 1px solid var(--border-medium); border-radius: var(--radius-lg); margin-bottom: 24px;">
+  <div class="card-body" style="padding: 20px 24px;">
+    <form action="{{ url_for('stock.stocks') }}" method="GET" style="display: flex; gap: 14px; flex-wrap: wrap; align-items: center;">
+      <div style="position: relative; flex-grow: 1; min-width: 280px;">
+        <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+        <input type="text" name="q" class="form-control" placeholder="Search by ticker symbol, company name or sector (e.g. TCS, HDFC, IT, Energy)..." value="{{ query_str }}" style="padding-left: 44px;">
+      </div>
+      <button type="submit" class="btn btn-primary">
+        <i class="fa-solid fa-filter"></i> Search Securities
+      </button>
+      {% if query_str %}
+        <a href="{{ url_for('stock.stocks') }}" class="btn btn-secondary">Clear Search</a>
+      {% endif %}
+    </form>
+  </div>
+</div>
+
+<!-- Stocks Telemetry Table Card -->
+<div class="card" style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); overflow: hidden;">
+  <div class="card-header">
+    <div class="card-title">
+      <i class="fa-solid fa-arrow-trend-up" style="color: var(--cyan-accent); margin-right: 6px;"></i> 
+      Listed Securities & Equities Telemetry ({{ stocks | length }})
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <a href="{{ url_for('portfolio.watchlist') }}" class="btn btn-sm btn-secondary" style="border-color: var(--cyan-accent); color: var(--cyan-bright);">
+        <i class="fa-solid fa-star"></i> My Watchlist
+      </a>
+      <a href="{{ url_for('stock.stock_analysis') }}" class="btn btn-sm btn-secondary">
+        <i class="fa-solid fa-robot"></i> AI Suitability Matrix
+      </a>
+    </div>
+  </div>
+
+  <div class="card-body" style="padding: 0;">
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Security / Ticker</th>
+            <th>Company Name</th>
+            <th>Sector</th>
+            <th>Market Price (₹)</th>
+            <th>24h Movement</th>
+            <th>Volatility Tier</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for s in stocks %}
+          <tr>
+            <td>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 28px; height: 28px; border-radius: var(--radius-xs); background: rgba(37, 99, 235, 0.15); border: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; color: var(--cyan-bright);">
+                  {{ s.symbol[:2] }}
+                </div>
+                <strong style="color: #fff; font-size: 0.95rem;">{{ s.symbol }}</strong>
+              </div>
+            </td>
+            <td>
+              <div style="font-weight: 600; color: var(--text-light);">{{ s.name or s.company_name }}</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">{{ s.market_cap or 'Large Cap' }}</div>
+            </td>
+            <td>
+              <span class="badge badge-ai" style="font-size: 0.7rem;">{{ s.sector }}</span>
+            </td>
+            <td style="font-weight: 700; font-size: 1rem; color: #fff;">
+              ₹{{ "{:,.2f}".format((s.price or s.current_price or 0)|float) }}
+            </td>
+            {% set chg = (s.change or s.day_change or 0)|float %}
+            {% set pct = (s.pct_change or s.change_pct or 0)|float %}
+            <td style="font-weight: 700; color: {% if chg >= 0 %}var(--success){% else %}var(--danger){% endif %};">
+              <span style="display: inline-flex; align-items: center; gap: 4px;">
+                {% if chg >= 0 %}
+                  <i class="fa-solid fa-caret-up"></i>
+                {% else %}
+                  <i class="fa-solid fa-caret-down"></i>
+                {% endif %}
+                {{ "{:+0.2f}".format(chg) }} ({{ "{:+0.2f}".format(pct) }}%)
+              </span>
+            </td>
+            <td>
+              <span class="badge badge-{% if s.risk_rating == 'Low' %}success{% elif s.risk_rating == 'Moderate' %}warning{% else %}danger{% endif %}">
+                {{ s.risk_rating }} Volatility
+              </span>
+            </td>
+            <td>
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <a href="{{ url_for('stock.stock_detail', symbol=s.symbol) }}" class="btn btn-sm btn-secondary" style="padding: 4px 10px; font-size: 0.8rem;">
+                  Details
+                </a>
+                <form action="{{ url_for('portfolio.add_watchlist') }}" method="POST" style="display:inline;">
+                  <input type="hidden" name="symbol" value="{{ s.symbol }}">
+                  <button type="submit" class="btn btn-sm btn-ghost" style="color: var(--cyan-bright); padding: 4px 8px;" title="Add to Watchlist">
+                    <i class="fa-regular fa-star"></i>
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 36px;">
+              No securities match your search criteria. Try searching by sector like "Banking", "IT" or ticker like "TCS".
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

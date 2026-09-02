@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}User Directory - FinAI Admin Console{% endblock %}
+{% block page_title %}
+<div style="display: flex; align-items: center; gap: 12px;">
+  <span>User Directory & Account Governance</span>
+  <span style="font-size: 0.72rem; padding: 4px 10px; border-radius: 999px; background: rgba(245, 158, 11, 0.15); border: 1px solid #f59e0b; color: #fbbf24; font-weight: 700; text-transform: uppercase;">
+    <i class="fa-solid fa-users-gear"></i> Directory Control
+  </span>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="card" style="margin-bottom: 24px; padding: 18px 22px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+    <div>
+      <h3 style="font-size: 1.15rem; font-weight: 700; margin: 0; color: #fff;">Registered Accounts Directory</h3>
+      <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px; margin-bottom: 0;">
+        Total Partitions: <strong>{{ users | length }} user(s)</strong> registered in the database.
+      </p>
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary btn-sm">
+        <i class="fa-solid fa-arrow-left"></i> Back to Console
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body" style="padding: 0;">
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>User ID</th>
+            <th>Name & Email</th>
+            <th>Demographics</th>
+            <th>Financial Exp</th>
+            <th>System Role</th>
+            <th>Joined Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for u in users %}
+          <tr>
+            <td style="font-weight: 700; color: var(--cyan-bright);">#{{ u.id }}</td>
+            <td>
+              <div style="font-weight: 700; color: #ffffff;">{{ u.name }}</div>
+              <div style="font-size: 0.78rem; color: var(--text-muted);">{{ u.email }}</div>
+            </td>
+            <td style="font-size: 0.85rem; color: var(--text-subtle);">
+              {{ u.age or 25 }} yrs • {{ u.occupation or 'Student / Professional' }}
+            </td>
+            <td style="font-size: 0.82rem;">
+              <span style="color: var(--cyan-bright);">{{ u.financial_exp or 'Beginner' }}</span>
+              <span style="color: var(--text-dim);"> / {{ u.investment_exp or 'None' }}</span>
+            </td>
+            <td>
+              <span class="badge badge-{% if u.role == 'admin' %}warning{% else %}primary{% endif %}">
+                <i class="fa-solid fa-{% if u.role == 'admin' %}shield-halved{% else %}user{% endif %}"></i> {{ u.role }}
+              </span>
+            </td>
+            <td style="font-size: 0.8rem; color: var(--text-muted);">
+              {{ u.created_at.strftime('%Y-%m-%d %H:%M') if u.created_at else 'Active' }}
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 32px;">
+              No user accounts found.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

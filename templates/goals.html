@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}Financial Goals & Milestones - FinAI Platform{% endblock %}
+{% block page_title %}Financial Goals & Milestone Progress Telemetry{% endblock %}
+
+{% block content %}
+<!-- Top Goals Telemetry Strip -->
+<div class="grid-3" style="margin-bottom: 24px;">
+  <div class="stat-card">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+      <div class="stat-label">Active Milestones</div>
+      <i class="fa-solid fa-bullseye" style="color: var(--cyan-accent); font-size: 1.1rem;"></i>
+    </div>
+    <div class="stat-value" style="color: #fff;">{{ goals | length }} <span style="font-size: 0.95rem; font-weight: 500; color: var(--text-muted);">goals</span></div>
+    <div class="stat-desc">Emergency reserves, asset purchases & savings targets</div>
+  </div>
+
+  <div class="stat-card" style="background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(13, 21, 39, 0.8) 100%);">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+      <div class="stat-label">Cumulative Goal Balance</div>
+      <i class="fa-solid fa-piggy-bank" style="color: var(--cyan-bright); font-size: 1.1rem;"></i>
+    </div>
+    <div class="stat-value" style="color: var(--cyan-bright);">
+      ₹{{ "{:,.2f}".format(goals | map(attribute='current_amount') | sum) }}
+    </div>
+    <div class="stat-desc">Total capital accumulated across active goals</div>
+  </div>
+
+  <div class="stat-card">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+      <div class="stat-label">Total Target Value</div>
+      <i class="fa-solid fa-flag-checkered" style="color: var(--blue-light); font-size: 1.1rem;"></i>
+    </div>
+    <div class="stat-value" style="color: #fff;">
+      ₹{{ "{:,.2f}".format(goals | map(attribute='target_amount') | sum) }}
+    </div>
+    <div class="stat-desc">Total required capital horizon</div>
+  </div>
+</div>
+
+<!-- Create Goal Card -->
+<div class="card" style="margin-bottom: 28px;">
+  <div class="card-header">
+    <div class="card-title">
+      <i class="fa-solid fa-circle-plus" style="color: var(--cyan-accent); margin-right: 6px;"></i> Initialize New Financial Goal
+    </div>
+    <span class="badge badge-ai">Automated SIP Modeling</span>
+  </div>
+  <div class="card-body">
+    <form action="{{ url_for('goal.add_goal') }}" method="POST" style="display: flex; flex-direction: column; gap: 16px;">
+      <div class="form-row">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label" for="name">Goal Name / Milestone *</label>
+          <input type="text" id="name" name="name" class="form-control" list="goal-presets" placeholder="e.g. Emergency Reserve, Macbook Pro, Master's Tuition" required>
+          <datalist id="goal-presets">
+            {% for p in presets %}
+              <option value="{{ p }}">
+            {% endfor %}
+          </datalist>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label" for="target_amount">Target Capital (₹) *</label>
+          <input type="number" id="target_amount" name="target_amount" class="form-control" step="100" min="100" placeholder="e.g. 150000" required>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label" for="current_amount">Initial Capital Saved (₹)</label>
+          <input type="number" id="current_amount" name="current_amount" class="form-control" step="100" min="0" value="0">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label" for="target_date">Target Horizon Date *</label>
+          <input type="date" id="target_date" name="target_date" class="form-control" value="{{ today_date }}" required>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label" for="priority">Priority Tier</label>
+          <select id="priority" name="priority" class="form-select">
+            <option value="High">High (Essential e.g. Emergency Fund)</option>
+            <option value="Medium" selected>Medium (Standard Growth)</option>
+            <option value="Low">Low (Discretionary Milestone)</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label" for="description">Milestone Notes</label>
+          <input type="text" id="description" name="description" class="form-control" placeholder="Target purpose or milestone notes">
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="align-self: flex-start; margin-top: 4px;">
+        <i class="fa-solid fa-plus"></i> Create Financial Goal
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Active Tracked Goals Grid -->
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #fff;">
+    <i class="fa-solid fa-list-check" style="color: var(--cyan-accent); margin-right: 6px;"></i> Active Milestones ({{ goals | length }})
+  </h3>
+  <span style="font-size: 0.82rem; color: var(--text-muted);">Real-time progress telemetry</span>
+</div>
+
+<div class="grid-2">
+  {% for g in goals %}
+  <div class="card" style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); margin-bottom: 0; transition: transform 0.2s ease, border-color 0.2s ease;">
+    <div class="card-header">
+      <div>
+        <div class="card-title" style="font-size: 1.05rem;">{{ g.name }}</div>
+        <span style="font-size: 0.78rem; color: var(--text-muted);">
+          <i class="fa-regular fa-calendar"></i> Target: {{ g.target_date }} • 
+          Priority: <strong style="color: {% if g.priority == 'High' %}var(--cyan-bright){% else %}var(--text-light){% endif %};">{{ g.priority }}</strong>
+        </span>
+      </div>
+      <span class="badge badge-{% if g.is_completed %}success{% else %}ai{% endif %}">
+        {{ g.status }}
+      </span>
+    </div>
+    <div class="card-body">
+      <!-- Target vs Current Amounts -->
+      <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+        <span style="font-size: 1.4rem; font-weight: 800; color: #fff;">
+          ₹{{ "{:,.2f}".format(g.current_amount) }}
+        </span>
+        <span style="font-size: 0.88rem; color: var(--text-muted);">
+          Target: <strong style="color: var(--cyan-bright);">₹{{ "{:,.2f}".format(g.target_amount) }}</strong>
+        </span>
+      </div>
+
+      <!-- Glowing Cumulative Progress Bar -->
+      <div class="progress-bar-container" style="height: 10px; margin-bottom: 8px;">
+        <div class="progress-bar-fill" style="width: {{ g.progress_pct }}%; background: {% if g.is_completed %}var(--success){% else %}var(--gradient-primary){% endif %};"></div>
+      </div>
+
+      <!-- Progress Stats -->
+      <div style="display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px;">
+        <span>Progress: <strong style="color: #fff;">{{ g.progress_pct }}%</strong></span>
+        <span>Remaining: <strong style="color: var(--cyan-bright);">₹{{ "{:,.2f}".format(g.remaining) }}</strong></span>
+      </div>
+
+      {% if g.description %}
+      <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px; font-style: italic;">
+        "{{ g.description }}"
+      </p>
+      {% endif %}
+
+      <!-- Cumulative Add Funds Form -->
+      <div style="background: rgba(5, 8, 17, 0.7); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 12px 14px; margin-bottom: 12px;">
+        <form action="{{ url_for('goal.add_funds', goal_id=g.id) }}" method="POST" style="display: flex; gap: 8px;">
+          <input type="number" name="added_amount" class="form-control" placeholder="+ Deposit amount (₹)" min="1" step="100" required style="padding: 8px 12px; font-size: 0.88rem;">
+          <button type="submit" class="btn btn-sm btn-primary" style="white-space: nowrap;">
+            <i class="fa-solid fa-plus"></i> Deposit
+          </button>
+        </form>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end;">
+        <form action="{{ url_for('goal.delete_goal', goal_id=g.id) }}" method="POST">
+          <button type="submit" class="btn btn-sm btn-ghost" style="color: #f87171;" onclick="return confirm('Remove this goal?');">
+            <i class="fa-solid fa-trash"></i> Remove Goal
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div style="grid-column: span 2; text-align: center; background: var(--bg-card); border: 1px dashed var(--border-medium); padding: 40px; border-radius: var(--radius-lg);">
+    <i class="fa-solid fa-bullseye" style="font-size: 2rem; color: var(--cyan-accent); opacity: 0.4; margin-bottom: 12px; display: block;"></i>
+    <h4 style="font-size: 1.1rem; color: #fff; margin-bottom: 4px;">No Financial Goals Created Yet</h4>
+    <p style="color: var(--text-muted); font-size: 0.9rem;">Initialize your first milestone (e.g. 3-month Emergency Fund) using the form above.</p>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+
+{% block title %}Risk Profile Assessment - FinAI System{% endblock %}
+{% block page_title %}Psychometric Risk Tolerance & Asset Allocation Profiler{% endblock %}
+
+{% block content %}
+<!-- Page Overview Banner -->
+<div class="card" style="background: linear-gradient(135deg, rgba(13, 21, 39, 0.95) 0%, rgba(30, 27, 75, 0.8) 100%); border: 1px solid var(--border-medium); border-radius: var(--radius-xl); padding: 28px 32px; margin-bottom: 28px; box-shadow: var(--shadow-md);">
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+    <div style="max-width: 680px;">
+      <div style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.75rem; font-weight: 700; color: var(--cyan-bright); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; background: rgba(6, 182, 212, 0.12); padding: 4px 12px; border-radius: var(--radius-full); border: 1px solid rgba(6, 182, 212, 0.3);">
+        <i class="fa-solid fa-scale-balanced"></i> Institutional Psychometric Model
+      </div>
+      <h2 style="font-size: 1.6rem; font-weight: 800; color: #ffffff; margin-bottom: 8px;">Comprehensive 10-Factor Risk Assessment</h2>
+      <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 0;">
+        FinAI evaluates your risk capacity, market experience, and emotional volatility tolerance across 3 distinct financial pillars to recommend a mathematically optimized asset allocation strategy.
+      </p>
+    </div>
+
+    <!-- Quick Pillars Legend -->
+    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+      <div style="background: rgba(5, 8, 17, 0.7); border: 1px solid var(--border-subtle); padding: 10px 16px; border-radius: var(--radius-md); text-align: center;">
+        <div style="font-size: 1.1rem; color: #38bdf8; margin-bottom: 2px;"><i class="fa-solid fa-hourglass-half"></i></div>
+        <div style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: var(--text-subtle);">Capacity</div>
+        <div style="font-size: 0.75rem; color: var(--text-muted);">4 Factors</div>
+      </div>
+      <div style="background: rgba(5, 8, 17, 0.7); border: 1px solid var(--border-subtle); padding: 10px 16px; border-radius: var(--radius-md); text-align: center;">
+        <div style="font-size: 1.1rem; color: #a855f7; margin-bottom: 2px;"><i class="fa-solid fa-graduation-cap"></i></div>
+        <div style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: var(--text-subtle);">Knowledge</div>
+        <div style="font-size: 0.75rem; color: var(--text-muted);">3 Factors</div>
+      </div>
+      <div style="background: rgba(5, 8, 17, 0.7); border: 1px solid var(--border-subtle); padding: 10px 16px; border-radius: var(--radius-md); text-align: center;">
+        <div style="font-size: 1.1rem; color: #f59e0b; margin-bottom: 2px;"><i class="fa-solid fa-brain"></i></div>
+        <div style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: var(--text-subtle);">Psychology</div>
+        <div style="font-size: 0.75rem; color: var(--text-muted);">3 Factors</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Active Risk Evaluation Result Card (If Assessed) -->
+{% if profile %}
+<div class="card" style="border-left: 6px solid {% if profile.risk_level == 'Conservative' %}#10b981{% elif profile.risk_level == 'Moderate' %}#f59e0b{% else %}#8b5cf6{% endif %}; margin-bottom: 32px; background: var(--bg-card); box-shadow: var(--shadow-glow-cyan);">
+  <div class="card-body" style="padding: 28px 32px;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px; margin-bottom: 20px;">
+      <div>
+        <span style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--cyan-bright);">
+          <i class="fa-solid fa-circle-check"></i> Current Evaluated Classification
+        </span>
+        <div style="display: flex; align-items: center; gap: 16px; margin-top: 6px;">
+          <h1 style="font-size: 2.2rem; font-weight: 800; color: #ffffff; margin: 0;">
+            {{ profile.risk_level }} Investor
+          </h1>
+          <span class="badge" style="font-size: 0.9rem; padding: 6px 14px; background: rgba(37, 99, 235, 0.2); border: 1px solid var(--cyan-accent); color: var(--cyan-bright); font-weight: 700;">
+            Score: {{ profile.score }} / 40 Points
+          </span>
+        </div>
+      </div>
+
+      <div style="text-align: right;">
+        <span style="font-size: 0.8rem; color: var(--text-muted);">
+          <i class="fa-regular fa-clock"></i> Last Evaluated: {{ profile.created_at or 'Recently' }}
+        </span>
+        <div style="margin-top: 6px;">
+          <a href="#questionnaireSection" class="btn btn-secondary btn-sm" style="border-color: var(--cyan-accent); color: var(--cyan-bright);">
+            <i class="fa-solid fa-arrow-rotate-right"></i> Retake Questionnaire
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Visual Tier Meter -->
+    <div style="margin-bottom: 22px;">
+      <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 600; margin-bottom: 6px;">
+        <span style="color: #10b981;">Conservative (10–18 pts)</span>
+        <span style="color: #f59e0b;">Moderate / Balanced (19–29 pts)</span>
+        <span style="color: #8b5cf6;">Aggressive / Growth (30–40 pts)</span>
+      </div>
+      <div style="width: 100%; height: 10px; background: rgba(5, 8, 17, 0.8); border-radius: 999px; overflow: hidden; border: 1px solid var(--border-subtle); position: relative;">
+        {% set pct = ((profile.score / 40) * 100)|round(1) %}
+        <div style="width: {{ pct }}%; height: 100%; background: linear-gradient(90deg, #10b981 0%, #f59e0b 50%, #8b5cf6 100%); border-radius: 999px; transition: width 1s ease;"></div>
+      </div>
+    </div>
+
+    <!-- Detailed Strategy Summary -->
+    <div style="background: rgba(5, 8, 17, 0.65); border: 1px solid var(--border-subtle); padding: 18px 22px; border-radius: var(--radius-md);">
+      <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; color: #ffffff; margin-bottom: 6px; font-size: 0.95rem;">
+        <i class="fa-solid fa-chart-pie" style="color: var(--cyan-accent);"></i> Strategic Asset Allocation Profile:
+      </div>
+      <p style="font-size: 0.92rem; color: var(--text-subtle); line-height: 1.6; margin: 0;">
+        {{ profile.explanation }}
+      </p>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- 10-Question Structured Assessment Questionnaire -->
+<div id="questionnaireSection" class="card" style="background: transparent; border: none; padding: 0; margin-bottom: 30px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px;">
+    <div>
+      <h3 style="font-size: 1.35rem; font-weight: 800; color: #ffffff; margin: 0;">
+        <i class="fa-solid fa-clipboard-question" style="color: var(--cyan-accent); margin-right: 8px;"></i>
+        Psychometric Risk Questionnaire
+      </h3>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; margin-bottom: 0;">
+        Select the option that most accurately reflects your personal financial reality.
+      </p>
+    </div>
+    <span style="font-size: 0.82rem; font-weight: 700; color: var(--cyan-bright); background: rgba(37, 99, 235, 0.15); padding: 6px 14px; border-radius: var(--radius-full); border: 1px solid rgba(6, 182, 212, 0.3);">
+      10 Questions • 3 Pillars
+    </span>
+  </div>
+
+  <form action="{{ request.path }}" method="POST" style="display: flex; flex-direction: column; gap: 32px;">
+    {% for pillar in pillars %}
+    <!-- Pillar Container Block -->
+    <div style="background: var(--bg-card); border: 1px solid var(--border-medium); border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow-sm);">
+      
+      <!-- Pillar Header -->
+      <div style="background: linear-gradient(90deg, rgba(37, 99, 235, 0.18) 0%, rgba(13, 21, 39, 0.8) 100%); padding: 18px 24px; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 14px;">
+        <div style="width: 40px; height: 40px; border-radius: var(--radius-sm); background: rgba(6, 182, 212, 0.15); border: 1px solid var(--cyan-accent); display: flex; align-items: center; justify-content: center; font-size: 1.15rem; color: var(--cyan-bright); flex-shrink: 0;">
+          <i class="{{ pillar.pillar_icon }}"></i>
+        </div>
+        <div>
+          <h4 style="font-size: 1.05rem; font-weight: 700; color: #ffffff; margin: 0;">{{ pillar.pillar_title }}</h4>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; margin-bottom: 0;">{{ pillar.pillar_desc }}</p>
+        </div>
+      </div>
+
+      <!-- Pillar Questions -->
+      <div style="padding: 24px; display: flex; flex-direction: column; gap: 24px;">
+        {% for q in pillar.questions %}
+        <div class="question-card" style="background: rgba(5, 8, 17, 0.6); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 22px 24px; transition: border-color var(--transition-fast);">
+          
+          <!-- Question Title & Metadata -->
+          <div style="display: flex; align-items: flex-start; gap: 14px; margin-bottom: 16px;">
+            <div style="background: rgba(37, 99, 235, 0.2); border: 1px solid rgba(6, 182, 212, 0.4); color: var(--cyan-bright); font-size: 0.78rem; font-weight: 800; padding: 4px 10px; border-radius: var(--radius-sm); flex-shrink: 0; margin-top: 2px;">
+              Q{{ "%02d" % q.number }}
+            </div>
+            <div>
+              <div style="font-size: 1rem; font-weight: 700; color: #ffffff; line-height: 1.4;">
+                {{ q.question }}
+              </div>
+              {% if q.subtitle %}
+              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">
+                {{ q.subtitle }}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Options Grid (2x2 Structured Cards) -->
+          <div class="options-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px;">
+            {% for opt in q.options %}
+            <label class="risk-option-card" style="display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; background: rgba(13, 21, 39, 0.6); border: 1px solid rgba(59, 130, 246, 0.18); border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease; position: relative;">
+              <input type="radio" name="{{ q.id }}" value="{{ opt.points }}" {% if loop.index == 2 %}checked{% endif %} required style="accent-color: var(--cyan-accent); margin-top: 3px; cursor: pointer; width: 17px; height: 17px; flex-shrink: 0;">
+              
+              <div style="flex-grow: 1;">
+                <div style="font-size: 0.88rem; font-weight: 500; color: var(--text-light); line-height: 1.4;">
+                  {{ opt.text }}
+                </div>
+                {% if opt.badge %}
+                <span style="display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; color: var(--cyan-bright); background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.25); padding: 2px 8px; border-radius: 4px; margin-top: 6px;">
+                  {{ opt.badge }}
+                </span>
+                {% endif %}
+              </div>
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+
+    <!-- Submit Action Card -->
+    <div class="card" style="background: linear-gradient(135deg, rgba(13, 21, 39, 0.95) 0%, rgba(20, 30, 60, 0.9) 100%); border: 1px solid var(--border-bright); border-radius: var(--radius-xl); padding: 28px 32px; text-align: center; box-shadow: var(--shadow-glow-cyan);">
+      <div style="max-width: 580px; margin: 0 auto 20px;">
+        <h4 style="font-size: 1.25rem; font-weight: 800; color: #ffffff; margin-bottom: 6px;">
+          Ready to Calculate Your Asset Allocation Model?
+        </h4>
+        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin: 0;">
+          Your responses will be computed through FinAI's psychometric matrix to derive your verified Risk Category and model portfolio ratios.
+        </p>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg" style="padding: 16px 42px; font-size: 1.05rem; font-weight: 700; border-radius: var(--radius-full); box-shadow: 0 4px 22px rgba(6, 182, 212, 0.5);">
+        <i class="fa-solid fa-calculator" style="margin-right: 8px;"></i> Submit & Calculate Risk Profile
+      </button>
+    </div>
+  </form>
+</div>
+
+<style>
+/* Interactive Option Card Hover Styling */
+.risk-option-card:hover {
+  border-color: var(--cyan-bright) !important;
+  background: rgba(37, 99, 235, 0.16) !important;
+  box-shadow: 0 4px 18px rgba(6, 182, 212, 0.25);
+  transform: translateY(-2px);
+}
+
+.risk-option-card:has(input[type="radio"]:checked) {
+  border-color: var(--cyan-accent) !important;
+  background: rgba(6, 182, 212, 0.15) !important;
+  box-shadow: 0 0 14px rgba(6, 182, 212, 0.35);
+}
+</style>
+{% endblock %}

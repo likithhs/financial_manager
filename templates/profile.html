@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}User Profile & Settings - FinAI Platform{% endblock %}
+{% block page_title %}User Profile & Financial Baseline Configuration{% endblock %}
+
+{% block content %}
+<div class="grid-3" style="max-width: 1100px; gap: 28px;">
+  
+  <!-- Left Side: User Identity Card -->
+  <div class="card" style="background: var(--bg-card); border: 1px solid var(--border-medium); border-radius: var(--radius-xl); text-align: center; padding: 32px 20px; height: fit-content;">
+    <div style="width: 72px; height: 72px; border-radius: 50%; background: var(--gradient-primary); margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: #fff; font-weight: 800; box-shadow: 0 0 24px rgba(6, 182, 212, 0.45);">
+      {{ user.name[:1] | upper }}
+    </div>
+    
+    <h3 style="font-size: 1.3rem; font-weight: 800; color: #fff; margin-bottom: 4px;">{{ user.name }}</h3>
+    <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">{{ user.email }}</div>
+    
+    <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 24px;">
+      <span class="badge badge-ai" style="text-transform: uppercase;">Role: {{ user.role }}</span>
+      <span class="badge badge-success"><i class="fa-solid fa-circle-check"></i> Active</span>
+    </div>
+
+    <div style="border-top: 1px solid var(--border-subtle); padding-top: 18px; text-align: left; display: flex; flex-direction: column; gap: 10px; font-size: 0.85rem;">
+      <div style="display: flex; justify-content: space-between;">
+        <span style="color: var(--text-muted);">Financial Tier:</span>
+        <strong style="color: var(--cyan-bright);">{{ user.financial_exp }}</strong>
+      </div>
+      <div style="display: flex; justify-content: space-between;">
+        <span style="color: var(--text-muted);">Investment Exp:</span>
+        <strong style="color: #fff;">{{ user.investment_exp }}</strong>
+      </div>
+      <div style="display: flex; justify-content: space-between;">
+        <span style="color: var(--text-muted);">Occupation:</span>
+        <strong style="color: #fff;">{{ user.occupation }}</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Side: Edit Baseline Form -->
+  <div class="card" style="grid-column: span 2; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); margin-bottom: 0;">
+    <div class="card-header">
+      <div class="card-title">
+        <i class="fa-solid fa-user-gear" style="color: var(--cyan-accent); margin-right: 6px;"></i> Edit Financial Profile & Settings
+      </div>
+      <span class="badge badge-ai">Database Calibrated</span>
+    </div>
+
+    <div class="card-body">
+      <form action="{{ url_for('auth.profile') }}" method="POST" style="display: flex; flex-direction: column; gap: 18px;">
+        <div class="form-row">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="name">Full Name *</label>
+            <input type="text" id="name" name="name" class="form-control" value="{{ user.name }}" required>
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">Email Address (Fixed)</label>
+            <input type="email" class="form-control" value="{{ user.email }}" disabled style="opacity: 0.7; cursor: not-allowed;">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="age">Age</label>
+            <input type="number" id="age" name="age" class="form-control" value="{{ user.age }}" min="18" max="100">
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="occupation">Occupation / Role</label>
+            <input type="text" id="occupation" name="occupation" class="form-control" value="{{ user.occupation }}">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="financial_exp">Financial Experience Level</label>
+            <select id="financial_exp" name="financial_exp" class="form-select">
+              <option value="Beginner" {% if user.financial_exp == 'Beginner' %}selected{% endif %}>Beginner (Budgeting & Cashflow)</option>
+              <option value="Intermediate" {% if user.financial_exp == 'Intermediate' %}selected{% endif %}>Intermediate (Active Saver)</option>
+              <option value="Advanced" {% if user.financial_exp == 'Advanced' %}selected{% endif %}>Advanced (Experienced Manager)</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="investment_exp">Investment Asset Experience</label>
+            <select id="investment_exp" name="investment_exp" class="form-select">
+              <option value="None" {% if user.investment_exp == 'None' %}selected{% endif %}>None (First time investor)</option>
+              <option value="Fixed Deposits / Gold" {% if user.investment_exp == 'Fixed Deposits / Gold' %}selected{% endif %}>Fixed Deposits / Gold</option>
+              <option value="Mutual Funds / SIP" {% if user.investment_exp == 'Mutual Funds / SIP' %}selected{% endif %}>Mutual Funds / SIPs</option>
+              <option value="Direct Stocks / Equity" {% if user.investment_exp == 'Direct Stocks / Equity' %}selected{% endif %}>Direct Stocks & Equity</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label" for="new_password">Change Password (Leave empty to keep existing)</label>
+          <input type="password" id="new_password" name="new_password" class="form-control" placeholder="Enter new password (optional)">
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+          <button type="submit" class="btn btn-primary btn-lg">
+            <i class="fa-solid fa-floppy-disk"></i> Save Profile Settings
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

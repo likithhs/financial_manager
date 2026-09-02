@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Budget & Savings - FinAI System{% endblock %}
+{% block page_title %}Savings & Budget Management{% endblock %}
+
+{% block content %}
+<!-- Over-Budget Alert Warning Banner -->
+{% if summary.is_overbudget %}
+<div class="alert alert-danger" style="font-weight: 600;">
+  ⚠️ WARNING: Monthly spending of ₹{{ "{:,.2f}".format(summary.spent) }} has exceeded your monthly budget of ₹{{ "{:,.2f}".format(summary.total_budget) }} by ₹{{ "{:,.2f}".format(summary.spent - summary.total_budget) }}! (Utilization: {{ summary.utilization }}%)
+</div>
+{% endif %}
+
+<div class="grid-4" style="margin-bottom: 24px;">
+  <div class="stat-card">
+    <div class="stat-label">Monthly Budget Limit</div>
+    <div class="stat-value" style="color: var(--primary);">₹{{ "{:,.2f}".format(summary.total_budget) }}</div>
+    <div class="stat-desc">Target for {{ summary.month_year }}</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-label">Actual Spent</div>
+    <div class="stat-value" style="color: {% if summary.is_overbudget %}var(--danger){% else %}var(--dark){% endif %};">
+      ₹{{ "{:,.2f}".format(summary.spent) }}
+    </div>
+    <div class="stat-desc">Budget Utilization: <strong>{{ summary.utilization }}%</strong></div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-label">Budget Remaining</div>
+    <div class="stat-value" style="color: {% if summary.remaining > 0 %}var(--success){% else %}var(--danger){% endif %};">
+      ₹{{ "{:,.2f}".format(summary.remaining) }}
+    </div>
+    <div class="stat-desc">Unused monthly spending limit</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-label">Savings Rate</div>
+    <div class="stat-value" style="color: var(--success);">{{ health.savings_rate }}%</div>
+    <div class="stat-desc">Savings: <strong>₹{{ "{:,.2f}".format(health.savings) }}</strong></div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <!-- Set Budget Form -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">🎯 Set Monthly Budget Target</div>
+    </div>
+    <div class="card-body">
+      <form action="{{ url_for('budget.set_budget') }}" method="POST">
+        <div class="form-group">
+          <label class="form-label" for="month_year">Target Month *</label>
+          <input type="month" id="month_year" name="month_year" class="form-control" value="{{ current_month }}" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="total_budget">Total Monthly Spending Limit (₹) *</label>
+          <input type="number" id="total_budget" name="total_budget" class="form-control" value="{{ summary.total_budget }}" min="0" step="100" placeholder="e.g. 35000" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top: 14px;">Save Monthly Budget</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Budget Utilization & Formulas -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">📊 Utilization & Mathematical Formulas</div>
+    </div>
+    <div class="card-body">
+      <div class="stat-label">Budget Utilization Progress</div>
+      <div class="progress-bar-container" style="height: 14px; margin-top: 6px;">
+        <div class="progress-bar-fill fill-{% if summary.utilization > 100 %}danger{% elif summary.utilization > 80 %}warning{% else %}success{% endif %}" style="width: {{ [summary.utilization, 100] | min }}%;"></div>
+      </div>
+      <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 6px; text-align: right;">
+        {{ summary.utilization }}% utilized
+      </div>
+
+      <div style="background: rgba(5, 8, 17, 0.7); border: 1px solid var(--border-subtle); padding: 16px; border-radius: var(--radius-md); margin-top: 16px; font-size: 0.85rem;">
+        <strong style="color: #ffffff;"><i class="fa-solid fa-calculator" style="color: var(--cyan-accent); margin-right: 6px;"></i> Standard Financial Metrics:</strong>
+        <p style="margin-top: 6px; font-family: monospace; color: var(--cyan-bright);">• Net Savings = Income (₹{{ "{:,.2f}".format(health.total_income) }}) - Expenses (₹{{ "{:,.2f}".format(health.total_expenses) }}) = ₹{{ "{:,.2f}".format(health.savings) }}</p>
+        <p style="margin-top: 4px; font-family: monospace; color: var(--cyan-bright);">• Savings Rate = (Savings / Income) × 100 = {{ health.savings_rate }}%</p>
+        <p style="margin-top: 4px; font-family: monospace; color: var(--cyan-bright);">• Budget Utilization = (Expenses / Budget) × 100 = {{ summary.utilization }}%</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

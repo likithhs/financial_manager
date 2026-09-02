@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Stock Watchlist - FinAI System{% endblock %}
+{% block page_title %}Custom Stock Watchlist{% endblock %}
+
+{% block content %}
+<div class="grid-2">
+  <!-- Add to Watchlist Form -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">+ Add Stock to Watchlist</div>
+    </div>
+    <div class="card-body">
+      <form action="{{ url_for('portfolio.add_watchlist') }}" method="POST">
+        <div class="form-group">
+          <label class="form-label" for="symbol">Select Stock from Directory</label>
+          <select id="symbol" name="symbol" class="form-select">
+            {% for s in all_stocks %}
+              <option value="{{ s.symbol }}">{{ s.symbol }} - {{ s.name }} (₹{{ s.price }})</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">Add to My Watchlist</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">⭐ Watchlist Overview</div>
+      <span class="badge badge-neutral">{{ watchlist | length }} Tracked Stocks</span>
+    </div>
+    <div class="card-body">
+      <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+        Monitor market quotes and price movements of target equities. You can run instant AI Suitability evaluations directly from your watchlist.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Watchlist Items Table -->
+<div class="card">
+  <div class="card-header">
+    <div class="card-title">My Tracked Tickers</div>
+  </div>
+  <div class="card-body" style="padding: 0;">
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Symbol</th>
+            <th>Company Name</th>
+            <th>Sector</th>
+            <th>Latest Price (₹)</th>
+            <th>Daily Change</th>
+            <th>Volatility</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in watchlist %}
+          <tr>
+            <td><strong style="color: var(--primary);">{{ item.symbol }}</strong></td>
+            <td>{{ item.company_name }}</td>
+            <td><span class="badge badge-neutral">{{ item.sector }}</span></td>
+            <td style="font-weight: 700;">₹{{ "{:,.2f}".format(item.price) }}</td>
+            <td style="font-weight: 600; color: {% if item.change >= 0 %}var(--success){% else %}var(--danger){% endif %};">
+              {{ "{:+0.2f}".format(item.change) }} ({{ "{:+0.2f}".format(item.pct_change) }}%)
+            </td>
+            <td>{{ item.risk_rating }}</td>
+            <td>
+              <div style="display: flex; gap: 8px;">
+                <a href="{{ url_for('stock.stock_analysis', symbol=item.symbol) }}" class="btn btn-primary btn-sm">AI Analysis</a>
+                <form action="{{ url_for('portfolio.delete_watchlist', item_id=item.id) }}" method="POST" style="display:inline;">
+                  <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Remove from watchlist?');">Remove</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px;">
+              Your watchlist is currently empty. Add stocks using the form above.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+
+{% block title %}Create Account - FinAI Assistant{% endblock %}
+
+{% block public_content %}
+<div class="auth-page-wrapper" style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px;">
+  <div style="max-width: 1100px; width: 100%; margin-bottom: 16px; display: flex; justify-content: flex-start;">
+    <a href="{{ url_for('index') }}" class="btn btn-sm btn-secondary" style="border-color: var(--border-subtle); gap: 8px;">
+      <i class="fa-solid fa-arrow-left"></i> Back to Home
+    </a>
+  </div>
+  <div class="auth-container" style="max-width: 1100px; width: 100%; display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; background: var(--bg-card); border: 1px solid var(--border-medium); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg), var(--shadow-glow-cyan); overflow: hidden;">
+    
+    <!-- Left Column: Branding & Steps -->
+    <div class="auth-side-brand" style="background: linear-gradient(135deg, rgba(37, 99, 235, 0.25) 0%, rgba(10, 15, 29, 0.95) 100%); border-right: 1px solid var(--border-subtle); padding: 50px 40px; display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <a href="{{ url_for('index') }}" class="brand-logo" style="margin-bottom: 40px; display: inline-flex;">
+          <div class="brand-icon">
+            <i class="fa-solid fa-bolt"></i>
+          </div>
+          <div class="brand-info">
+            <span class="brand-title">Fin<span>AI</span></span>
+            <span class="brand-tagline">Your AI-Powered Financial Assistant</span>
+          </div>
+        </a>
+
+        <h2 style="font-size: 2rem; font-weight: 800; line-height: 1.25; margin-bottom: 16px;">
+          Start Your AI-Guided <span class="gradient-text-cyan">Financial Journey</span>
+        </h2>
+        <p style="font-size: 0.95rem; color: var(--text-subtle); line-height: 1.6; margin-bottom: 30px;">
+          Join FinAI to gain automated cashflow insights, diagnostic health scores, behavioral risk profiling, and personalized investment horizons.
+        </p>
+
+        <!-- Step List -->
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="display: flex; gap: 14px;">
+            <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; color: #fff; flex-shrink: 0;">1</div>
+            <div>
+              <h5 style="font-size: 0.9rem; font-weight: 700; color: #fff;">Create Free Account</h5>
+              <p style="font-size: 0.78rem; color: var(--text-muted);">Set up your secure credentials</p>
+            </div>
+          </div>
+          <div style="display: flex; gap: 14px;">
+            <div style="width: 28px; height: 28px; border-radius: 50%; background: rgba(37, 99, 235, 0.2); border: 1px solid var(--border-medium); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; color: var(--cyan-bright); flex-shrink: 0;">2</div>
+            <div>
+              <h5 style="font-size: 0.9rem; font-weight: 700; color: #fff;">Log Cashflow & Incomes</h5>
+              <p style="font-size: 0.78rem; color: var(--text-muted);">Track your active finances & budget</p>
+            </div>
+          </div>
+          <div style="display: flex; gap: 14px;">
+            <div style="width: 28px; height: 28px; border-radius: 50%; background: rgba(37, 99, 235, 0.2); border: 1px solid var(--border-medium); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; color: var(--cyan-bright); flex-shrink: 0;">3</div>
+            <div>
+              <h5 style="font-size: 0.9rem; font-weight: 700; color: #fff;">Get AI Diagnostics</h5>
+              <p style="font-size: 0.78rem; color: var(--text-muted);">Instant health scoring & asset allocation</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Security Footnote -->
+      <div style="padding-top: 30px; border-top: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 10px; font-size: 0.8rem; color: var(--text-muted);">
+        <i class="fa-solid fa-lock" style="color: var(--success);"></i>
+        <span>Bank-Grade Encryption & Isolated Databases</span>
+      </div>
+    </div>
+
+    <!-- Right Column: Registration Form -->
+    <div class="auth-form-side" style="padding: 40px 40px; display: flex; flex-direction: column; justify-content: center;">
+      <div style="margin-bottom: 24px;">
+        <h3 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 6px;">Create Your FinAI Account</h3>
+        <p style="font-size: 0.88rem; color: var(--text-muted);">Enter your details to initialize your financial management profile.</p>
+      </div>
+
+      <!-- Flash Messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="badge badge-{{ category }}" style="display: block; margin-bottom: 18px; padding: 12px 18px; border-radius: 8px; font-size: 0.88rem; text-transform: none; text-align: left; line-height: 1.4;">
+              <i class="fa-solid fa-circle-info"></i> {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <form action="{{ url_for('auth.register') }}" method="POST" style="display: flex; flex-direction: column; gap: 16px;">
+        <!-- Full Name & Email -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div>
+            <label for="name" style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--text-subtle); margin-bottom: 6px;">
+              Full Name *
+            </label>
+            <input type="text" id="name" name="name" required autofocus placeholder="e.g. Likith H S"
+                   style="width: 100%; background: rgba(5, 8, 17, 0.85); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 10px 14px; color: var(--text-white); font-size: 0.9rem; outline: none;">
+          </div>
+          <div>
+            <label for="email" style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--text-subtle); margin-bottom: 6px;">
+              Email Address *
+            </label>
+            <input type="email" id="email" name="email" required placeholder="name@example.com"
+                   style="width: 100%; background: rgba(5, 8, 17, 0.85); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 10px 14px; color: var(--text-white); font-size: 0.9rem; outline: none;">
+          </div>
+        </div>
+
+        <!-- Password & Confirm Password (With Show/Hide Eye Toggle) -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div>
+            <label for="regPassword" style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--text-subtle); margin-bottom: 6px;">
+              Password *
+            </label>
+            <div style="position: relative;">
+              <input type="password" id="regPassword" name="password" required placeholder="Min 6 characters"
+                     style="width: 100%; background: rgba(5, 8, 17, 0.85); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 10px 38px 10px 14px; color: var(--text-white); font-size: 0.9rem; outline: none;">
+              <button type="button" id="toggleRegPwd" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 4px;" title="Show/Hide Password">
+                <i class="fa-solid fa-eye" id="eyeIconReg"></i>
+              </button>
+            </div>
+          </div>
+          <div>
+            <label for="confirm_password" style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--text-subtle); margin-bottom: 6px;">
+              Confirm Password *
+            </label>
+            <div style="position: relative;">
+              <input type="password" id="confirm_password" name="confirm_password" required placeholder="Repeat password"
+                     style="width: 100%; background: rgba(5, 8, 17, 0.85); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 10px 38px 10px 14px; color: var(--text-white); font-size: 0.9rem; outline: none;">
+              <button type="button" id="toggleConfPwd" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 4px;" title="Show/Hide Password">
+                <i class="fa-solid fa-eye" id="eyeIconConf"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Password Strength Meter -->
+        <div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 4px;">
+            <span style="color: var(--text-muted);">Password Strength:</span>
+            <span id="strengthText" style="font-weight: 700; color: var(--danger);">Enter password</span>
+          </div>
+          <div style="height: 4px; background: rgba(255,255,255,0.08); border-radius: 999px; overflow: hidden;">
+            <div id="strengthBar" style="width: 0%; height: 100%; background: var(--danger); transition: all 0.3s ease;"></div>
+          </div>
+        </div>
+
+        <!-- Age & Occupation -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div>
+            <label for="age" style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--text-subtle); margin-bottom: 6px;">Age</label>
+            <input type="number" id="age" name="age" value="23" min="18" max="100"
+                   style="width: 100%; background: rgba(5, 8, 17, 0.85); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 10px 14px; color: var(--text-white); font-size: 0.9rem; outline: none;">
+          </div>
+          <div>
+            <label for="occupation" style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--text-subtle); margin-bottom: 6px;">Occupation</label>
+            <input type="text" id="occupation" name="occupation" value="Student / Professional"
+                   style="width: 100%; background: rgba(5, 8, 17, 0.85); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 10px 14px; color: var(--text-white); font-size: 0.9rem; outline: none;">
+          </div>
+        </div>
+
+        <!-- Experience Levels -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div>
+            <label for="financial_exp" style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--text-subtle); margin-bottom: 6px;">Financial Experience</label>
+            <select id="financial_exp" name="financial_exp" style="width: 100%; background: #080d1a; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 10px 14px; color: var(--text-white); font-size: 0.85rem; outline: none;">
+              <option value="Beginner" selected>Beginner (Learning budgeting)</option>
+              <option value="Intermediate">Intermediate (Active saver)</option>
+              <option value="Advanced">Advanced (Experienced manager)</option>
+            </select>
+          </div>
+          <div>
+            <label for="investment_exp" style="display: block; font-size: 0.82rem; font-weight: 600; color: var(--text-subtle); margin-bottom: 6px;">Investment Experience</label>
+            <select id="investment_exp" name="investment_exp" style="width: 100%; background: #080d1a; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 10px 14px; color: var(--text-white); font-size: 0.85rem; outline: none;">
+              <option value="None" selected>None (No prior investments)</option>
+              <option value="Fixed Deposits / Gold">Fixed Deposits / Gold</option>
+              <option value="Mutual Funds / SIP">Mutual Funds / SIPs</option>
+              <option value="Direct Stocks / Equity">Direct Stocks & Equity</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 10px;">
+          <i class="fa-solid fa-user-plus"></i> Create Account
+        </button>
+      </form>
+
+      <!-- Already Have Account Link -->
+      <div style="margin-top: 20px; text-align: center; font-size: 0.88rem; color: var(--text-muted);">
+        Already have a FinAI account? 
+        <a href="{{ url_for('auth.login') }}" style="color: var(--cyan-bright); font-weight: 700; text-decoration: none;">
+          Sign In here
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // 1. Password Strength Meter
+  const pwd = document.getElementById('regPassword');
+  const bar = document.getElementById('strengthBar');
+  const text = document.getElementById('strengthText');
+
+  if (pwd && bar && text) {
+    pwd.addEventListener('input', () => {
+      const val = pwd.value;
+      let score = 0;
+      if (val.length >= 6) score += 25;
+      if (val.length >= 8) score += 25;
+      if (/[A-Z]/.test(val)) score += 25;
+      if (/[0-9!@#$%^&*]/.test(val)) score += 25;
+
+      bar.style.width = score + '%';
+      if (score === 0) {
+        bar.style.background = 'transparent';
+        text.innerText = 'Enter password';
+        text.style.color = 'var(--text-muted)';
+      } else if (score <= 25) {
+        bar.style.background = '#ef4444';
+        text.innerText = 'Weak';
+        text.style.color = '#ef4444';
+      } else if (score <= 50) {
+        bar.style.background = '#f59e0b';
+        text.innerText = 'Moderate';
+        text.style.color = '#f59e0b';
+      } else if (score <= 75) {
+        bar.style.background = '#38bdf8';
+        text.innerText = 'Good';
+        text.style.color = '#38bdf8';
+      } else {
+        bar.style.background = '#10b981';
+        text.innerText = 'Strong';
+        text.style.color = '#10b981';
+      }
+    });
+  }
+
+  // 2. Show / Hide Password Toggles
+  function setupToggle(btnId, inputId, iconId) {
+    const btn = document.getElementById(btnId);
+    const input = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+
+    if (btn && input && icon) {
+      btn.addEventListener('click', () => {
+        if (input.type === 'password') {
+          input.type = 'text';
+          icon.classList.remove('fa-eye');
+          icon.classList.add('fa-eye-slash');
+          icon.style.color = 'var(--cyan-bright)';
+        } else {
+          input.type = 'password';
+          icon.classList.remove('fa-eye-slash');
+          icon.classList.add('fa-eye');
+          icon.style.color = 'var(--text-muted)';
+        }
+      });
+    }
+  }
+
+  setupToggle('toggleRegPwd', 'regPassword', 'eyeIconReg');
+  setupToggle('toggleConfPwd', 'confirm_password', 'eyeIconConf');
+});
+</script>
+{% endblock %}

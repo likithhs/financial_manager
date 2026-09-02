@@ -1,0 +1,258 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - FinAI Financial Platform{% endblock %}
+{% block page_title %}Executive Financial Intelligence Cockpit{% endblock %}
+
+{% block content %}
+<!-- 1. Top Highlight Cashflow Glass Cards -->
+<div class="grid-4" style="margin-bottom: 24px;">
+  <!-- Income Card -->
+  <div class="stat-card" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(13, 21, 39, 0.8) 100%);">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+      <div class="stat-label">Total Monthly Inflows</div>
+      <div style="width: 34px; height: 34px; border-radius: var(--radius-sm); background: var(--success-bg); border: 1px solid var(--success-border); display: flex; align-items: center; justify-content: center; color: var(--success);">
+        <i class="fa-solid fa-arrow-down-left"></i>
+      </div>
+    </div>
+    <div class="stat-value" style="color: var(--success);">₹{{ "{:,.2f}".format(health.total_income) }}</div>
+    <div class="stat-desc" style="color: var(--text-muted);"><i class="fa-solid fa-bolt" style="color: var(--cyan-accent);"></i> Active Recorded Incomes</div>
+  </div>
+
+  <!-- Expenses Card -->
+  <div class="stat-card" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(13, 21, 39, 0.8) 100%);">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+      <div class="stat-label">Total Living Outflows</div>
+      <div style="width: 34px; height: 34px; border-radius: var(--radius-sm); background: var(--danger-bg); border: 1px solid var(--danger-border); display: flex; align-items: center; justify-content: center; color: var(--danger);">
+        <i class="fa-solid fa-arrow-up-right"></i>
+      </div>
+    </div>
+    <div class="stat-value" style="color: var(--danger);">₹{{ "{:,.2f}".format(health.total_expenses) }}</div>
+    <div class="stat-desc">Burn Rate Ratio: <strong style="color: #fff;">{{ health.expense_ratio }}%</strong></div>
+  </div>
+
+  <!-- Net Savings Card -->
+  <div class="stat-card" style="background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(13, 21, 39, 0.8) 100%);">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+      <div class="stat-label">Net Monthly Savings</div>
+      <div style="width: 34px; height: 34px; border-radius: var(--radius-sm); background: rgba(6, 182, 212, 0.15); border: 1px solid rgba(6, 182, 212, 0.3); display: flex; align-items: center; justify-content: center; color: var(--cyan-bright);">
+        <i class="fa-solid fa-piggy-bank"></i>
+      </div>
+    </div>
+    <div class="stat-value" style="color: {% if health.savings >= 0 %}var(--cyan-bright){% else %}var(--danger){% endif %};">
+      ₹{{ "{:,.2f}".format(health.savings) }}
+    </div>
+    <div class="stat-desc">Savings Rate: <strong style="color: #fff;">{{ health.savings_rate }}%</strong></div>
+  </div>
+
+  <!-- Emergency Fund Runway -->
+  <div class="stat-card" style="background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(13, 21, 39, 0.8) 100%);">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+      <div class="stat-label">Emergency Safety Net</div>
+      <div style="width: 34px; height: 34px; border-radius: var(--radius-sm); background: rgba(37, 99, 235, 0.15); border: 1px solid rgba(37, 99, 235, 0.3); display: flex; align-items: center; justify-content: center; color: var(--blue-light);">
+        <i class="fa-solid fa-shield-heart"></i>
+      </div>
+    </div>
+    <div class="stat-value" style="color: var(--text-white);">{{ health.emergency_fund_ratio }} <span style="font-size: 0.95rem; font-weight: 500; color: var(--text-muted);">months</span></div>
+    <div class="stat-desc">Target: 3 to 6 months reserve</div>
+  </div>
+</div>
+
+<!-- 2. AI Intelligence Gatekeeper & Diagnostic Tier -->
+<div class="grid-3" style="margin-bottom: 24px;">
+  <!-- Card 1: 6-Pillar Health Score -->
+  <div class="card" style="margin-bottom: 0;">
+    <div class="card-header">
+      <div class="card-title"><i class="fa-solid fa-heart-pulse" style="color: var(--cyan-accent); margin-right: 6px;"></i> Financial Health</div>
+      <span class="badge badge-{{ health.health_status | lower | replace(' ', '-') }}">{{ health.health_status }}</span>
+    </div>
+    <div class="card-body">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+        <span style="font-size: 2.2rem; font-weight: 800; color: var(--text-white);">{{ health.score }}<span style="font-size: 1rem; color: var(--text-muted);">/100</span></span>
+        <span style="font-size: 0.85rem; font-weight: 600; color: var(--cyan-accent);">6-Pillar Matrix</span>
+      </div>
+
+      <div class="progress-bar-container" style="margin-bottom: 12px;">
+        <div class="progress-bar-fill" style="width: {{ health.score }}%;"></div>
+      </div>
+
+      <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
+        {{ health.explanation[:120] }}...
+      </p>
+
+      <a href="{{ url_for('analysis.financial_analysis') }}" class="btn btn-secondary btn-sm btn-block">
+        View Diagnostic Breakdown <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- Card 2: Risk Profile -->
+  <div class="card" style="margin-bottom: 0;">
+    <div class="card-header">
+      <div class="card-title"><i class="fa-solid fa-scale-balanced" style="color: var(--cyan-accent); margin-right: 6px;"></i> Behavioral Risk Tier</div>
+      <span class="badge badge-ai">{{ risk_level }}</span>
+    </div>
+    <div class="card-body">
+      <p style="font-size: 0.84rem; color: var(--text-subtle); margin-bottom: 14px;">
+        Determines volatility endurance and asset allocation models.
+      </p>
+      <div style="background: rgba(5, 8, 17, 0.75); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 14px; margin-bottom: 16px;">
+        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Calibrated Profile:</div>
+        <div style="font-size: 1.15rem; font-weight: 700; color: var(--text-white); margin-top: 2px;">{{ risk_level }}</div>
+      </div>
+      <a href="{{ url_for('analysis.risk_profile') }}" class="btn btn-secondary btn-sm btn-block">
+        Retake Risk Assessment <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- Card 3: Investment Readiness Gatekeeper -->
+  <div class="card" style="margin-bottom: 0;">
+    <div class="card-header">
+      <div class="card-title"><i class="fa-solid fa-shield-halved" style="color: var(--cyan-accent); margin-right: 6px;"></i> Investment Readiness</div>
+      <span class="badge badge-{% if readiness.is_ready %}success{% else %}warning{% endif %}">
+        {% if readiness.is_ready %}Ready to Invest{% else %}Gated / Protect Buffer{% endif %}
+      </span>
+    </div>
+    <div class="card-body">
+      <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px;">
+        {% if readiness.reasons %}{{ readiness.reasons[0] }}{% else %}Financial baseline is evaluated against emergency reserve and liquidity rules.{% endif %}
+      </p>
+      <div style="background: rgba(5, 8, 17, 0.75); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 12px; margin-bottom: 16px;">
+        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Allocatable Monthly Surplus:</div>
+        <div style="font-size: 1.2rem; font-weight: 800; color: var(--success);">
+          ₹{{ "{:,.2f}".format(health.savings if health.savings > 0 else 0) }}
+        </div>
+      </div>
+      <a href="{{ url_for('analysis.investment_readiness') }}" class="btn btn-secondary btn-sm btn-block">
+        Verify Gatekeeper Checks <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- 3. AI Asset Allocation & Portfolio Telemetry -->
+<div class="grid-2" style="margin-bottom: 24px;">
+  <!-- Asset Allocation AI -->
+  <div class="card" style="margin-bottom: 0;">
+    <div class="card-header">
+      <div class="card-title"><i class="fa-solid fa-chart-pie" style="color: var(--cyan-accent); margin-right: 6px;"></i> AI Asset Allocation Snapshot</div>
+      <a href="{{ url_for('investment.investment_recommendation') }}" class="btn btn-secondary btn-sm">Full Engine</a>
+    </div>
+    <div class="card-body">
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px;">
+        Model allocation tailored for <strong>{{ risk_level }}</strong> profile:
+      </p>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        {% for alloc in latest_rec.allocation %}
+        <div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px;">
+            <span>{{ alloc.category }}</span>
+            <span style="color: var(--cyan-bright);">{{ alloc.percentage }}% {% if alloc.monthly_amount is defined and alloc.monthly_amount is not none %}(₹{{ "{:,.2f}".format(alloc.monthly_amount) }}){% endif %}</span>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" style="width: {{ alloc.percentage }}%;"></div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Virtual Portfolio & Watchlist -->
+  <div class="card" style="margin-bottom: 0;">
+    <div class="card-header">
+      <div class="card-title"><i class="fa-solid fa-briefcase" style="color: var(--cyan-accent); margin-right: 6px;"></i> Virtual Portfolio & Watchlist</div>
+      <a href="{{ url_for('portfolio.portfolio') }}" class="btn btn-secondary btn-sm">Open Portfolio</a>
+    </div>
+    <div class="card-body">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px;">
+        <div style="background: rgba(5, 8, 17, 0.75); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 14px;">
+          <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Portfolio Value</div>
+          <div style="font-size: 1.3rem; font-weight: 800; color: var(--text-white);">₹{{ "{:,.2f}".format(portfolio.total_invested) }}</div>
+        </div>
+        <div style="background: rgba(5, 8, 17, 0.75); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 14px;">
+          <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Watchlist Stocks</div>
+          <div style="font-size: 1.3rem; font-weight: 800; color: var(--cyan-bright);">{{ watchlist_count }} Securities</div>
+        </div>
+      </div>
+      <a href="{{ url_for('portfolio.watchlist') }}" class="btn btn-ghost btn-sm btn-block" style="border: 1px solid var(--border-subtle);">
+        <i class="fa-solid fa-star"></i> View Custom Stock Watchlist
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- 4. Transactions & Goals Progress -->
+<div class="grid-2">
+  <!-- Recent Incomes & Expenses -->
+  <div class="card" style="margin-bottom: 0;">
+    <div class="card-header">
+      <div class="card-title"><i class="fa-solid fa-receipt" style="color: var(--cyan-accent); margin-right: 6px;"></i> Recent Inflow & Outflows</div>
+      <div style="display: flex; gap: 8px;">
+        <a href="{{ url_for('financial.income') }}" class="btn btn-secondary btn-sm">+ Income</a>
+        <a href="{{ url_for('financial.expenses') }}" class="btn btn-secondary btn-sm">+ Expense</a>
+      </div>
+    </div>
+    <div class="card-body" style="padding: 0;">
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Source / Title</th>
+              <th>Category</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for inc in recent_incomes %}
+            <tr>
+              <td><span class="badge badge-success">Income</span></td>
+              <td><strong>{{ inc.source }}</strong></td>
+              <td>{{ inc.category }}</td>
+              <td style="color: var(--success); font-weight: 700;">+₹{{ "{:,.2f}".format(inc.amount) }}</td>
+            </tr>
+            {% endfor %}
+            {% for exp in recent_expenses %}
+            <tr>
+              <td><span class="badge badge-danger">Expense</span></td>
+              <td><strong>{{ exp.title }}</strong></td>
+              <td>{{ exp.category }}</td>
+              <td style="color: var(--danger); font-weight: 700;">-₹{{ "{:,.2f}".format(exp.amount) }}</td>
+            </tr>
+            {% endfor %}
+            {% if not recent_incomes and not recent_expenses %}
+            <tr>
+              <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 24px;">No financial transactions logged yet.</td>
+            </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Financial Goals Progress Preview -->
+  <div class="card" style="margin-bottom: 0;">
+    <div class="card-header">
+      <div class="card-title"><i class="fa-solid fa-bullseye" style="color: var(--cyan-accent); margin-right: 6px;"></i> Financial Goals Progress</div>
+      <a href="{{ url_for('goal.goals') }}" class="btn btn-secondary btn-sm">All Goals</a>
+    </div>
+    <div class="card-body">
+      {% for g in goals %}
+        <div style="margin-bottom: 16px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; font-weight: 600; font-size: 0.9rem; margin-bottom: 6px;">
+            <span>{{ g.name }}</span>
+            <span style="color: var(--cyan-bright);">₹{{ "{:,.2f}".format(g.current_amount) }} / ₹{{ "{:,.2f}".format(g.target_amount) }}</span>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" style="width: {% if g.target_amount > 0 %}{{ (g.current_amount / g.target_amount * 100) | round(1) }}{% else %}0{% endif %}%;"></div>
+          </div>
+        </div>
+      {% else %}
+        <p style="text-align: center; color: var(--text-muted); padding: 20px;">No goals set yet. Start with an Emergency Fund milestone.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

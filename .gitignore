@@ -1,0 +1,32 @@
+# Environment Variables & Secrets
+.env
+.env.local
+
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# Python Cache & Bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE & Editor configs
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Binary Executables
+cloudflared.exe
+*.exe
+
+# System & OS Files
+.DS_Store
+Thumbs.db
+
+# Accidental Nested Folders & Backups
+financial_manager/
+*_backup.py

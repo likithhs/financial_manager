@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}System Financial Logs & Audit - FinAI Admin{% endblock %}
+{% block page_title %}
+<div style="display: flex; align-items: center; gap: 12px;">
+  <span>System Financial Logs & AI Activity Audit</span>
+  <span style="font-size: 0.72rem; padding: 4px 10px; border-radius: 999px; background: rgba(245, 158, 11, 0.15); border: 1px solid #f59e0b; color: #fbbf24; font-weight: 700; text-transform: uppercase;">
+    <i class="fa-solid fa-receipt"></i> Audit Feed
+  </span>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="card" style="margin-bottom: 24px; padding: 18px 22px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+    <div>
+      <h3 style="font-size: 1.15rem; font-weight: 700; margin: 0; color: #fff;">Platform Financial Activity Stream</h3>
+      <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 2px; margin-bottom: 0;">
+        Live audit stream of all income records, expense outlays, and conversational assistant interactions across the platform.
+      </p>
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary btn-sm">
+        <i class="fa-solid fa-arrow-left"></i> Back to Console
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <!-- Income & Expense Logs -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <i class="fa-solid fa-money-bill-transfer" style="color: var(--cyan-accent); margin-right: 8px;"></i>
+        Recent Financial Transactions
+      </div>
+    </div>
+    <div class="card-body" style="padding: 0;">
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Account</th>
+              <th>Type</th>
+              <th>Category</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for inc in incomes %}
+            <tr>
+              <td><strong>{{ inc.user_name }}</strong></td>
+              <td><span class="badge badge-success"><i class="fa-solid fa-arrow-down-left"></i> Income</span></td>
+              <td style="font-size: 0.85rem; color: var(--text-subtle);">{{ inc.category }}</td>
+              <td style="color: var(--success); font-weight: 700;">+₹{{ "{:,.2f}".format(inc.amount) }}</td>
+            </tr>
+            {% endfor %}
+            {% for exp in expenses %}
+            <tr>
+              <td><strong>{{ exp.user_name }}</strong></td>
+              <td><span class="badge badge-danger"><i class="fa-solid fa-arrow-up-right"></i> Expense</span></td>
+              <td style="font-size: 0.85rem; color: var(--text-subtle);">{{ exp.category }}</td>
+              <td style="color: var(--danger); font-weight: 700;">-₹{{ "{:,.2f}".format(exp.amount) }}</td>
+            </tr>
+            {% endfor %}
+            {% if not incomes and not expenses %}
+            <tr>
+              <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 24px;">
+                No financial transactions recorded across the system yet.
+              </td>
+            </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Query Logs -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">
+        <i class="fa-solid fa-robot" style="color: #a855f7; margin-right: 8px;"></i>
+        AI Assistant Conversation Audit
+      </div>
+    </div>
+    <div class="card-body" style="padding: 0;">
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Prompt Query</th>
+              <th>Timestamp</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for ai in ai_logs %}
+            <tr>
+              <td style="font-weight: 700; color: #fff;">{{ ai.user_name }}</td>
+              <td style="font-size: 0.85rem; color: var(--text-subtle);">"{{ ai.user_message[:55] }}..."</td>
+              <td style="font-size: 0.78rem; color: var(--text-muted);">
+                {{ ai.created_at.strftime('%b %d, %H:%M') if ai.created_at else 'Recent' }}
+              </td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="3" style="text-align: center; color: var(--text-muted); padding: 24px;">
+                No AI assistant queries logged yet.
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
