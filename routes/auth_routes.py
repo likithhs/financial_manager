@@ -71,10 +71,22 @@ def register():
 
         password_hash = generate_password_hash(password)
 
-        user_id = execute_db("""
-            INSERT INTO users (name, email, password, role)
-            VALUES (%s, %s, %s, 'user')
-        """, (name, email, password_hash))
+        try:
+            user_id = execute_db("""
+                INSERT INTO users (name, email, password, password_hash, role)
+                VALUES (%s, %s, %s, %s, 'user')
+            """, (name, email, password_hash, password_hash))
+        except Exception:
+            try:
+                user_id = execute_db("""
+                    INSERT INTO users (name, email, password_hash, role)
+                    VALUES (%s, %s, %s, 'user')
+                """, (name, email, password_hash))
+            except Exception:
+                user_id = execute_db("""
+                    INSERT INTO users (name, email, password, role)
+                    VALUES (%s, %s, %s, 'user')
+                """, (name, email, password_hash))
 
         flash('Registration successful! You can now log in.', 'success')
         return redirect(url_for('auth.login'))
@@ -101,7 +113,8 @@ def login():
             one=True
         )
 
-        if user and check_password_hash(user['password'], password):
+        stored_hash = (user.get('password_hash') or user.get('password') or '') if user else ''
+        if user and stored_hash and check_password_hash(stored_hash, password):
             session['user_id'] = user['id']
             session['user_name'] = user['name']
             session['user_email'] = user['email']
