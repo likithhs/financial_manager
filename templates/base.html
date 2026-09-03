@@ -54,7 +54,7 @@
         <div class="nav-section-title" style="color: #f59e0b; letter-spacing: 0.1em;">
           <i class="fa-solid fa-database"></i> Platform Telemetry
         </div>
-        <a href="{{ url_for('market.market') }}" class="nav-link {% if 'market' in request.endpoint or 'stock' in request.endpoint %}active{% endif %}">
+        <a href="{{ url_for('stock.stocks') }}" class="nav-link {% if 'stock' in request.endpoint or 'market' in request.endpoint %}active{% endif %}">
           <i class="fa-solid fa-arrow-trend-up"></i> <span>Securities Catalog</span>
         </a>
         <a href="{{ url_for('admin.health') }}" class="nav-link {% if 'admin.health' in request.endpoint %}active{% endif %}">
