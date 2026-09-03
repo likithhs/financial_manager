@@ -62,8 +62,9 @@ def run_phase3_tests():
     try:
         registered_blueprints = set(app.blueprints.keys())
         expected_blueprints = {
-            'main', 'auth', 'dashboard_bp', 'profile', 'income', 'expense',
-            'goal', 'risk', 'market', 'assistant', 'investment', 'admin', 'api'
+            'main', 'auth', 'dashboard_bp', 'financial', 'budget',
+            'goal', 'analysis', 'investment', 'stock', 'portfolio',
+            'ai', 'admin', 'api'
         }
         missing_bps = expected_blueprints - registered_blueprints
         assert not missing_bps, f"Missing blueprints: {missing_bps}"

@@ -7,6 +7,7 @@ from database import query_db
 stock_bp = Blueprint('stock', __name__)
 
 @stock_bp.route('/stocks', methods=['GET'])
+@stock_bp.route('/market', methods=['GET'])
 @login_required
 def stocks():
     query_str = request.args.get('q', '').strip()
@@ -14,6 +15,7 @@ def stocks():
     return render_template('stocks.html', stocks=stock_list, query_str=query_str)
 
 @stock_bp.route('/stocks/<symbol>', methods=['GET'])
+@stock_bp.route('/market/<symbol>', methods=['GET'])
 @login_required
 def stock_detail(symbol):
     stock_data = StockService.get_stock_by_symbol(symbol)
