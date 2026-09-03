@@ -67,10 +67,11 @@ def expenses():
     return render_template('expenses.html', expenses=user_expenses, total_expenses=total_expenses, categories=EXPENSE_CATEGORIES, today_date=today_date)
 
 @financial_bp.route('/expenses/add', methods=['POST'])
+@financial_bp.route('/expense/add', methods=['POST'])
 @login_required
 def add_expense():
     user_id = session['user_id']
-    title = request.form.get('title', '')
+    title = request.form.get('title', '') or request.form.get('category', 'Expense')
     amount = request.form.get('amount', 0)
     category = request.form.get('category', 'Food & Dining')
     exp_date = request.form.get('date', date.today().strftime('%Y-%m-%d'))
@@ -82,19 +83,20 @@ def add_expense():
             flash('Expense amount must be greater than zero.', 'danger')
             return redirect(url_for('financial.expenses'))
     except ValueError:
-        flash('Invalid expense amount entered.', 'danger')
+        flash('Invalid amount entered.', 'danger')
         return redirect(url_for('financial.expenses'))
 
-    FinancialService.add_expense(user_id, title, amount, category, exp_date, description)
-    evaluate_user_financial_health(user_id)
-    flash('Expense entry added successfully.', 'success')
+    FinancialService.add_expense(user_id, category, amount, exp_date, description, title)
+    evaluate_user_financial_health(user_id) # Re-evaluate health score
+    flash('Expense entry recorded successfully.', 'success')
     return redirect(url_for('financial.expenses'))
 
 @financial_bp.route('/expenses/delete/<int:expense_id>', methods=['POST'])
+@financial_bp.route('/expense/delete/<int:expense_id>', methods=['POST'])
 @login_required
 def delete_expense(expense_id):
     user_id = session['user_id']
     FinancialService.delete_expense(expense_id, user_id)
     evaluate_user_financial_health(user_id)
-    flash('Expense record deleted.', 'info')
+    flash('Expense entry removed.', 'info')
     return redirect(url_for('financial.expenses'))
