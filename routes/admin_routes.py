@@ -79,7 +79,7 @@ def health():
     tables_telemetry = {}
     table_names = [
         'users', 'incomes', 'expenses', 'financial_goals',
-        'risk_profiles', 'stocks', 'ai_conversations', 'watchlist'
+        'risk_profiles', 'stocks', 'ai_conversations', 'stock_watchlist'
     ]
     for t in table_names:
         try:

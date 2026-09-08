@@ -1,7 +1,13 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from routes.auth_routes import login_required
 from ai.financial_analyzer import evaluate_user_financial_health
-from ai.risk_analyzer import RISK_QUESTIONS, evaluate_risk_profile, save_user_risk_profile
+from ai.risk_analyzer import (
+    RISK_PILLARS,
+    ALL_QUESTIONS,
+    RISK_QUESTIONS,
+    evaluate_risk_profile,
+    save_user_risk_profile
+)
 from ai.investment_readiness import evaluate_investment_readiness
 from ai.personalized_suggestions import generate_smart_suggestions
 from database import query_db
