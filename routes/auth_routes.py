@@ -71,22 +71,26 @@ def register():
 
         password_hash = generate_password_hash(password)
 
-        try:
+        user_id = execute_db("""
+            INSERT INTO users (name, email, password, password_hash, role)
+            VALUES (%s, %s, %s, %s, 'user')
+        """, (name, email, password_hash, password_hash))
+
+        if not user_id:
             user_id = execute_db("""
-                INSERT INTO users (name, email, password, password_hash, role)
-                VALUES (%s, %s, %s, %s, 'user')
-            """, (name, email, password_hash, password_hash))
-        except Exception:
-            try:
-                user_id = execute_db("""
-                    INSERT INTO users (name, email, password_hash, role)
-                    VALUES (%s, %s, %s, 'user')
-                """, (name, email, password_hash))
-            except Exception:
-                user_id = execute_db("""
-                    INSERT INTO users (name, email, password, role)
-                    VALUES (%s, %s, %s, 'user')
-                """, (name, email, password_hash))
+                INSERT INTO users (name, email, password_hash, role)
+                VALUES (%s, %s, %s, 'user')
+            """, (name, email, password_hash))
+
+        if not user_id:
+            user_id = execute_db("""
+                INSERT INTO users (name, email, password, role)
+                VALUES (%s, %s, %s, 'user')
+            """, (name, email, password_hash))
+
+        if not user_id:
+            flash('Failed to create account. Please try again.', 'danger')
+            return render_template('register.html')
 
         flash('Registration successful! You can now log in.', 'success')
         return redirect(url_for('auth.login'))

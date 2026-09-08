@@ -106,7 +106,7 @@
                 </span>
               </td>
               <td style="font-size: 0.78rem; color: var(--text-muted);">
-                {{ u.created_at.strftime('%b %d, %Y') if u.created_at else 'Active' }}
+                {{ u.created_at[:10] if u.created_at is string else (u.created_at.strftime('%b %d, %Y') if u.created_at else 'Active') }}
               </td>
             </tr>
             {% else %}

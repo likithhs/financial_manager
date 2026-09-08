@@ -14,13 +14,16 @@ except ImportError:
 
 SQLITE_DB_PATH = os.path.join(os.path.dirname(__file__), 'database', 'financial_manager.db')
 
+MYSQL_OFFLINE = False
+
 def get_db_connection():
     """
     Establish database connection.
     Attempts MySQL first. If MySQL fails (e.g. server not running),
     seamlessly falls back to a local SQLite database for zero-config demo.
     """
-    if MYSQL_AVAILABLE:
+    global MYSQL_OFFLINE
+    if MYSQL_AVAILABLE and not MYSQL_OFFLINE:
         try:
             conn = mysql.connector.connect(
                 host=Config.DB_HOST,
@@ -29,10 +32,12 @@ def get_db_connection():
                 database=Config.DB_NAME,
                 port=Config.DB_PORT,
                 autocommit=True,
-                use_pure=True
+                use_pure=True,
+                connection_timeout=2
             )
             return conn, 'mysql'
-        except MySQLError as err:
+        except Exception as err:
+            MYSQL_OFFLINE = True
             # Fall through to SQLite fallback
             pass
 
@@ -138,6 +143,7 @@ def init_db():
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
                 email TEXT NOT NULL UNIQUE,
+                password TEXT,
                 password_hash TEXT NOT NULL,
                 age INTEGER DEFAULT 25,
                 occupation TEXT DEFAULT 'Student / Professional',
@@ -163,6 +169,7 @@ def init_db():
             CREATE TABLE IF NOT EXISTS expenses (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER NOT NULL,
+                category_id INTEGER,
                 title TEXT NOT NULL,
                 amount REAL NOT NULL,
                 category TEXT NOT NULL,
@@ -187,8 +194,10 @@ def init_db():
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER NOT NULL,
                 name TEXT NOT NULL,
+                goal_name TEXT,
                 target_amount REAL NOT NULL,
                 current_amount REAL DEFAULT 0.00,
+                current_savings REAL DEFAULT 0.00,
                 target_date TEXT NOT NULL,
                 priority TEXT DEFAULT 'Medium',
                 description TEXT,
@@ -325,6 +334,26 @@ def init_db():
             );
             ''')
             
+            # Ensure compatibility columns exist on existing SQLite databases
+            cursor.execute("PRAGMA table_info(users)")
+            user_cols = [c[1] for c in cursor.fetchall()]
+            if 'password' not in user_cols:
+                cursor.execute("ALTER TABLE users ADD COLUMN password TEXT")
+            if 'password_hash' not in user_cols:
+                cursor.execute("ALTER TABLE users ADD COLUMN password_hash TEXT")
+
+            cursor.execute("PRAGMA table_info(expenses)")
+            expense_cols = [c[1] for c in cursor.fetchall()]
+            if 'category_id' not in expense_cols:
+                cursor.execute("ALTER TABLE expenses ADD COLUMN category_id INTEGER")
+
+            cursor.execute("PRAGMA table_info(financial_goals)")
+            goal_cols = [c[1] for c in cursor.fetchall()]
+            if 'goal_name' not in goal_cols:
+                cursor.execute("ALTER TABLE financial_goals ADD COLUMN goal_name TEXT")
+            if 'current_savings' not in goal_cols:
+                cursor.execute("ALTER TABLE financial_goals ADD COLUMN current_savings REAL DEFAULT 0.00")
+
             # Check if admin user exists
             cursor.execute("SELECT id FROM users WHERE email = 'admin@financialmanager.com'")
             if not cursor.fetchone():

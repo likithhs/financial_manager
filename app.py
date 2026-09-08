@@ -75,7 +75,7 @@ def create_app(config_class=Config):
         if 'user_id' in session:
             if session.get('user_role') == 'admin':
                 return redirect(url_for('admin.dashboard'))
-            return redirect(url_for('dashboard.dashboard'))
+            return redirect(url_for('dashboard_bp.dashboard'))
         return main_bp.view_functions['landing']()
 
     @app.route('/dashboard', endpoint='dashboard')
@@ -84,7 +84,7 @@ def create_app(config_class=Config):
             return redirect(url_for('auth.login'))
         if session.get('user_role') == 'admin':
             return redirect(url_for('admin.dashboard'))
-        return redirect(url_for('dashboard.dashboard'))
+        return dashboard_bp.view_functions['dashboard']()
 
     return app
 

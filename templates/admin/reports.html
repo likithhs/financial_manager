@@ -101,7 +101,7 @@
               <td style="font-weight: 700; color: #fff;">{{ ai.user_name }}</td>
               <td style="font-size: 0.85rem; color: var(--text-subtle);">"{{ ai.user_message[:55] }}..."</td>
               <td style="font-size: 0.78rem; color: var(--text-muted);">
-                {{ ai.created_at.strftime('%b %d, %H:%M') if ai.created_at else 'Recent' }}
+                {{ ai.created_at[:16] if ai.created_at is string else (ai.created_at.strftime('%b %d, %H:%M') if ai.created_at else 'Recent') }}
               </td>
             </tr>
             {% else %}

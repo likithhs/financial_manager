@@ -436,8 +436,8 @@ CREATE TABLE IF NOT EXISTS stock_analysis (
 -- Insert default Admin user if not present (Password: admin123)
 INSERT IGNORE INTO users (id, name, email, password, password_hash, role)
 VALUES (1, 'System Administrator', 'admin@financialmanager.com', 
-        'scrypt:32768:8:1$xP5g6n9v$e16441bf971fce81cfdf7ef7d8b871c53044a2c3bc6689d0b7d7b003a3d54ef028e57813a37b3f46f33bbdf5ff3b6801088c5ef92a177265b4c10c14c382cefb',
-        'scrypt:32768:8:1$xP5g6n9v$e16441bf971fce81cfdf7ef7d8b871c53044a2c3bc6689d0b7d7b003a3d54ef028e57813a37b3f46f33bbdf5ff3b6801088c5ef92a177265b4c10c14c382cefb',
+        'scrypt:32768:8:1$JkuN89kpZ9Qmmv7F$86b14a702a0a9f23bc4e21b7ed103f46e94a843b6fdec24f7ac5f58d99b83635aa2c5e5133931ceb56397f48e919180697a5639024a421605f8fd6cf9fcb26a0',
+        'scrypt:32768:8:1$JkuN89kpZ9Qmmv7F$86b14a702a0a9f23bc4e21b7ed103f46e94a843b6fdec24f7ac5f58d99b83635aa2c5e5133931ceb56397f48e919180697a5639024a421605f8fd6cf9fcb26a0',
         'admin');
 
 -- Pre-seed Stocks
