@@ -63,6 +63,9 @@
 
         {% else %}
         <!-- ================= USER PERSONAL FINANCE SUITE ================= -->
+        <a href="{{ url_for('main.home') }}" class="nav-link {% if request.endpoint in ['main.home'] %}active{% endif %}">
+          <i class="fa-solid fa-house"></i> <span>Home</span>
+        </a>
         <a href="{{ url_for('dashboard') }}" class="nav-link {% if request.endpoint in ['dashboard', 'dashboard.dashboard', 'dashboard_bp.dashboard'] or 'dashboard' in request.endpoint %}active{% endif %}">
           <i class="fa-solid fa-chart-pie"></i> <span>Dashboard</span>
         </a>
@@ -138,9 +141,15 @@
       <header class="topbar">
         <div class="topbar-title">{% block page_title %}Dashboard{% endblock %}</div>
         <div style="display: flex; align-items: center; gap: 14px;">
-          <a href="{{ url_for('index') }}" class="btn btn-sm btn-secondary" style="border-color: var(--border-subtle); color: var(--text-light);">
+          {% if session.get('user_role') == 'admin' %}
+          <a href="{{ url_for('admin.dashboard') }}" class="btn btn-sm btn-secondary" style="border-color: var(--border-subtle); color: var(--text-light);">
+            <i class="fa-solid fa-gauge-high"></i> Admin
+          </a>
+          {% else %}
+          <a href="{{ url_for('main.home') }}" class="btn btn-sm btn-secondary" style="border-color: var(--border-subtle); color: var(--text-light);">
             <i class="fa-solid fa-house"></i> Home
           </a>
+          {% endif %}
           <span style="background: rgba(37, 99, 235, 0.15); border: 1px solid rgba(6, 182, 212, 0.3); color: var(--cyan-bright); padding: 6px 14px; border-radius: var(--radius-full); font-size: 0.82rem; font-weight: 600;">
             <i class="fa-solid fa-circle-user"></i> {{ session.get('user_name') }}
           </span>

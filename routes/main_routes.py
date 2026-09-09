@@ -5,6 +5,7 @@ Handles public entrypoint (/) and system health check (/health).
 
 from flask import Blueprint, render_template, redirect, url_for, session, jsonify
 from database import query_db
+from routes.auth_routes import login_required
 
 main_bp = Blueprint('main', __name__)
 
@@ -13,8 +14,18 @@ main_bp = Blueprint('main', __name__)
 def index():
     """Landing page route."""
     if 'user_id' in session:
-        return redirect(url_for('dashboard'))
+        if session.get('user_role') == 'admin':
+            return redirect(url_for('admin.dashboard'))
+        return redirect(url_for('main.home'))
     return render_template('index.html')
+
+
+@main_bp.route('/home')
+@login_required
+def home():
+    """Authenticated user landing page."""
+    user_name = session.get('user_name', 'User')
+    return render_template('home.html', user_name=user_name)
 
 
 @main_bp.route('/health', methods=['GET'])
