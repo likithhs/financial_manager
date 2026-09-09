@@ -36,7 +36,9 @@ def admin_required(f):
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
     if 'user_id' in session:
-        return redirect(url_for('dashboard'))
+        if session.get('user_role') == 'admin':
+            return redirect(url_for('admin.dashboard'))
+        return redirect(url_for('main.home'))
 
     if request.method == 'POST':
         name = request.form.get('name', '').strip()
@@ -101,7 +103,9 @@ def register():
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if 'user_id' in session:
-        return redirect(url_for('dashboard'))
+        if session.get('user_role') == 'admin':
+            return redirect(url_for('admin.dashboard'))
+        return redirect(url_for('main.home'))
 
     if request.method == 'POST':
         email = request.form.get('email', '').strip().lower()
@@ -129,7 +133,7 @@ def login():
             if session['user_role'] == 'admin':
                 return redirect(url_for('admin.dashboard'))
 
-            return redirect(url_for('dashboard'))
+            return redirect(url_for('main.home'))
 
         flash(
             'Invalid email address or password. Please try again.',
