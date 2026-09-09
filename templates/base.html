@@ -63,7 +63,7 @@
 
         {% else %}
         <!-- ================= USER PERSONAL FINANCE SUITE ================= -->
-        <a href="{{ url_for('dashboard') }}" class="nav-link {% if request.endpoint in ['dashboard', 'dashboard.dashboard'] %}active{% endif %}">
+        <a href="{{ url_for('dashboard') }}" class="nav-link {% if request.endpoint in ['dashboard', 'dashboard.dashboard', 'dashboard_bp.dashboard'] or 'dashboard' in request.endpoint %}active{% endif %}">
           <i class="fa-solid fa-chart-pie"></i> <span>Dashboard</span>
         </a>
 
