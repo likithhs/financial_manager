@@ -2,140 +2,1222 @@
 
 {% block title %}FinAI - Your Money. Your Goals. Smarter Decisions.{% endblock %}
 
+{% block extra_css %}
+<style>
+  /* ====================================================================
+     FinAI - WARM MINIMALIST DESIGN SYSTEM
+     Based on reference design: Warm off-white / light cream (#FAF7F0),
+     dark navy/charcoal typography (#18181B), warm orange accent (#D97706),
+     rounded cards, subtle shadows, minimal borders, and lots of whitespace.
+     ==================================================================== */
+
+  body {
+    background-color: #FAF7F0 !important;
+    background-image: none !important;
+    color: #18181B !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    overflow-x: hidden;
+  }
+
+  :root {
+    --fa-bg: #FAF7F0;
+    --fa-surface: #FFFFFF;
+    --fa-charcoal: #18181B;
+    --fa-heading: #111827;
+    --fa-muted: #6B7280;
+    --fa-subtle: #9CA3AF;
+    --fa-orange: #D97706;
+    --fa-orange-dark: #B45309;
+    --fa-orange-soft: #FEF3C7;
+    --fa-orange-border: #FDE68A;
+    --fa-pill-bg: #FAF1DF;
+    --fa-pill-border: #F3E8CE;
+    --fa-border: #E5E7EB;
+    --fa-border-light: #F3F4F6;
+    --fa-shadow-card: 0 20px 45px -12px rgba(0, 0, 0, 0.08);
+    --fa-shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.03);
+    --fa-radius-pill: 9999px;
+    --fa-radius-card: 18px;
+    --fa-radius-hero: 22px;
+  }
+
+  /* Reset & Scope */
+  .finai-warm-landing {
+    background-color: var(--fa-bg);
+    min-height: 100vh;
+    color: var(--fa-charcoal);
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    position: relative;
+  }
+
+  .finai-warm-landing a {
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  /* -------------------------------------------------------------
+     1. TOP NAVIGATION BAR
+     ------------------------------------------------------------- */
+  .fa-nav-wrapper {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(250, 247, 240, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.25s ease;
+  }
+
+  .fa-nav-inner {
+    max-width: 1220px;
+    margin: 0 auto;
+    padding: 16px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* Brand Logo with 3 vertical chart bars */
+  .fa-brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    text-decoration: none;
+  }
+
+  .fa-logo-icon {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 3.5px;
+    height: 24px;
+    padding-bottom: 1px;
+  }
+
+  .fa-logo-bar {
+    width: 5px;
+    background: var(--fa-orange);
+    border-radius: 4px;
+    display: inline-block;
+  }
+
+  .fa-logo-bar.b1 { height: 14px; }
+  .fa-logo-bar.b2 { height: 24px; }
+  .fa-logo-bar.b3 { height: 18px; }
+
+  .fa-brand-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .fa-brand-name {
+    font-size: 1.34rem;
+    font-weight: 800;
+    color: var(--fa-heading);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+  }
+
+  .fa-brand-name span {
+    color: var(--fa-orange);
+  }
+
+  /* Navigation Links */
+  .fa-nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .fa-nav-link {
+    color: #4B5563;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 6px 4px;
+    position: relative;
+  }
+
+  .fa-nav-link:hover {
+    color: var(--fa-orange);
+  }
+
+  .fa-nav-link.active {
+    color: var(--fa-heading);
+    font-weight: 700;
+  }
+
+  .fa-nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 4px;
+    right: 4px;
+    height: 2px;
+    background: var(--fa-orange);
+    border-radius: 2px;
+  }
+
+  /* Nav Right Actions */
+  .fa-nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .fa-btn-signin {
+    color: #374151;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: var(--fa-radius-pill);
+    transition: all 0.2s ease;
+  }
+
+  .fa-btn-signin:hover {
+    color: var(--fa-orange);
+    background: rgba(0, 0, 0, 0.03);
+  }
+
+  .fa-btn-getstarted {
+    background: var(--fa-orange);
+    color: #FFFFFF !important;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 9px 22px;
+    border-radius: var(--fa-radius-pill);
+    box-shadow: 0 2px 8px rgba(217, 119, 6, 0.22);
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .fa-btn-getstarted:hover {
+    background: var(--fa-orange-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(217, 119, 6, 0.32);
+  }
+
+  .fa-mobile-toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    color: var(--fa-charcoal);
+    font-size: 1.35rem;
+    cursor: pointer;
+  }
+
+  /* -------------------------------------------------------------
+     2. HERO SECTION
+     ------------------------------------------------------------- */
+  .fa-hero {
+    padding: 68px 24px 60px;
+    text-align: center;
+    position: relative;
+  }
+
+  .fa-hero-container {
+    max-width: 980px;
+    margin: 0 auto;
+  }
+
+  /* Pill Badge */
+  .fa-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--fa-pill-bg);
+    border: 1px solid var(--fa-pill-border);
+    border-radius: var(--fa-radius-pill);
+    padding: 6px 18px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #92400E;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  }
+
+  .fa-pill-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--fa-orange);
+    display: inline-block;
+  }
+
+  /* Big Dual-Color Headline */
+  .fa-title {
+    font-size: 3.9rem;
+    font-weight: 800;
+    line-height: 1.14;
+    letter-spacing: -0.04em;
+    color: var(--fa-heading);
+    margin-bottom: 22px;
+  }
+
+  .fa-title .accent-text {
+    color: var(--fa-orange);
+    display: inline;
+  }
+
+  /* Subtitle */
+  .fa-subtitle {
+    font-size: 1.08rem;
+    line-height: 1.68;
+    color: var(--fa-muted);
+    max-width: 660px;
+    margin: 0 auto 34px;
+    font-weight: 400;
+  }
+
+  /* 3 CTA Buttons */
+  .fa-cta-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 48px;
+  }
+
+  .fa-btn-primary {
+    background: var(--fa-orange);
+    color: #FFFFFF !important;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 13px 28px;
+    border-radius: var(--fa-radius-pill);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 14px rgba(217, 119, 6, 0.28);
+    transition: all 0.2s ease;
+  }
+
+  .fa-btn-primary:hover {
+    background: var(--fa-orange-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(217, 119, 6, 0.35);
+  }
+
+  .fa-btn-secondary {
+    background: #FFFFFF;
+    color: #374151;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 13px 26px;
+    border-radius: var(--fa-radius-pill);
+    border: 1px solid var(--fa-border);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .fa-btn-secondary:hover {
+    border-color: #D1D5DB;
+    background: #F9FAFB;
+    color: var(--fa-charcoal);
+  }
+
+  .fa-btn-demo {
+    background: transparent;
+    border: none;
+    color: #374151;
+    font-size: 0.95rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    cursor: pointer;
+    border-radius: var(--fa-radius-pill);
+    transition: all 0.2s ease;
+  }
+
+  .fa-btn-demo:hover {
+    color: var(--fa-orange);
+  }
+
+  .fa-play-circle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--fa-orange);
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.76rem;
+    padding-left: 3px;
+    box-shadow: 0 2px 8px rgba(217, 119, 6, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  .fa-btn-demo:hover .fa-play-circle {
+    transform: scale(1.08);
+    background: var(--fa-orange-dark);
+  }
+
+  /* Thin Divider */
+  .fa-divider {
+    max-width: 600px;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.08);
+    margin: 0 auto 38px;
+  }
+
+  /* 4 Statistics Metrics Row */
+  .fa-stats-grid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 64px;
+    margin-bottom: 56px;
+  }
+
+  .fa-stat-box {
+    text-align: center;
+  }
+
+  .fa-stat-num {
+    font-size: 2.15rem;
+    font-weight: 800;
+    color: var(--fa-heading);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+
+  .fa-stat-label {
+    font-size: 0.84rem;
+    font-weight: 500;
+    color: var(--fa-muted);
+  }
+
+  /* -------------------------------------------------------------
+     3. MAIN VISUAL / CONTENT SECTION (Large Rounded Preview Card)
+     ------------------------------------------------------------- */
+  .fa-hero-showcase {
+    max-width: 820px;
+    margin: 0 auto;
+    border-radius: var(--fa-radius-hero);
+    background: #FFFFFF;
+    border: 4px solid #FFFFFF;
+    box-shadow: var(--fa-shadow-card);
+    overflow: hidden;
+    text-align: left;
+    transition: all 0.3s ease;
+  }
+
+  .fa-hero-showcase:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 28px 60px -12px rgba(0, 0, 0, 0.14);
+  }
+
+  .fa-showcase-header {
+    background: #FAF8F4;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--fa-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .fa-showcase-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .fa-showcase-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--fa-orange-soft);
+    border: 1px solid var(--fa-orange-border);
+    color: var(--fa-orange);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+  }
+
+  .fa-showcase-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--fa-heading);
+    margin: 0;
+  }
+
+  .fa-showcase-sub {
+    font-size: 0.78rem;
+    color: var(--fa-muted);
+    margin: 0;
+  }
+
+  .fa-showcase-badges {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .fa-score-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    color: #059669;
+    padding: 4px 12px;
+    border-radius: var(--fa-radius-pill);
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .fa-score-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #10b981;
+  }
+
+  .fa-showcase-body {
+    padding: 24px;
+    background: #FFFFFF;
+  }
+
+  .fa-metric-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 22px;
+  }
+
+  .fa-metric-item {
+    background: #FAF8F4;
+    border: 1px solid var(--fa-border);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+
+  .fa-metric-label {
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: var(--fa-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+
+  .fa-metric-val {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--fa-heading);
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+
+  .fa-metric-desc {
+    font-size: 0.72rem;
+    color: #059669;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* Simulated Mini Chart Inside Showcase */
+  .fa-chart-container {
+    background: #FAF8F4;
+    border: 1px solid var(--fa-border);
+    border-radius: 14px;
+    padding: 18px 20px;
+  }
+
+  .fa-chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .fa-chart-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--fa-heading);
+  }
+
+  .fa-chart-status {
+    font-size: 0.76rem;
+    color: var(--fa-orange);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  /* -------------------------------------------------------------
+     4. FEATURES SECTION (Clean White Rounded Cards)
+     ------------------------------------------------------------- */
+  .fa-section {
+    padding: 84px 24px;
+    position: relative;
+  }
+
+  .fa-container {
+    max-width: 1160px;
+    margin: 0 auto;
+  }
+
+  .fa-section-header {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 52px;
+  }
+
+  .fa-section-tag {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--fa-orange);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+
+  .fa-section-heading {
+    font-size: 2.35rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--fa-heading);
+    margin-bottom: 14px;
+  }
+
+  .fa-section-desc {
+    font-size: 1.02rem;
+    color: var(--fa-muted);
+    line-height: 1.6;
+  }
+
+  .fa-features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 22px;
+  }
+
+  .fa-feature-card {
+    background: #FFFFFF;
+    border-radius: var(--fa-radius-card);
+    padding: 28px 24px;
+    border: 1px solid var(--fa-border);
+    box-shadow: var(--fa-shadow-subtle);
+    transition: all 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .fa-feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.06);
+    border-color: rgba(217, 119, 6, 0.3);
+  }
+
+  .fa-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: var(--fa-orange-soft);
+    color: var(--fa-orange);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    margin-bottom: 18px;
+  }
+
+  .fa-card-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--fa-heading);
+    margin-bottom: 10px;
+    letter-spacing: -0.02em;
+  }
+
+  .fa-card-text {
+    font-size: 0.88rem;
+    color: var(--fa-muted);
+    line-height: 1.6;
+    margin-bottom: 18px;
+  }
+
+  .fa-card-meta {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--fa-orange);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* -------------------------------------------------------------
+     5. HOW IT WORKS (3 Simple Steps)
+     ------------------------------------------------------------- */
+  .fa-workflow-strip {
+    background: #FFFFFF;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 80px 24px;
+  }
+
+  .fa-workflow-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    max-width: 1160px;
+    margin: 0 auto;
+  }
+
+  .fa-step-card {
+    background: #FAF8F4;
+    border-radius: var(--fa-radius-card);
+    border: 1px solid var(--fa-border);
+    padding: 32px 28px;
+  }
+
+  .fa-step-num {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--fa-orange);
+    color: #FFFFFF;
+    font-weight: 800;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+  }
+
+  .fa-step-title {
+    font-size: 1.18rem;
+    font-weight: 700;
+    color: var(--fa-heading);
+    margin-bottom: 10px;
+  }
+
+  .fa-step-desc {
+    font-size: 0.9rem;
+    color: var(--fa-muted);
+    line-height: 1.6;
+  }
+
+  /* -------------------------------------------------------------
+     6. INTERACTIVE AI ASSISTANT SHOWCASE
+     ------------------------------------------------------------- */
+  .fa-ai-section {
+    padding: 84px 24px;
+  }
+
+  .fa-ai-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 48px;
+    align-items: center;
+  }
+
+  .fa-check-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .fa-check-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.92rem;
+    color: #374151;
+  }
+
+  .fa-check-item i {
+    color: #059669;
+    font-size: 1rem;
+  }
+
+  /* Chat Box Card */
+  .fa-chat-card {
+    background: #FFFFFF;
+    border-radius: var(--fa-radius-hero);
+    border: 1px solid var(--fa-border);
+    box-shadow: var(--fa-shadow-card);
+    overflow: hidden;
+  }
+
+  .fa-chat-header {
+    background: #FAF8F4;
+    padding: 16px 22px;
+    border-bottom: 1px solid var(--fa-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .fa-chat-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .fa-chat-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: var(--fa-orange);
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+  }
+
+  .fa-chat-body {
+    padding: 22px;
+    min-height: 240px;
+    max-height: 300px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    background: #FFFFFF;
+  }
+
+  .message-row {
+    display: flex;
+    gap: 10px;
+  }
+
+  .message-row.user {
+    justify-content: flex-end;
+  }
+
+  .message-bubble {
+    padding: 12px 16px;
+    border-radius: 14px;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    max-width: 85%;
+  }
+
+  .message-row.ai .message-bubble {
+    background: #FAF8F4;
+    border: 1px solid var(--fa-border);
+    color: var(--fa-charcoal);
+  }
+
+  .message-row.user .message-bubble {
+    background: var(--fa-orange);
+    color: #FFFFFF;
+  }
+
+  .chat-suggestions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 12px 22px;
+    background: #FAF8F4;
+    border-top: 1px solid var(--fa-border);
+  }
+
+  .chat-suggestions .chip {
+    background: #FFFFFF;
+    border: 1px solid var(--fa-border);
+    border-radius: var(--fa-radius-pill);
+    padding: 5px 12px;
+    font-size: 0.76rem;
+    font-weight: 500;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .chat-suggestions .chip:hover {
+    border-color: var(--fa-orange);
+    color: var(--fa-orange);
+    background: #FEF3C7;
+  }
+
+  .fa-chat-input-bar {
+    padding: 14px 20px;
+    background: #FFFFFF;
+    border-top: 1px solid var(--fa-border);
+    display: flex;
+    gap: 10px;
+  }
+
+  .fa-chat-input {
+    flex: 1;
+    border: 1px solid var(--fa-border);
+    border-radius: var(--fa-radius-pill);
+    padding: 9px 18px;
+    font-size: 0.88rem;
+    background: #FAF8F4;
+    outline: none;
+  }
+
+  .fa-chat-input:focus {
+    border-color: var(--fa-orange);
+    background: #FFFFFF;
+  }
+
+  .fa-chat-send {
+    background: var(--fa-orange);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .fa-chat-send:hover {
+    background: var(--fa-orange-dark);
+  }
+
+  /* -------------------------------------------------------------
+     7. BANK-GRADE SECURITY & PRIVACY
+     ------------------------------------------------------------- */
+  .fa-security-box {
+    background: #FFFFFF;
+    border: 1px solid var(--fa-border);
+    border-radius: var(--fa-radius-card);
+    padding: 40px;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 36px;
+    align-items: center;
+    box-shadow: var(--fa-shadow-subtle);
+  }
+
+  .fa-security-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .fa-security-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: #374151;
+  }
+
+  .fa-security-item i {
+    color: var(--fa-orange);
+    font-size: 1.1rem;
+    width: 24px;
+  }
+
+  /* -------------------------------------------------------------
+     8. CTA BANNER
+     ------------------------------------------------------------- */
+  .fa-cta-banner {
+    background: linear-gradient(135deg, #FAF1DF 0%, #FAF7F0 60%, #FFFFFF 100%);
+    border: 1px solid var(--fa-orange-border);
+    border-radius: var(--fa-radius-hero);
+    padding: 64px 40px;
+    text-align: center;
+    margin: 40px 0 80px;
+    box-shadow: 0 16px 36px rgba(217, 119, 6, 0.08);
+  }
+
+  .fa-cta-banner h2 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--fa-heading);
+    margin-bottom: 14px;
+    letter-spacing: -0.03em;
+  }
+
+  .fa-cta-banner p {
+    font-size: 1.05rem;
+    color: var(--fa-muted);
+    max-width: 580px;
+    margin: 0 auto 30px;
+    line-height: 1.6;
+  }
+
+  /* -------------------------------------------------------------
+     9. FOOTER
+     ------------------------------------------------------------- */
+  .fa-footer {
+    background: #FFFFFF;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    padding: 60px 24px 36px;
+  }
+
+  .fa-footer-inner {
+    max-width: 1160px;
+    margin: 0 auto;
+  }
+
+  .fa-footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 48px;
+  }
+
+  .fa-footer-brand p {
+    font-size: 0.88rem;
+    color: var(--fa-muted);
+    line-height: 1.6;
+    margin-top: 14px;
+    max-width: 320px;
+  }
+
+  .fa-footer-col h5 {
+    font-size: 0.86rem;
+    font-weight: 700;
+    color: var(--fa-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 16px;
+  }
+
+  .fa-footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .fa-footer-links a {
+    color: var(--fa-muted);
+    font-size: 0.88rem;
+  }
+
+  .fa-footer-links a:hover {
+    color: var(--fa-orange);
+  }
+
+  .fa-footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    padding-top: 24px;
+    font-size: 0.84rem;
+    color: var(--fa-subtle);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  /* -------------------------------------------------------------
+     10. RESPONSIVE BREAKPOINTS
+     ------------------------------------------------------------- */
+  @media (max-width: 1024px) {
+    .fa-title { font-size: 3.2rem; }
+    .fa-nav-menu { display: none; }
+    .fa-mobile-toggle { display: block; }
+    .fa-features-grid { grid-template-columns: repeat(2, 1fr); }
+    .fa-workflow-grid { grid-template-columns: 1fr; }
+    .fa-ai-grid { grid-template-columns: 1fr; }
+    .fa-security-box { grid-template-columns: 1fr; }
+    .fa-footer-grid { grid-template-columns: 1fr 1fr; }
+    .fa-metric-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 768px) {
+    .fa-title { font-size: 2.35rem; }
+    .fa-stats-grid { gap: 24px; flex-wrap: wrap; }
+    .fa-stat-box { min-width: 120px; }
+    .fa-stat-num { font-size: 1.75rem; }
+    .fa-features-grid { grid-template-columns: 1fr; }
+    .fa-footer-grid { grid-template-columns: 1fr; }
+    .fa-cta-row { flex-direction: column; width: 100%; }
+    .fa-btn-primary, .fa-btn-secondary { width: 100%; justify-content: center; }
+    .fa-metric-grid { grid-template-columns: 1fr; }
+  }
+</style>
+{% endblock %}
+
 {% block public_content %}
-<div class="finai-landing">
-  <!-- 1. NAVBAR (Real-world Product Nav) -->
-  <header class="finai-nav">
-    <div class="nav-container">
-      <a href="{{ url_for('index') }}" class="brand-logo">
-        <div class="brand-icon">
-          <i class="fa-solid fa-bolt"></i>
+<div class="finai-warm-landing">
+  <!-- 1. TOP NAVBAR -->
+  <header class="fa-nav-wrapper">
+    <div class="fa-nav-inner">
+      <!-- Logo: 3 rounded vertical bars + Brand Name FinAI -->
+      <a href="{{ url_for('index') }}" class="fa-brand">
+        <div class="fa-logo-icon">
+          <span class="fa-logo-bar b1"></span>
+          <span class="fa-logo-bar b2"></span>
+          <span class="fa-logo-bar b3"></span>
         </div>
-        <div class="brand-info">
-          <span class="brand-title">Fin<span>AI</span></span>
-          <span class="brand-tagline">AI-Powered Financial Platform</span>
+        <div class="fa-brand-text">
+          <span class="fa-brand-name">Fin<span>AI</span></span>
         </div>
       </a>
 
+      <!-- Center Navigation Links -->
       <nav>
-        <ul class="nav-links" id="navLinks">
-          <li><a href="#home" class="nav-link-item active"><i class="fa-solid fa-house" style="font-size: 0.82rem;"></i> <span>Home</span></a></li>
-          <li><a href="#features" class="nav-link-item"><i class="fa-solid fa-shapes" style="font-size: 0.82rem;"></i> <span>Features</span></a></li>
-          <li><a href="#how-it-works" class="nav-link-item"><i class="fa-solid fa-route" style="font-size: 0.82rem;"></i> <span>How It Works</span></a></li>
-          <li><a href="#ai" class="nav-link-item"><i class="fa-solid fa-robot" style="font-size: 0.82rem;"></i> <span>AI Assistant</span></a></li>
-          <li><a href="#security" class="nav-link-item"><i class="fa-solid fa-shield-halved" style="font-size: 0.82rem;"></i> <span>Security</span></a></li>
+        <ul class="fa-nav-menu" id="navLinks">
+          <li><a href="#home" class="fa-nav-link active">Home</a></li>
+          <li><a href="#features" class="fa-nav-link">Features</a></li>
+          <li><a href="#how-it-works" class="fa-nav-link">How It Works</a></li>
+          <li><a href="#ai" class="fa-nav-link">AI Assistant</a></li>
+          <li><a href="#security" class="fa-nav-link">Security</a></li>
         </ul>
       </nav>
 
-      <div class="nav-actions">
-        <a href="{{ url_for('auth.login') }}" class="btn btn-ghost btn-sm">
-          <i class="fa-regular fa-user"></i> Sign In
-        </a>
-        <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-sm">
+      <!-- Right Actions: Sign In + Get Started Button -->
+      <div class="fa-nav-actions">
+        <a href="{{ url_for('auth.login') }}" class="fa-btn-signin">Sign In</a>
+        <a href="{{ url_for('auth.register') }}" class="fa-btn-getstarted">
           Get Started <i class="fa-solid fa-arrow-right"></i>
         </a>
-        <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle Navigation">
+        <button class="fa-mobile-toggle" id="mobileMenuToggle" aria-label="Toggle Navigation">
           <i class="fa-solid fa-bars"></i>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- 2. LARGE CENTERED HERO SECTION -->
-  <section class="hero-centered" id="home">
-    <div class="container">
-      <div class="hero-pill">
-        <span class="badge badge-ai">
-          <i class="fa-solid fa-shield-halved"></i> AI-Powered Personal Finance & Wealth Intelligence
-        </span>
+  <!-- 2. HERO SECTION -->
+  <section class="fa-hero" id="home">
+    <div class="fa-hero-container">
+      <!-- Pill Badge -->
+      <div class="fa-pill">
+        <span class="fa-pill-dot"></span>
+        AI-Powered Personal Finance & Wealth Intelligence
       </div>
 
-      <h1 class="hero-headline">
-        Your Money. Your Goals. <span class="gradient-text-cyan">Smarter Decisions.</span>
+      <!-- Main Headline with Warm Orange Accent -->
+      <h1 class="fa-title">
+        Your Money. Your Goals.<br>
+        <span class="accent-text">Smarter Decisions.</span>
       </h1>
 
-      <p class="hero-subtext">
+      <!-- Subtitle Description -->
+      <p class="fa-subtitle">
         Track cashflow, diagnose your financial health score, evaluate investment readiness, and build sustainable wealth with your personal AI financial assistant.
       </p>
 
-      <div class="hero-actions">
-        <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">
-          <i class="fa-solid fa-bolt"></i> Get Started Free
+      <!-- 3 CTA Action Buttons -->
+      <div class="fa-cta-row">
+        <a href="{{ url_for('auth.register') }}" class="fa-btn-primary">
+          Get Started Free <i class="fa-solid fa-arrow-right"></i>
         </a>
-        <a href="{{ url_for('auth.login') }}" class="btn btn-secondary btn-lg">
-          <i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In to Account
+        <a href="{{ url_for('auth.login') }}" class="fa-btn-secondary">
+          Sign In to Account
+        </a>
+        <a href="#ai" class="fa-btn-demo">
+          <span class="fa-play-circle"><i class="fa-solid fa-play"></i></span>
+          <span>Watch AI Demo</span>
         </a>
       </div>
 
-      <!-- Hero Fintech Console Card -->
-      <div class="hero-mockup-wrap">
-        <div class="mockup-main-panel">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border-subtle); flex-wrap: wrap; gap: 14px;">
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <div style="width: 42px; height: 42px; border-radius: var(--radius-sm); background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.1rem; box-shadow: 0 0 20px rgba(6, 182, 212, 0.35);">
-                <i class="fa-solid fa-chart-line"></i>
-              </div>
-              <div style="text-align: left;">
-                <h4 style="font-size: 1.05rem; font-weight: 700;">Financial Intelligence Cockpit</h4>
-                <p style="font-size: 0.78rem; color: var(--text-muted);">Real-time cashflow telemetry & risk allocation</p>
-              </div>
-            </div>
+      <!-- Subtle Thin Divider Line -->
+      <div class="fa-divider"></div>
 
-            <!-- Health Score & Security Badges in Header -->
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <div style="display: flex; align-items: center; gap: 8px; background: rgba(16, 185, 129, 0.12); border: 1px solid var(--success-border); padding: 6px 14px; border-radius: var(--radius-full);">
-                <span style="width: 22px; height: 22px; border-radius: 50%; background: var(--success); color: #000; font-weight: 800; font-size: 0.72rem; display: flex; align-items: center; justify-content: center;">84</span>
-                <span style="font-size: 0.78rem; font-weight: 700; color: var(--success);">Health Score: Excellent</span>
-              </div>
-              <span class="badge badge-ai" style="padding: 7px 14px;">
-                <i class="fa-solid fa-shield-halved"></i> 256-Bit Encrypted
-              </span>
+      <!-- 4 Stats Metric Counters (Real Project Capabilities) -->
+      <div class="fa-stats-grid">
+        <div class="fa-stat-box">
+          <div class="fa-stat-num">6</div>
+          <div class="fa-stat-label">Health Pillars</div>
+        </div>
+        <div class="fa-stat-box">
+          <div class="fa-stat-num">₹0</div>
+          <div class="fa-stat-label">Zero Hidden Fees</div>
+        </div>
+        <div class="fa-stat-box">
+          <div class="fa-stat-num">256-Bit</div>
+          <div class="fa-stat-label">SSL Encryption</div>
+        </div>
+        <div class="fa-stat-box">
+          <div class="fa-stat-num">24/7</div>
+          <div class="fa-stat-label">AI Advisory</div>
+        </div>
+      </div>
+
+      <!-- 3. MAIN VISUAL: Large Rounded Card Framing Financial Cockpit -->
+      <div class="fa-hero-showcase">
+        <div class="fa-showcase-header">
+          <div class="fa-showcase-title-wrap">
+            <div class="fa-showcase-icon"><i class="fa-solid fa-chart-line"></i></div>
+            <div>
+              <h4 class="fa-showcase-title">Financial Intelligence Cockpit</h4>
+              <p class="fa-showcase-sub">Real-time cashflow telemetry & risk allocation</p>
             </div>
           </div>
+          <div class="fa-showcase-badges">
+            <div class="fa-score-badge">
+              <span class="fa-score-dot"></span> Health Score: 84 (Excellent)
+            </div>
+          </div>
+        </div>
 
+        <div class="fa-showcase-body">
           <!-- 4 Stat Metrics Grid -->
-          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; text-align: left;">
-            <div class="mock-stat">
-              <div class="mock-stat-label">Monthly Inflows</div>
-              <div class="mock-stat-val">₹85,000</div>
-              <div class="mock-stat-sub up"><i class="fa-solid fa-arrow-trend-up"></i> +14.2% Growth</div>
+          <div class="fa-metric-grid">
+            <div class="fa-metric-item">
+              <div class="fa-metric-label">Monthly Inflows</div>
+              <div class="fa-metric-val">₹85,000</div>
+              <div class="fa-metric-desc"><i class="fa-solid fa-arrow-trend-up"></i> +14.2% Growth</div>
             </div>
-            <div class="mock-stat">
-              <div class="mock-stat-label">Living Outflows</div>
-              <div class="mock-stat-val">₹46,350</div>
-              <div class="mock-stat-sub safe"><i class="fa-solid fa-check"></i> Controlled Burn</div>
+            <div class="fa-metric-item">
+              <div class="fa-metric-label">Living Outflows</div>
+              <div class="fa-metric-val">₹46,350</div>
+              <div class="fa-metric-desc"><i class="fa-solid fa-check"></i> Controlled Burn</div>
             </div>
-            <div class="mock-stat">
-              <div class="mock-stat-label">Net Savings</div>
-              <div class="mock-stat-val" style="color: var(--cyan-bright);">₹38,650</div>
-              <div class="mock-stat-sub up"><i class="fa-solid fa-leaf"></i> 45.4% Savings Rate</div>
+            <div class="fa-metric-item">
+              <div class="fa-metric-label">Net Savings</div>
+              <div class="fa-metric-val" style="color: var(--fa-orange);">₹38,650</div>
+              <div class="fa-metric-desc"><i class="fa-solid fa-leaf"></i> 45.4% Savings Rate</div>
             </div>
-            <div class="mock-stat">
-              <div class="mock-stat-label">Investment Surplus</div>
-              <div class="mock-stat-val" style="color: var(--success);">₹25,000</div>
-              <div class="mock-stat-sub up"><i class="fa-solid fa-circle-check"></i> Gatekeeper Cleared</div>
+            <div class="fa-metric-item">
+              <div class="fa-metric-label">Investment Surplus</div>
+              <div class="fa-metric-val" style="color: #059669;">₹25,000</div>
+              <div class="fa-metric-desc"><i class="fa-solid fa-circle-check"></i> Surplus Cleared</div>
             </div>
           </div>
 
-          <!-- Glowing Wealth Chart Visual -->
-          <div style="background: rgba(5, 8, 17, 0.7); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px; text-align: left;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-              <span style="font-size: 0.88rem; font-weight: 700; color: var(--text-subtle);">Simulated Wealth Growth & Asset Allocation</span>
-              <span style="font-size: 0.78rem; color: var(--cyan-accent); font-weight: 600;"><i class="fa-solid fa-microchip"></i> AI Engine Active</span>
+          <!-- Clean Wealth Growth Mini Chart Visual -->
+          <div class="fa-chart-container">
+            <div class="fa-chart-header">
+              <span class="fa-chart-title">Simulated Wealth Trajectory & Asset Allocation</span>
+              <span class="fa-chart-status"><i class="fa-solid fa-microchip"></i> AI Engine Active</span>
             </div>
             <svg viewBox="0 0 500 110" style="width: 100%; height: 110px; overflow: visible;">
               <defs>
-                <linearGradient id="cyanBlueGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.45"/>
-                  <stop offset="100%" stop-color="#2563eb" stop-opacity="0.0"/>
+                <linearGradient id="warmOrangeGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#D97706" stop-opacity="0.25"/>
+                  <stop offset="100%" stop-color="#D97706" stop-opacity="0.0"/>
                 </linearGradient>
               </defs>
-              <path d="M0,90 Q70,75 140,60 T280,45 T420,20 T500,10 L500,110 L0,110 Z" fill="url(#cyanBlueGrad)"/>
-              <path d="M0,90 Q70,75 140,60 T280,45 T420,20 T500,10" fill="none" stroke="#22d3ee" stroke-width="3" stroke-linecap="round"/>
-              <circle cx="140" cy="60" r="4" fill="#fff" stroke="#06b6d4" stroke-width="2"/>
-              <circle cx="280" cy="45" r="4" fill="#fff" stroke="#06b6d4" stroke-width="2"/>
-              <circle cx="420" cy="20" r="4" fill="#fff" stroke="#06b6d4" stroke-width="2"/>
-              <circle cx="500" cy="10" r="5" fill="#10b981" stroke="#fff" stroke-width="2"/>
+              <path d="M0,90 Q70,75 140,60 T280,45 T420,20 T500,10 L500,110 L0,110 Z" fill="url(#warmOrangeGrad)"/>
+              <path d="M0,90 Q70,75 140,60 T280,45 T420,20 T500,10" fill="none" stroke="#D97706" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="140" cy="60" r="4" fill="#fff" stroke="#D97706" stroke-width="2"/>
+              <circle cx="280" cy="45" r="4" fill="#fff" stroke="#D97706" stroke-width="2"/>
+              <circle cx="420" cy="20" r="4" fill="#fff" stroke="#D97706" stroke-width="2"/>
+              <circle cx="500" cy="10" r="5" fill="#059669" stroke="#fff" stroke-width="2"/>
             </svg>
           </div>
         </div>
@@ -143,97 +1225,101 @@
     </div>
   </section>
 
-  <!-- 3. PRODUCT FEATURES -->
-  <section class="section" id="features" style="background: rgba(10, 15, 29, 0.5); border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);">
-    <div class="container">
-      <div class="section-header">
-        <span class="badge badge-ai section-pill">
-          <i class="fa-solid fa-microchip"></i> Intelligent Capabilities
-        </span>
-        <h2 class="section-title">Engineered for Smart Wealth Building</h2>
-        <p class="section-subtitle">
+  <!-- 4. FEATURES SECTION (Clean White Rounded Cards) -->
+  <section class="fa-section" id="features" style="background: #FFFFFF; border-top: 1px solid var(--fa-border); border-bottom: 1px solid var(--fa-border);">
+    <div class="fa-container">
+      <div class="fa-section-header">
+        <div class="fa-section-tag">Intelligent Capabilities</div>
+        <h2 class="fa-section-heading">Engineered for Smart Wealth Building</h2>
+        <p class="fa-section-desc">
           FinAI combines automated cashflow tracking, medical-grade financial health diagnostics, and behavioral risk profiling into one seamless experience.
         </p>
       </div>
 
-      <div class="features-grid">
-        <!-- 1 -->
-        <div class="feature-card">
-          <div class="feature-icon-box"><i class="fa-solid fa-wallet"></i></div>
-          <h3 class="feature-title">Smart Cashflow Tracking</h3>
-          <p class="feature-desc">Multi-channel earnings tracking, automated spending breakdown, and dynamic savings rate calculations in real time.</p>
-          <div style="margin-top: 18px; font-size: 0.84rem; font-weight: 600; color: var(--cyan-bright);">
-            <i class="fa-solid fa-check-circle" style="color: var(--success);"></i> Instant Categorization
+      <div class="fa-features-grid">
+        <!-- Feature 1 -->
+        <div class="fa-feature-card">
+          <div>
+            <div class="fa-card-icon"><i class="fa-solid fa-wallet"></i></div>
+            <h3 class="fa-card-title">Smart Cashflow Tracking</h3>
+            <p class="fa-card-text">Multi-channel earnings tracking, automated spending breakdown, and dynamic savings rate calculations in real time.</p>
+          </div>
+          <div class="fa-card-meta">
+            <i class="fa-solid fa-circle-check" style="color: #059669;"></i> Instant Categorization
           </div>
         </div>
 
-        <!-- 2 -->
-        <div class="feature-card">
-          <div class="feature-icon-box"><i class="fa-solid fa-heart-pulse"></i></div>
-          <h3 class="feature-title">6-Pillar Health Score</h3>
-          <p class="feature-desc">A comprehensive 0–100 stability index evaluating emergency runway, expense ratios, debt tolerance, and liquidity buffers.</p>
-          <div style="margin-top: 18px; font-size: 0.84rem; font-weight: 600; color: var(--cyan-bright);">
-            <i class="fa-solid fa-check-circle" style="color: var(--success);"></i> Objective Scoring
+        <!-- Feature 2 -->
+        <div class="fa-feature-card">
+          <div>
+            <div class="fa-card-icon"><i class="fa-solid fa-heart-pulse"></i></div>
+            <h3 class="fa-card-title">6-Pillar Health Score</h3>
+            <p class="fa-card-text">A comprehensive 0–100 stability index evaluating emergency runway, expense ratios, debt tolerance, and liquidity buffers.</p>
+          </div>
+          <div class="fa-card-meta">
+            <i class="fa-solid fa-circle-check" style="color: #059669;"></i> Objective Scoring
           </div>
         </div>
 
-        <!-- 3 -->
-        <div class="feature-card">
-          <div class="feature-icon-box"><i class="fa-solid fa-bullseye"></i></div>
-          <h3 class="feature-title">Goal Planning & SIPs</h3>
-          <p class="feature-desc">Target milestone modeling (Emergency Fund, Higher Education, Travel) with automated monthly SIP calculations.</p>
-          <div style="margin-top: 18px; font-size: 0.84rem; font-weight: 600; color: var(--cyan-bright);">
-            <i class="fa-solid fa-check-circle" style="color: var(--success);"></i> Progress Telemetry
+        <!-- Feature 3 -->
+        <div class="fa-feature-card">
+          <div>
+            <div class="fa-card-icon"><i class="fa-solid fa-bullseye"></i></div>
+            <h3 class="fa-card-title">Goal Planning & SIPs</h3>
+            <p class="fa-card-text">Target milestone modeling (Emergency Fund, Higher Education, Travel) with automated monthly SIP calculations.</p>
+          </div>
+          <div class="fa-card-meta">
+            <i class="fa-solid fa-circle-check" style="color: #059669;"></i> Progress Telemetry
           </div>
         </div>
 
-        <!-- 4 -->
-        <div class="feature-card">
-          <div class="feature-icon-box"><i class="fa-solid fa-chart-pie"></i></div>
-          <h3 class="feature-title">AI Asset Allocation</h3>
-          <p class="feature-desc">Objective portfolio distribution across Mutual Funds, Index Funds, ETFs, and Fixed Deposits matched to your risk tolerance.</p>
-          <div style="margin-top: 18px; font-size: 0.84rem; font-weight: 600; color: var(--cyan-bright);">
-            <i class="fa-solid fa-check-circle" style="color: var(--success);"></i> Explainable Horizons
+        <!-- Feature 4 -->
+        <div class="fa-feature-card">
+          <div>
+            <div class="fa-card-icon"><i class="fa-solid fa-chart-pie"></i></div>
+            <h3 class="fa-card-title">AI Asset Allocation</h3>
+            <p class="fa-card-text">Objective portfolio distribution across Mutual Funds, Index Funds, ETFs, and Fixed Deposits matched to your risk tolerance.</p>
+          </div>
+          <div class="fa-card-meta">
+            <i class="fa-solid fa-circle-check" style="color: #059669;"></i> Explainable Horizons
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 4. HOW IT WORKS (3 Simple Steps) -->
-  <section class="section" id="how-it-works">
-    <div class="container">
-      <div class="section-header">
-        <span class="badge badge-ai section-pill">
-          <i class="fa-solid fa-route"></i> Streamlined Workflow
-        </span>
-        <h2 class="section-title">How FinAI Empowers Your Financial Future</h2>
-        <p class="section-subtitle">
+  <!-- 5. HOW IT WORKS (3 Simple Steps) -->
+  <section class="fa-workflow-strip" id="how-it-works">
+    <div class="fa-container">
+      <div class="fa-section-header">
+        <div class="fa-section-tag">Streamlined Workflow</div>
+        <h2 class="fa-section-heading">How FinAI Empowers Your Financial Future</h2>
+        <p class="fa-section-desc">
           Three simple steps to achieve complete clarity and control over your personal finances.
         </p>
       </div>
 
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
-        <div class="card" style="padding: 30px; text-align: left; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);">
-          <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--gradient-primary); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">1</div>
-          <h4 style="font-size: 1.2rem; margin-bottom: 10px;">Record Your Baseline</h4>
-          <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">
+      <div class="fa-workflow-grid">
+        <div class="fa-step-card">
+          <div class="fa-step-num">1</div>
+          <h4 class="fa-step-title">Record Your Baseline</h4>
+          <p class="fa-step-desc">
             Log your regular income sources, living expenses, and target milestones to initialize your personalized financial model.
           </p>
         </div>
 
-        <div class="card" style="padding: 30px; text-align: left; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);">
-          <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--gradient-cyan); color: #000; font-weight: 800; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">2</div>
-          <h4 style="font-size: 1.2rem; margin-bottom: 10px;">Get Instant Diagnostics</h4>
-          <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">
+        <div class="fa-step-card">
+          <div class="fa-step-num">2</div>
+          <h4 class="fa-step-title">Get Instant Diagnostics</h4>
+          <p class="fa-step-desc">
             The 6-Pillar diagnostic engine computes your financial health score and verifies your Investment Readiness before taking market risks.
           </p>
         </div>
 
-        <div class="card" style="padding: 30px; text-align: left; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg);">
-          <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--gradient-primary); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">3</div>
-          <h4 style="font-size: 1.2rem; margin-bottom: 10px;">Grow With AI Guidance</h4>
-          <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">
+        <div class="fa-step-card">
+          <div class="fa-step-num">3</div>
+          <h4 class="fa-step-title">Grow With AI Guidance</h4>
+          <p class="fa-step-desc">
             Receive risk-calibrated asset allocations, track virtual portfolios, and chat with your dedicated AI strategist anytime.
           </p>
         </div>
@@ -241,144 +1327,154 @@
     </div>
   </section>
 
-  <!-- 5. AI ASSISTANT SHOWCASE -->
-  <section class="section" id="ai" style="background: rgba(10, 15, 29, 0.5); border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle);">
-    <div class="container">
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;">
+  <!-- 6. INTERACTIVE AI ASSISTANT SHOWCASE -->
+  <section class="fa-ai-section" id="ai">
+    <div class="fa-container">
+      <div class="fa-ai-grid">
         <!-- Left Column -->
         <div>
-          <span class="badge badge-ai section-pill">
-            <i class="fa-solid fa-wand-magic-sparkles"></i> Context-Aware Assistant
-          </span>
-          <h2 class="section-title" style="font-size: 2.3rem; margin-bottom: 18px;">
+          <div class="fa-section-tag">Context-Aware Assistant</div>
+          <h2 class="fa-section-heading" style="margin-bottom: 18px;">
             Meet FinAI, Your Personal Financial Strategist
           </h2>
-          <p style="font-size: 1rem; color: var(--text-subtle); line-height: 1.7; margin-bottom: 24px;">
+          <p style="font-size: 1rem; color: var(--fa-muted); line-height: 1.7; margin-bottom: 24px;">
             FinAI analyzes your live database numbers — verifying your active income, expense ratios, and emergency reserves before offering personalized financial answers.
           </p>
 
-          <div style="display: flex; flex-direction: column; gap: 14px; margin-bottom: 30px;">
-            <div style="display: flex; align-items: center; gap: 12px; font-size: 0.92rem;">
-              <i class="fa-solid fa-circle-check" style="color: var(--success);"></i> Natural language expense queries and budgeting advice
+          <div class="fa-check-list">
+            <div class="fa-check-item">
+              <i class="fa-solid fa-circle-check"></i> Natural language expense queries and budgeting advice
             </div>
-            <div style="display: flex; align-items: center; gap: 12px; font-size: 0.92rem;">
-              <i class="fa-solid fa-circle-check" style="color: var(--success);"></i> Investment Readiness gatekeeper preventing premature market risks
+            <div class="fa-check-item">
+              <i class="fa-solid fa-circle-check"></i> Investment Readiness gatekeeper preventing premature market risks
             </div>
-            <div style="display: flex; align-items: center; gap: 12px; font-size: 0.92rem;">
-              <i class="fa-solid fa-circle-check" style="color: var(--success);"></i> Explainable stock suitability diagnostics
+            <div class="fa-check-item">
+              <i class="fa-solid fa-circle-check"></i> Explainable stock suitability diagnostics
             </div>
           </div>
 
-          <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">
-            <i class="fa-solid fa-bolt"></i> Try FinAI Assistant Free
+          <a href="{{ url_for('auth.register') }}" class="fa-btn-primary" style="padding: 13px 28px;">
+            Try FinAI Assistant Free <i class="fa-solid fa-arrow-right"></i>
           </a>
         </div>
 
-        <!-- Right Column: Interactive Chat Mockup -->
-        <div style="background: var(--bg-card); border: 1px solid var(--border-medium); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg), var(--shadow-glow-cyan); overflow: hidden;">
-          <div style="background: rgba(8, 13, 26, 0.9); padding: 16px 20px; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <div style="width: 34px; height: 34px; border-radius: var(--radius-sm); background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.9rem;">
-                <i class="fa-solid fa-robot"></i>
-              </div>
+        <!-- Right Column: Interactive Chat Mockup (Hooks into landing.js) -->
+        <div class="fa-chat-card">
+          <div class="fa-chat-header">
+            <div class="fa-chat-title-wrap">
+              <div class="fa-chat-avatar"><i class="fa-solid fa-robot"></i></div>
               <div>
-                <h5 style="font-size: 0.9rem; font-weight: 700;">FinAI Conversational Engine</h5>
-                <span style="font-size: 0.72rem; color: var(--success);"><i class="fa-solid fa-circle" style="font-size: 0.5rem;"></i> Active & Connected</span>
+                <h5 style="font-size: 0.92rem; font-weight: 700; margin: 0; color: var(--fa-heading);">FinAI Conversational Engine</h5>
+                <span style="font-size: 0.72rem; color: #059669; font-weight: 600;"><i class="fa-solid fa-circle" style="font-size: 0.5rem;"></i> Active & Connected</span>
               </div>
             </div>
-            <span class="badge badge-ai" style="font-size: 0.68rem;">v2.4</span>
+            <span style="font-size: 0.75rem; font-weight: 700; color: var(--fa-orange); background: var(--fa-orange-soft); padding: 4px 10px; border-radius: var(--fa-radius-pill);">v2.4</span>
           </div>
 
-          <div style="padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+          <div class="fa-chat-body" id="landingChatMessages">
             <!-- AI Message -->
-            <div style="display: flex; gap: 10px;">
-              <div style="background: rgba(19, 31, 56, 0.85); border: 1px solid var(--border-subtle); padding: 12px 16px; border-radius: var(--radius-md); font-size: 0.88rem; max-width: 85%;">
+            <div class="message-row ai">
+              <div class="message-bubble">
                 Hi! I'm FinAI. How can I help optimize your finances and investment horizons today?
               </div>
             </div>
 
             <!-- User Message -->
-            <div style="display: flex; justify-content: flex-end;">
-              <div style="background: var(--gradient-primary); color: #fff; padding: 12px 16px; border-radius: var(--radius-md); font-size: 0.88rem; max-width: 85%;">
+            <div class="message-row user">
+              <div class="message-bubble">
                 Can I afford to invest in Mutual Funds this month?
               </div>
             </div>
 
             <!-- AI Message 2 -->
-            <div style="display: flex; gap: 10px;">
-              <div style="background: rgba(19, 31, 56, 0.85); border: 1px solid var(--border-subtle); padding: 12px 16px; border-radius: var(--radius-md); font-size: 0.88rem; max-width: 88%;">
+            <div class="message-row ai">
+              <div class="message-bubble">
                 Based on your current income (₹85,000), living costs (₹46,350), and savings surplus (₹38,650), you can safely invest <strong>₹15,000</strong> without impacting your emergency runway.
               </div>
             </div>
           </div>
+
+          <!-- Suggested Chips -->
+          <div class="chat-suggestions">
+            <button type="button" class="chip">Analyze my financial health</button>
+            <button type="button" class="chip">Show my expenses</button>
+            <button type="button" class="chip">How much can I save?</button>
+          </div>
+
+          <!-- Input bar -->
+          <div class="fa-chat-input-bar">
+            <input type="text" id="landingChatInput" class="fa-chat-input" placeholder="Ask FinAI about your finances..." autocomplete="off">
+            <button type="button" id="landingChatSend" class="fa-chat-send" aria-label="Send">
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 6. SECURITY SECTION -->
-  <section class="section" id="security">
-    <div class="container">
-      <div style="background: var(--bg-card); border: 1px solid var(--border-medium); border-radius: var(--radius-xl); padding: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: center;">
+  <!-- 7. BANK-GRADE SECURITY -->
+  <section class="fa-section" id="security" style="padding-top: 20px;">
+    <div class="fa-container">
+      <div class="fa-security-box">
         <div>
-          <span class="badge badge-success" style="margin-bottom: 12px;">
-            <i class="fa-solid fa-shield-halved"></i> Bank-Grade Privacy
-          </span>
-          <h3 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 14px;">Your Financial Data Stays Yours</h3>
-          <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">
+          <div class="fa-section-tag" style="color: #059669;">Bank-Grade Privacy</div>
+          <h3 style="font-size: 1.85rem; font-weight: 800; margin-bottom: 12px; color: var(--fa-heading);">Your Financial Data Stays Yours</h3>
+          <p style="color: var(--fa-muted); font-size: 0.95rem; line-height: 1.6; margin: 0;">
             We use end-to-end encrypted databases, zero data selling, and isolated user records. Financial insights are generated strictly for your private dashboard.
           </p>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 14px;">
-          <div style="display: flex; align-items: center; gap: 12px; font-size: 0.92rem; color: var(--text-light);">
-            <i class="fa-solid fa-lock" style="color: var(--cyan-accent); font-size: 1.1rem;"></i> 256-Bit SSL/TLS Encryption
+        <div class="fa-security-list">
+          <div class="fa-security-item">
+            <i class="fa-solid fa-lock"></i> 256-Bit SSL/TLS Transport Encryption
           </div>
-          <div style="display: flex; align-items: center; gap: 12px; font-size: 0.92rem; color: var(--text-light);">
-            <i class="fa-solid fa-database" style="color: var(--cyan-accent); font-size: 1.1rem;"></i> Isolated Database Partitioning
+          <div class="fa-security-item">
+            <i class="fa-solid fa-database"></i> Isolated Database Partitioning
           </div>
-          <div style="display: flex; align-items: center; gap: 12px; font-size: 0.92rem; color: var(--text-light);">
-            <i class="fa-solid fa-user-shield" style="color: var(--cyan-accent); font-size: 1.1rem;"></i> Role-Based Access Control
+          <div class="fa-security-item">
+            <i class="fa-solid fa-user-shield"></i> Role-Based Strict Access Control
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 7. FINAL CTA -->
-  <section class="section" style="padding: 60px 0 90px;">
-    <div class="container">
-      <div class="cta-banner">
-        <span class="badge badge-ai" style="margin-bottom: 16px;">
-          <i class="fa-solid fa-rocket"></i> Take Charge of Your Financial Future
-        </span>
+  <!-- 8. FINAL CTA BANNER -->
+  <section class="fa-section" style="padding: 40px 24px 80px;">
+    <div class="fa-container">
+      <div class="fa-cta-banner">
+        <div class="fa-pill" style="margin-bottom: 18px;">
+          <span class="fa-pill-dot"></span> Take Charge of Your Financial Future
+        </div>
         <h2>Start Building Better Financial Habits Today</h2>
         <p>
           Experience intelligent cashflow management, automated health scores, and personalized investment guidance.
         </p>
-        <div class="cta-buttons">
-          <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">
-            <i class="fa-solid fa-user-plus"></i> Create Free Account
+        <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+          <a href="{{ url_for('auth.register') }}" class="fa-btn-primary" style="padding: 14px 32px; font-size: 1rem;">
+            Create Free Account <i class="fa-solid fa-arrow-right"></i>
           </a>
-          <a href="{{ url_for('auth.login') }}" class="btn btn-secondary btn-lg">
-            <i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In to Account
+          <a href="{{ url_for('auth.login') }}" class="fa-btn-secondary" style="padding: 14px 28px; font-size: 1rem;">
+            Sign In to Account
           </a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 8. FOOTER -->
-  <footer class="finai-footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <div class="brand-logo">
-            <div class="brand-icon">
-              <i class="fa-solid fa-bolt"></i>
+  <!-- 9. FOOTER -->
+  <footer class="fa-footer">
+    <div class="fa-footer-inner">
+      <div class="fa-footer-grid">
+        <div class="fa-footer-brand">
+          <div class="fa-brand">
+            <div class="fa-logo-icon">
+              <span class="fa-logo-bar b1"></span>
+              <span class="fa-logo-bar b2"></span>
+              <span class="fa-logo-bar b3"></span>
             </div>
-            <div class="brand-info">
-              <span class="brand-title">Fin<span>AI</span></span>
-              <span class="brand-tagline">AI-Powered Financial Platform</span>
+            <div class="fa-brand-text">
+              <span class="fa-brand-name">Fin<span>AI</span></span>
             </div>
           </div>
           <p>
@@ -386,9 +1482,9 @@
           </p>
         </div>
 
-        <div class="footer-col">
+        <div class="fa-footer-col">
           <h5>Product</h5>
-          <ul class="footer-links">
+          <ul class="fa-footer-links">
             <li><a href="#features">Features</a></li>
             <li><a href="#how-it-works">How It Works</a></li>
             <li><a href="#ai">AI Assistant</a></li>
@@ -396,18 +1492,18 @@
           </ul>
         </div>
 
-        <div class="footer-col">
+        <div class="fa-footer-col">
           <h5>Platform Access</h5>
-          <ul class="footer-links">
+          <ul class="fa-footer-links">
             <li><a href="{{ url_for('auth.login') }}">Sign In</a></li>
             <li><a href="{{ url_for('auth.register') }}">Create Account</a></li>
-            <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+            <li><a href="{{ url_for('dashboard') }}">Financial Cockpit</a></li>
           </ul>
         </div>
 
-        <div class="footer-col">
+        <div class="fa-footer-col">
           <h5>Trust & Compliance</h5>
-          <ul class="footer-links">
+          <ul class="fa-footer-links">
             <li><a href="#security">Privacy Protection</a></li>
             <li><a href="#security">Bank-Grade Encryption</a></li>
             <li><a href="#">Terms of Service</a></li>
@@ -415,13 +1511,11 @@
         </div>
       </div>
 
-      <div class="footer-bottom">
-        <div>
-          &copy; 2026 FinAI Platform. All rights reserved.
-        </div>
-        <div style="display: flex; gap: 16px;">
-          <span><i class="fa-solid fa-shield-halved"></i> 256-Bit SSL Encrypted</span>
-          <span><i class="fa-solid fa-microchip"></i> AI Decision Engine</span>
+      <div class="fa-footer-bottom">
+        <div>&copy; 2026 FinAI Platform. All rights reserved.</div>
+        <div style="display: flex; gap: 18px;">
+          <span><i class="fa-solid fa-shield-halved" style="color: var(--fa-orange);"></i> 256-Bit SSL Encrypted</span>
+          <span><i class="fa-solid fa-microchip" style="color: var(--fa-orange);"></i> AI Decision Engine</span>
         </div>
       </div>
     </div>
