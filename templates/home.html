@@ -5,23 +5,23 @@
 
 {% block content %}
 <!-- Welcome Hero Banner -->
-<div class="card" style="background: linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(6, 182, 212, 0.1) 50%, rgba(13, 21, 39, 0.8) 100%); border: 1px solid rgba(6, 182, 212, 0.3); border-radius: var(--radius-lg); padding: 36px 32px; margin-bottom: 28px; position: relative; overflow: hidden;">
-  <div style="position: absolute; right: -20px; top: -20px; width: 220px; height: 220px; background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 70%); pointer-events: none;"></div>
+<div class="card" style="background: linear-gradient(135deg, #FAF1DF 0%, #FAF7F0 60%, #FFFFFF 100%); border: 1px solid #FDE68A; border-radius: var(--radius-lg); padding: 36px 32px; margin-bottom: 28px; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(217, 119, 6, 0.06);">
+  <div style="position: absolute; right: -20px; top: -20px; width: 220px; height: 220px; background: radial-gradient(circle, rgba(217, 119, 6, 0.12) 0%, transparent 70%); pointer-events: none;"></div>
   <div style="position: relative; z-index: 1;">
-    <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(6, 182, 212, 0.15); border: 1px solid rgba(6, 182, 212, 0.3); border-radius: var(--radius-full); padding: 5px 14px; font-size: 0.8rem; font-weight: 600; color: var(--cyan-bright); margin-bottom: 14px;">
-      <i class="fa-solid fa-sparkles"></i> Financial Intelligence Hub
+    <div style="display: inline-flex; align-items: center; gap: 8px; background: #FEF3C7; border: 1px solid #FDE68A; border-radius: var(--radius-full); padding: 5px 14px; font-size: 0.8rem; font-weight: 600; color: #92400E; margin-bottom: 14px;">
+      <span style="width: 7px; height: 7px; border-radius: 50%; background: #D97706; display: inline-block;"></span> Financial Intelligence Hub
     </div>
-    <h1 style="font-size: 2.1rem; font-weight: 800; color: #fff; margin-bottom: 10px; letter-spacing: -0.5px;">
-      Welcome, <span style="background: linear-gradient(135deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{{ session.get('user_name', user_name) }}</span>!
+    <h1 style="font-size: 2.15rem; font-weight: 800; color: #111827; margin-bottom: 10px; letter-spacing: -0.5px;">
+      Welcome, <span style="color: #D97706;">{{ session.get('user_name', user_name) }}</span>!
     </h1>
-    <p style="font-size: 1.05rem; color: var(--text-light); max-width: 680px; line-height: 1.6; margin-bottom: 22px;">
+    <p style="font-size: 1.02rem; color: #4B5563; max-width: 680px; line-height: 1.6; margin-bottom: 22px;">
       Your personal finance suite is ready. Track cashflow, plan smart budgets, analyze market risks, and get real-time AI guidance for your financial journey.
     </p>
     <div style="display: flex; gap: 12px; flex-wrap: wrap;">
       <a href="{{ url_for('dashboard') }}" class="btn btn-primary" style="padding: 10px 22px; font-weight: 600;">
         <i class="fa-solid fa-chart-pie"></i> Open Financial Cockpit
       </a>
-      <a href="{{ url_for('ai.ai_assistant') }}" class="btn btn-secondary" style="padding: 10px 22px; font-weight: 600; border-color: var(--border-subtle);">
+      <a href="{{ url_for('ai.ai_assistant') }}" class="btn btn-secondary" style="padding: 10px 22px; font-weight: 600;">
         <i class="fa-solid fa-robot"></i> Ask FinAI Assistant
       </a>
     </div>
@@ -30,114 +30,114 @@
 
 <!-- Quick Navigation Modules -->
 <div style="margin-bottom: 16px;">
-  <h3 style="font-size: 1.15rem; font-weight: 700; color: #fff; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-    <i class="fa-solid fa-compass" style="color: var(--cyan-bright);"></i> Quick Access
+  <h3 style="font-size: 1.15rem; font-weight: 700; color: #111827; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+    <i class="fa-solid fa-compass" style="color: #D97706;"></i> Quick Access
   </h3>
 </div>
 
 <div class="grid-3" style="gap: 20px; margin-bottom: 28px;">
   <!-- Dashboard Card -->
-  <div class="card" style="background: rgba(13, 21, 39, 0.7); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 22px; display: flex; flex-direction: column; justify-content: space-between;">
+  <div class="card" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 18px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 18px rgba(0,0,0,0.03);">
     <div>
-      <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(37, 99, 235, 0.15); border: 1px solid rgba(37, 99, 235, 0.3); display: flex; align-items: center; justify-content: center; color: var(--blue-light); font-size: 1.25rem; margin-bottom: 14px;">
+      <div style="width: 44px; height: 44px; border-radius: 10px; background: #FEF3C7; border: 1px solid #FDE68A; display: flex; align-items: center; justify-content: center; color: #D97706; font-size: 1.25rem; margin-bottom: 14px;">
         <i class="fa-solid fa-chart-pie"></i>
       </div>
-      <h4 style="font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: 6px;">Executive Dashboard</h4>
-      <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 18px;">
+      <h4 style="font-size: 1.05rem; font-weight: 700; color: #111827; margin-bottom: 6px;">Executive Dashboard</h4>
+      <p style="font-size: 0.88rem; color: #6B7280; line-height: 1.5; margin-bottom: 18px;">
         High-level overview of inflows, outflows, savings runway, and real-time financial health diagnostics.
       </p>
     </div>
-    <a href="{{ url_for('dashboard') }}" class="btn btn-sm btn-ghost" style="color: var(--cyan-bright); padding-left: 0; display: inline-flex; align-items: center; gap: 6px; font-weight: 600;">
+    <a href="{{ url_for('dashboard') }}" class="btn btn-sm btn-ghost" style="color: #D97706; padding-left: 0; display: inline-flex; align-items: center; gap: 6px; font-weight: 600;">
       Go to Dashboard <i class="fa-solid fa-arrow-right"></i>
     </a>
   </div>
 
   <!-- Cashflow Management Card -->
-  <div class="card" style="background: rgba(13, 21, 39, 0.7); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 22px; display: flex; flex-direction: column; justify-content: space-between;">
+  <div class="card" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 18px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 18px rgba(0,0,0,0.03);">
     <div>
-      <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); display: flex; align-items: center; justify-content: center; color: var(--success); font-size: 1.25rem; margin-bottom: 14px;">
+      <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(5, 150, 105, 0.1); border: 1px solid rgba(5, 150, 105, 0.25); display: flex; align-items: center; justify-content: center; color: #059669; font-size: 1.25rem; margin-bottom: 14px;">
         <i class="fa-solid fa-wallet"></i>
       </div>
-      <h4 style="font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: 6px;">Cashflow & Expenses</h4>
-      <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 18px;">
+      <h4 style="font-size: 1.05rem; font-weight: 700; color: #111827; margin-bottom: 6px;">Cashflow & Expenses</h4>
+      <p style="font-size: 0.88rem; color: #6B7280; line-height: 1.5; margin-bottom: 18px;">
         Record recurring salary and revenue, log category expenditures, and monitor daily burn rate.
       </p>
     </div>
     <div style="display: flex; gap: 10px;">
-      <a href="{{ url_for('financial.income') }}" class="btn btn-sm btn-ghost" style="color: var(--success); padding-left: 0; display: inline-flex; align-items: center; gap: 6px; font-weight: 600;">
+      <a href="{{ url_for('financial.income') }}" class="btn btn-sm btn-ghost" style="color: #059669; padding-left: 0; display: inline-flex; align-items: center; gap: 6px; font-weight: 600;">
         Incomes <i class="fa-solid fa-arrow-right"></i>
       </a>
-      <a href="{{ url_for('financial.expenses') }}" class="btn btn-sm btn-ghost" style="color: var(--danger); padding-left: 0; display: inline-flex; align-items: center; gap: 6px; font-weight: 600;">
+      <a href="{{ url_for('financial.expenses') }}" class="btn btn-sm btn-ghost" style="color: #DC2626; padding-left: 0; display: inline-flex; align-items: center; gap: 6px; font-weight: 600;">
         Expenses <i class="fa-solid fa-arrow-right"></i>
       </a>
     </div>
   </div>
 
   <!-- Budget & Goals Card -->
-  <div class="card" style="background: rgba(13, 21, 39, 0.7); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 22px; display: flex; flex-direction: column; justify-content: space-between;">
+  <div class="card" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 18px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 18px rgba(0,0,0,0.03);">
     <div>
-      <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.3); display: flex; align-items: center; justify-content: center; color: #f59e0b; font-size: 1.25rem; margin-bottom: 14px;">
+      <div style="width: 44px; height: 44px; border-radius: 10px; background: #FEF3C7; border: 1px solid #FDE68A; display: flex; align-items: center; justify-content: center; color: #D97706; font-size: 1.25rem; margin-bottom: 14px;">
         <i class="fa-solid fa-bullseye"></i>
       </div>
-      <h4 style="font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: 6px;">Budgets & Goals</h4>
-      <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 18px;">
+      <h4 style="font-size: 1.05rem; font-weight: 700; color: #111827; margin-bottom: 6px;">Budgets & Goals</h4>
+      <p style="font-size: 0.88rem; color: #6B7280; line-height: 1.5; margin-bottom: 18px;">
         Set monthly category limits, plan milestones, and track savings targets towards long-term goals.
       </p>
     </div>
     <div style="display: flex; gap: 10px;">
-      <a href="{{ url_for('budget.budget') }}" class="btn btn-sm btn-ghost" style="color: #f59e0b; padding-left: 0; display: inline-flex; align-items: center; gap: 6px; font-weight: 600;">
+      <a href="{{ url_for('budget.budget') }}" class="btn btn-sm btn-ghost" style="color: #D97706; padding-left: 0; display: inline-flex; align-items: center; gap: 6px; font-weight: 600;">
         Budgets <i class="fa-solid fa-arrow-right"></i>
       </a>
-      <a href="{{ url_for('goal.goals') }}" class="btn btn-sm btn-ghost" style="color: #38bdf8; padding-left: 0; display: inline-flex; align-items: center; gap: 6px; font-weight: 600;">
+      <a href="{{ url_for('goal.goals') }}" class="btn btn-sm btn-ghost" style="color: #2563EB; padding-left: 0; display: inline-flex; align-items: center; gap: 6px; font-weight: 600;">
         Goals <i class="fa-solid fa-arrow-right"></i>
       </a>
     </div>
   </div>
 
   <!-- Risk Profile & Analysis Card -->
-  <div class="card" style="background: rgba(13, 21, 39, 0.7); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 22px; display: flex; flex-direction: column; justify-content: space-between;">
+  <div class="card" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 18px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 18px rgba(0,0,0,0.03);">
     <div>
-      <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(139, 92, 246, 0.15); border: 1px solid rgba(139, 92, 246, 0.3); display: flex; align-items: center; justify-content: center; color: #a78bfa; font-size: 1.25rem; margin-bottom: 14px;">
+      <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.25); display: flex; align-items: center; justify-content: center; color: #7C3AED; font-size: 1.25rem; margin-bottom: 14px;">
         <i class="fa-solid fa-scale-balanced"></i>
       </div>
-      <h4 style="font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: 6px;">Risk & Readiness</h4>
-      <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 18px;">
+      <h4 style="font-size: 1.05rem; font-weight: 700; color: #111827; margin-bottom: 6px;">Risk & Readiness</h4>
+      <p style="font-size: 0.88rem; color: #6B7280; line-height: 1.5; margin-bottom: 18px;">
         Evaluate your risk tolerance pillars, check investment readiness, and review personalized asset allocation.
       </p>
     </div>
-    <a href="{{ url_for('analysis.risk_profile') }}" class="btn btn-sm btn-ghost" style="color: #a78bfa; padding-left: 0; display: inline-flex; align-items: center; gap: 6px; font-weight: 600;">
+    <a href="{{ url_for('analysis.risk_profile') }}" class="btn btn-sm btn-ghost" style="color: #7C3AED; padding-left: 0; display: inline-flex; align-items: center; gap: 6px; font-weight: 600;">
       View Risk Profile <i class="fa-solid fa-arrow-right"></i>
     </a>
   </div>
 
   <!-- Market Telemetry & Portfolio Card -->
-  <div class="card" style="background: rgba(13, 21, 39, 0.7); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 22px; display: flex; flex-direction: column; justify-content: space-between;">
+  <div class="card" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 18px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 18px rgba(0,0,0,0.03);">
     <div>
-      <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(6, 182, 212, 0.15); border: 1px solid rgba(6, 182, 212, 0.3); display: flex; align-items: center; justify-content: center; color: var(--cyan-bright); font-size: 1.25rem; margin-bottom: 14px;">
+      <div style="width: 44px; height: 44px; border-radius: 10px; background: #FEF3C7; border: 1px solid #FDE68A; display: flex; align-items: center; justify-content: center; color: #D97706; font-size: 1.25rem; margin-bottom: 14px;">
         <i class="fa-solid fa-arrow-trend-up"></i>
       </div>
-      <h4 style="font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: 6px;">Markets & Watchlist</h4>
-      <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 18px;">
+      <h4 style="font-size: 1.05rem; font-weight: 700; color: #111827; margin-bottom: 6px;">Markets & Watchlist</h4>
+      <p style="font-size: 0.88rem; color: #6B7280; line-height: 1.5; margin-bottom: 18px;">
         Explore live market telemetry, AI stock technical signals, and curate your personal investment watchlist.
       </p>
     </div>
-    <a href="{{ url_for('stock.stocks') }}" class="btn btn-sm btn-ghost" style="color: var(--cyan-bright); padding-left: 0; display: inline-flex; align-items: center; gap: 6px; font-weight: 600;">
+    <a href="{{ url_for('stock.stocks') }}" class="btn btn-sm btn-ghost" style="color: #D97706; padding-left: 0; display: inline-flex; align-items: center; gap: 6px; font-weight: 600;">
       Explore Markets <i class="fa-solid fa-arrow-right"></i>
     </a>
   </div>
 
   <!-- FinAI Copilot Card -->
-  <div class="card" style="background: rgba(13, 21, 39, 0.7); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 22px; display: flex; flex-direction: column; justify-content: space-between;">
+  <div class="card" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 18px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 18px rgba(0,0,0,0.03);">
     <div>
-      <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3); display: flex; align-items: center; justify-content: center; color: #60a5fa; font-size: 1.25rem; margin-bottom: 14px;">
+      <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(37, 99, 235, 0.1); border: 1px solid rgba(37, 99, 235, 0.25); display: flex; align-items: center; justify-content: center; color: #2563EB; font-size: 1.25rem; margin-bottom: 14px;">
         <i class="fa-solid fa-robot"></i>
       </div>
-      <h4 style="font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: 6px;">FinAI Assistant</h4>
-      <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 18px;">
+      <h4 style="font-size: 1.05rem; font-weight: 700; color: #111827; margin-bottom: 6px;">FinAI Assistant</h4>
+      <p style="font-size: 0.88rem; color: #6B7280; line-height: 1.5; margin-bottom: 18px;">
         Ask questions about your finances, generate budget optimizations, or get stock analysis on demand.
       </p>
     </div>
-    <a href="{{ url_for('ai.ai_assistant') }}" class="btn btn-sm btn-ghost" style="color: #60a5fa; padding-left: 0; display: inline-flex; align-items: center; gap: 6px; font-weight: 600;">
+    <a href="{{ url_for('ai.ai_assistant') }}" class="btn btn-sm btn-ghost" style="color: #2563EB; padding-left: 0; display: inline-flex; align-items: center; gap: 6px; font-weight: 600;">
       Start Conversation <i class="fa-solid fa-arrow-right"></i>
     </a>
   </div>
