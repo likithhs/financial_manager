@@ -17,10 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
         navLinks.style.position = 'absolute';
         navLinks.style.top = '100%';
         navLinks.style.left = '0';
-        navLinks.style.width = '100%';
-        navLinks.style.background = '#120d2b';
+        navLinks.style.background = '#FAF7F0';
         navLinks.style.padding = '20px';
-        navLinks.style.borderBottom = '1px solid rgba(168, 85, 247, 0.3)';
+        navLinks.style.borderBottom = '1px solid #E5E7EB';
+        navLinks.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.06)';
         navLinks.style.gap = '16px';
       }
     });
