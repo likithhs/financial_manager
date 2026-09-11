@@ -25,8 +25,10 @@
     <aside class="sidebar">
       <div class="sidebar-header">
         <a href="{{ url_for('dashboard') }}" class="brand-logo">
-          <div class="brand-icon">
-            <i class="fa-solid fa-bolt"></i>
+          <div class="fa-logo-icon" style="display: inline-flex; align-items: flex-end; gap: 3.5px; height: 24px; padding-bottom: 2px;">
+            <span style="width: 5px; height: 14px; background: #D97706; border-radius: 4px; display: inline-block;"></span>
+            <span style="width: 5px; height: 24px; background: #D97706; border-radius: 4px; display: inline-block;"></span>
+            <span style="width: 5px; height: 18px; background: #D97706; border-radius: 4px; display: inline-block;"></span>
           </div>
           <div class="brand-info">
             <span class="brand-title">Fin<span>AI</span></span>
@@ -54,10 +56,10 @@
         <div class="nav-section-title" style="color: #f59e0b; letter-spacing: 0.1em;">
           <i class="fa-solid fa-database"></i> Platform Telemetry
         </div>
-        <a href="{{ url_for('stock.stocks') }}" class="nav-link {% if 'stock' in request.endpoint or 'market' in request.endpoint %}active{% endif %}">
+        <a href="{{ url_for('stock.stocks') }}" class="nav-link {% if request.endpoint and ('stock' in request.endpoint or 'market' in request.endpoint) %}active{% endif %}">
           <i class="fa-solid fa-arrow-trend-up"></i> <span>Securities Catalog</span>
         </a>
-        <a href="{{ url_for('admin.health') }}" class="nav-link {% if 'admin.health' in request.endpoint %}active{% endif %}">
+        <a href="{{ url_for('admin.health') }}" class="nav-link {% if request.endpoint and 'admin.health' in request.endpoint %}active{% endif %}">
           <i class="fa-solid fa-heart-pulse"></i> <span>System Health & Diagnostics</span>
         </a>
 
@@ -66,7 +68,7 @@
         <a href="{{ url_for('main.home') }}" class="nav-link {% if request.endpoint in ['main.home'] %}active{% endif %}">
           <i class="fa-solid fa-house"></i> <span>Home</span>
         </a>
-        <a href="{{ url_for('dashboard') }}" class="nav-link {% if request.endpoint in ['dashboard', 'dashboard.dashboard', 'dashboard_bp.dashboard'] or 'dashboard' in request.endpoint %}active{% endif %}">
+        <a href="{{ url_for('dashboard') }}" class="nav-link {% if request.endpoint and (request.endpoint in ['dashboard', 'dashboard.dashboard', 'dashboard_bp.dashboard'] or 'dashboard' in request.endpoint) %}active{% endif %}">
           <i class="fa-solid fa-chart-pie"></i> <span>Dashboard</span>
         </a>
 
@@ -122,8 +124,8 @@
 
       <div class="sidebar-footer">
         <div>
-          <div style="font-weight: 700; color: #fff; font-size: 0.88rem;">{{ session.get('user_name', 'User') }}</div>
-          <div style="font-size: 0.72rem; color: var(--cyan-bright); text-transform: uppercase;">{{ session.get('user_role', 'user') }}</div>
+          <div style="font-weight: 700; color: #111827; font-size: 0.88rem;">{{ session.get('user_name', 'User') }}</div>
+          <div style="font-size: 0.72rem; color: #D97706; text-transform: uppercase; font-weight: 600;">{{ session.get('user_role', 'user') }}</div>
         </div>
         <div style="display: flex; gap: 10px; align-items: center;">
           <a href="{{ url_for('auth.profile') }}" style="color: var(--text-subtle); font-size: 0.9rem;" title="My Profile">
@@ -141,16 +143,7 @@
       <header class="topbar">
         <div class="topbar-title">{% block page_title %}Dashboard{% endblock %}</div>
         <div style="display: flex; align-items: center; gap: 14px;">
-          {% if session.get('user_role') == 'admin' %}
-          <a href="{{ url_for('admin.dashboard') }}" class="btn btn-sm btn-secondary" style="border-color: var(--border-subtle); color: var(--text-light);">
-            <i class="fa-solid fa-gauge-high"></i> Admin
-          </a>
-          {% else %}
-          <a href="{{ url_for('main.home') }}" class="btn btn-sm btn-secondary" style="border-color: var(--border-subtle); color: var(--text-light);">
-            <i class="fa-solid fa-house"></i> Home
-          </a>
-          {% endif %}
-          <span style="background: rgba(37, 99, 235, 0.15); border: 1px solid rgba(6, 182, 212, 0.3); color: var(--cyan-bright); padding: 6px 14px; border-radius: var(--radius-full); font-size: 0.82rem; font-weight: 600;">
+          <span style="background: rgba(217, 119, 6, 0.1); border: 1px solid rgba(217, 119, 6, 0.25); color: #B45309; padding: 6px 14px; border-radius: var(--radius-full); font-size: 0.82rem; font-weight: 600;">
             <i class="fa-solid fa-circle-user"></i> {{ session.get('user_name') }}
           </span>
           <a href="{{ url_for('auth.logout') }}" class="btn btn-sm btn-ghost" style="color: #f87171;" title="Logout">
@@ -194,11 +187,11 @@
         gap: 10px;
         padding: 12px 20px;
         border-radius: 999px;
-        background: linear-gradient(135deg, #06b6d4 0%, #2563eb 100%);
+        background: linear-gradient(135deg, #D97706 0%, #EA580C 100%);
         color: #ffffff !important;
         text-decoration: none !important;
-        box-shadow: 0 8px 24px rgba(6, 182, 212, 0.42), 0 2px 10px rgba(0, 0, 0, 0.4);
-        border: 1px solid rgba(255, 255, 255, 0.25);
+        box-shadow: 0 6px 20px rgba(217, 119, 6, 0.35);
+        border: 1px solid #FDE68A;
         backdrop-filter: blur(8px);
         transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         cursor: pointer;
