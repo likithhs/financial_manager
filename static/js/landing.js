@@ -130,64 +130,72 @@ document.addEventListener('DOMContentLoaded', () => {
     return div.innerHTML;
   }
 
-  // 4. Live ScrollSpy: Section Tracking in Top Navbar with Electric Blue Glow
-  const navSections = [
-    document.getElementById('home'),
-    document.getElementById('features'),
-    document.getElementById('how-it-works'),
-    document.getElementById('ai'),
-    document.getElementById('security')
-  ].filter(Boolean);
+  // 4. Live ScrollSpy: Section Tracking in Top Navbar with Active Indicator
+  const navSectionIds = ['home', 'features', 'how-it-works', 'ai', 'security'];
+  const navSections = navSectionIds
+    .map(id => document.getElementById(id))
+    .filter(Boolean);
 
-  const headerNavItems = document.querySelectorAll('.nav-links .nav-link-item[href^="#"]');
+  const headerNavItems = document.querySelectorAll('.fa-nav-menu .fa-nav-link[href^="#"], .nav-links .nav-link-item[href^="#"]');
+
+  function setActiveLink(sectionId) {
+    if (!sectionId || !headerNavItems.length) return;
+    headerNavItems.forEach(link => {
+      if (link.getAttribute('href') === `#${sectionId}`) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+  }
 
   function updateActiveNavSection() {
     if (!navSections.length || !headerNavItems.length) return;
 
-    const scrollPos = window.scrollY + 140; // Offset for fixed navbar
+    // Special check if reached bottom of page
+    const isAtBottom = (window.innerHeight + window.scrollY) >= (document.documentElement.scrollHeight - 60);
+    if (isAtBottom) {
+      const lastId = navSections[navSections.length - 1].getAttribute('id');
+      setActiveLink(lastId);
+      return;
+    }
 
-    let currentSectionId = '';
+    const scrollPos = window.scrollY + 160; // Offset for sticky navbar
+    let currentSectionId = navSections[0].getAttribute('id');
+
     navSections.forEach(section => {
-      const top = section.offsetTop;
-      const height = section.offsetHeight;
-      if (scrollPos >= top && scrollPos < top + height) {
+      const top = section.getBoundingClientRect().top + window.scrollY;
+      if (scrollPos >= top) {
         currentSectionId = section.getAttribute('id');
       }
     });
 
-    // Special check if reached very bottom of page
-    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 50) {
-      currentSectionId = navSections[navSections.length - 1].getAttribute('id');
-    }
-
-    if (currentSectionId) {
-      headerNavItems.forEach(link => {
-        if (link.getAttribute('href') === `#${currentSectionId}`) {
-          link.classList.add('active');
-        } else {
-          link.classList.remove('active');
-        }
-      });
-    }
+    setActiveLink(currentSectionId);
   }
 
   window.addEventListener('scroll', updateActiveNavSection, { passive: true });
   updateActiveNavSection(); // Initial check on load
 
   // Smooth in-page scrolling with navbar offset
-  headerNavItems.forEach(link => {
+  document.querySelectorAll('.fa-nav-link[href^="#"], .fa-btn-demo[href^="#"], .nav-links .nav-link-item[href^="#"]').forEach(link => {
     link.addEventListener('click', function(e) {
       const targetHash = this.getAttribute('href');
       if (targetHash && targetHash.startsWith('#')) {
         const targetElement = document.querySelector(targetHash);
         if (targetElement) {
           e.preventDefault();
-          const navOffset = 80;
-          const targetTop = Math.max(0, targetElement.offsetTop - navOffset);
+          const navOffset = document.querySelector('.fa-nav-wrapper')?.offsetHeight || 75;
+          const targetTop = Math.max(0, targetElement.getBoundingClientRect().top + window.scrollY - navOffset);
           window.scrollTo({
             top: targetTop,
             behavior: 'smooth'
           });
+          setActiveLink(targetElement.getAttribute('id'));
+
+          // Close mobile menu if open
+          if (navLinks && window.innerWidth <= 1024 && navLinks.style.display === 'flex') {
+            navLinks.style.display = 'none';
+          }
         }
       }
     });
