@@ -4,16 +4,16 @@
 {% block page_title %}FinAI Autonomous Financial Strategist{% endblock %}
 
 {% block content %}
-<div class="card" style="background: var(--bg-card); border: 1px solid var(--border-medium); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg), var(--shadow-glow-cyan); overflow: hidden; margin-bottom: 20px;">
+<div class="card" style="background: #FFFFFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); box-shadow: var(--shadow-sm); overflow: hidden; margin-bottom: 20px;">
   
   <!-- Assistant Header Bar -->
-  <div class="card-header" style="background: rgba(5, 8, 17, 0.85); padding: 18px 24px; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+  <div class="card-header" style="background: #FAF8F4; padding: 18px 24px; border-bottom: 1px solid #E5E7EB; display: flex; justify-content: space-between; align-items: center;">
     <div style="display: flex; align-items: center; gap: 12px;">
       <div style="width: 42px; height: 42px; border-radius: var(--radius-sm); background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.1rem; box-shadow: 0 0 18px rgba(6, 182, 212, 0.4);">
         <i class="fa-solid fa-robot"></i>
       </div>
       <div>
-        <h4 style="font-size: 1.05rem; font-weight: 700; color: #fff; line-height: 1.2;">FinAI Intelligence Core</h4>
+        <h4 style="font-size: 1.05rem; font-weight: 700; color: #111827; line-height: 1.2;">FinAI Intelligence Core</h4>
         <span style="font-size: 0.75rem; color: var(--success); display: flex; align-items: center; gap: 6px;">
           <i class="fa-solid fa-circle" style="font-size: 0.5rem;"></i> Active • Synchronized with your Live Database
         </span>
@@ -33,15 +33,15 @@
   <!-- Conversation Area -->
   <div style="display: flex; flex-direction: column; height: 520px;">
     <!-- Message History Scrollbox -->
-    <div id="chatBox" style="flex-grow: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 20px; background: rgba(5, 8, 17, 0.5);">
+    <div id="chatBox" style="flex-grow: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 20px; background: #FAF7F0;">
       
       <!-- Welcome AI Greeting -->
       <div style="display: flex; gap: 12px; max-width: 82%;">
         <div style="width: 34px; height: 34px; border-radius: 50%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.88rem; flex-shrink: 0; margin-top: 2px;">
           <i class="fa-solid fa-robot"></i>
         </div>
-        <div style="background: rgba(13, 21, 39, 0.85); border: 1px solid var(--border-medium); border-radius: 4px 18px 18px 18px; padding: 16px 20px; color: var(--text-light); line-height: 1.6; font-size: 0.92rem; box-shadow: var(--shadow-sm);">
-          <div style="font-weight: 700; color: var(--cyan-bright); font-size: 0.78rem; text-transform: uppercase; margin-bottom: 6px;">
+        <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 4px 18px 18px 18px; padding: 16px 20px; color: #18181B; line-height: 1.6; font-size: 0.92rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+          <div style="font-weight: 700; color: #D97706; font-size: 0.78rem; text-transform: uppercase; margin-bottom: 6px;">
             FinAI Strategist
           </div>
           Hello! I am your <strong>FinAI Financial Assistant</strong>. I am directly connected to your active cashflow numbers, emergency reserves, 6-pillar health rating, and behavioral risk tier.
@@ -54,7 +54,7 @@
       {% for chat in conversations %}
         <!-- User Bubble -->
         <div style="display: flex; justify-content: flex-end; width: 100%;">
-          <div style="max-width: 75%; background: var(--gradient-primary); color: #fff; border-radius: 18px 18px 4px 18px; padding: 14px 20px; font-size: 0.92rem; line-height: 1.5; box-shadow: 0 4px 16px rgba(37, 99, 235, 0.35);">
+          <div style="max-width: 75%; background: linear-gradient(135deg, #D97706 0%, #EA580C 100%); color: #ffffff; border-radius: 18px 18px 4px 18px; padding: 14px 20px; font-size: 0.92rem; line-height: 1.5; box-shadow: 0 4px 14px rgba(217, 119, 6, 0.25);">
             <div style="font-size: 0.72rem; color: rgba(255,255,255,0.7); font-weight: 700; text-transform: uppercase; margin-bottom: 4px;">You</div>
             {{ chat.user_message }}
           </div>
@@ -65,8 +65,8 @@
           <div style="width: 34px; height: 34px; border-radius: 50%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.88rem; flex-shrink: 0; margin-top: 2px;">
             <i class="fa-solid fa-robot"></i>
           </div>
-          <div style="background: rgba(13, 21, 39, 0.85); border: 1px solid var(--border-medium); border-radius: 4px 18px 18px 18px; padding: 16px 20px; color: var(--text-light); line-height: 1.6; font-size: 0.92rem; box-shadow: var(--shadow-sm); white-space: pre-wrap;">
-            <div style="font-weight: 700; color: var(--cyan-bright); font-size: 0.78rem; text-transform: uppercase; margin-bottom: 6px;">
+          <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 4px 18px 18px 18px; padding: 16px 20px; color: #18181B; line-height: 1.6; font-size: 0.92rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); white-space: pre-wrap;">
+            <div style="font-weight: 700; color: #D97706; font-size: 0.78rem; text-transform: uppercase; margin-bottom: 6px;">
               FinAI Strategist
             </div>
             {{ chat.ai_response }}
@@ -76,11 +76,11 @@
     </div>
 
     <!-- Suggested Quick Prompts Strip -->
-    <div style="padding: 12px 24px; background: rgba(8, 13, 26, 0.9); border-top: 1px solid var(--border-subtle); display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none;">
+    <div style="padding: 12px 24px; background: #FAF8F4; border-top: 1px solid #E5E7EB; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none;">
       {% for prompt in quick_prompts %}
         <form action="{{ url_for('ai.ai_assistant') }}" method="POST" style="margin: 0; flex-shrink: 0;">
           <input type="hidden" name="message" value="{{ prompt }}">
-          <button type="submit" class="btn btn-sm btn-secondary" style="font-size: 0.78rem; padding: 6px 14px; border-radius: var(--radius-full); background: rgba(37, 99, 235, 0.1); border-color: rgba(6, 182, 212, 0.3); color: var(--cyan-bright);">
+          <button type="submit" class="btn btn-sm btn-secondary" style="font-size: 0.78rem; padding: 6px 14px; border-radius: var(--radius-full); background: #FEF3C7; border: 1px solid #FDE68A; color: #92400E; font-weight: 600;">
             <i class="fa-solid fa-sparkles"></i> {{ prompt }}
           </button>
         </form>
@@ -88,9 +88,9 @@
     </div>
 
     <!-- Input Bar Form -->
-    <div style="padding: 18px 24px; background: rgba(5, 8, 17, 0.95); border-top: 1px solid var(--border-subtle);">
+    <div style="padding: 18px 24px; background: #FFFFFF; border-top: 1px solid #E5E7EB;">
       <form action="{{ url_for('ai.ai_assistant') }}" method="POST" style="display: flex; gap: 12px; align-items: center;">
-        <input type="text" name="message" class="form-control" placeholder="Ask FinAI about your cashflow, health score, emergency fund, or stock market suitability..." required autofocus style="flex-grow: 1; padding: 14px 18px; font-size: 0.95rem;">
+        <input type="text" name="message" class="form-control" placeholder="Ask FinAI about your cashflow, health score, emergency fund, or stock market suitability..." required autofocus style="flex-grow: 1; padding: 14px 18px; font-size: 0.95rem; background: #FAF8F4; border: 1px solid #D1D5DB; color: #18181B;">
         <button type="submit" class="btn btn-primary btn-lg" style="padding: 14px 28px;">
           <span>Send</span> <i class="fa-solid fa-paper-plane"></i>
         </button>
@@ -99,8 +99,8 @@
   </div>
 </div>
 
-<div style="padding: 14px 18px; background: rgba(5, 8, 17, 0.6); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; gap: 10px;">
-  <i class="fa-solid fa-circle-exclamation" style="color: var(--cyan-accent); font-size: 1rem;"></i>
+<div style="padding: 14px 18px; background: #FEF3C7; border: 1px solid #FDE68A; border-radius: var(--radius-md); font-size: 0.8rem; color: #92400E; display: flex; align-items: center; gap: 10px;">
+  <i class="fa-solid fa-circle-exclamation" style="color: #D97706; font-size: 1rem;"></i>
   <span><strong>AI Advisory Note:</strong> FinAI delivers algorithmic financial intelligence based on your verified numbers and objective mathematical formulas. Always verify critical transactions with your primary banking institution.</span>
 </div>
 

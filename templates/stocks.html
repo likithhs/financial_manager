@@ -6,21 +6,21 @@
 {% block content %}
 <!-- Market Benchmark Overview Ticker Strip -->
 <div class="grid-3" style="margin-bottom: 24px;">
-  <div class="stat-card" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(13, 21, 39, 0.8) 100%);">
+  <div class="stat-card" style="background: #FFFFFF; border: 1px solid var(--border-subtle); box-shadow: var(--shadow-sm);">
     <div style="display: flex; justify-content: space-between; align-items: flex-start;">
       <div class="stat-label">NIFTY 50 Benchmark</div>
       <span class="badge badge-success">+0.58%</span>
     </div>
-    <div class="stat-value" style="color: #fff;">24,852.10</div>
+    <div class="stat-value" style="color: var(--text-white);">24,852.10</div>
     <div class="stat-desc" style="color: var(--success);"><i class="fa-solid fa-arrow-trend-up"></i> +142.30 pts today</div>
   </div>
 
-  <div class="stat-card" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(13, 21, 39, 0.8) 100%);">
+  <div class="stat-card" style="background: #FFFFFF; border: 1px solid var(--border-subtle); box-shadow: var(--shadow-sm);">
     <div style="display: flex; justify-content: space-between; align-items: flex-start;">
       <div class="stat-label">SENSEX Benchmark</div>
       <span class="badge badge-success">+0.52%</span>
     </div>
-    <div class="stat-value" style="color: #fff;">81,438.45</div>
+    <div class="stat-value" style="color: var(--text-white);">81,438.45</div>
     <div class="stat-desc" style="color: var(--success);"><i class="fa-solid fa-arrow-trend-up"></i> +419.20 pts today</div>
   </div>
 
@@ -91,7 +91,7 @@
                 <div style="width: 28px; height: 28px; border-radius: var(--radius-xs); background: rgba(37, 99, 235, 0.15); border: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; color: var(--cyan-bright);">
                   {{ s.symbol[:2] }}
                 </div>
-                <strong style="color: #fff; font-size: 0.95rem;">{{ s.symbol }}</strong>
+                <strong style="color: var(--text-white); font-size: 0.95rem;">{{ s.symbol }}</strong>
               </div>
             </td>
             <td>
@@ -101,7 +101,7 @@
             <td>
               <span class="badge badge-ai" style="font-size: 0.7rem;">{{ s.sector }}</span>
             </td>
-            <td style="font-weight: 700; font-size: 1rem; color: #fff;">
+            <td style="font-weight: 700; font-size: 1rem; color: var(--text-white);">
               ₹{{ "{:,.2f}".format((s.price or s.current_price or 0)|float) }}
             </td>
             {% set chg = (s.change or s.day_change or 0)|float %}
