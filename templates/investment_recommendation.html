@@ -6,13 +6,13 @@
 {% block content %}
 {% if not rec.is_ready %}
 <!-- Gated Notice Card -->
-<div class="card" style="background: linear-gradient(135deg, rgba(13, 21, 39, 0.95) 0%, rgba(30, 20, 40, 0.9) 100%); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: var(--radius-xl); padding: 32px; margin-bottom: 28px; box-shadow: 0 0 30px rgba(239, 68, 68, 0.2);">
+<div class="card" style="background: linear-gradient(135deg, #FAF1DF 0%, #FAF7F0 60%, #FFFFFF 100%); border: 1px solid #FDE68A; border: 1px solid rgba(239, 68, 68, 0.4); border-radius: var(--radius-xl); padding: 32px; margin-bottom: 28px; box-shadow: 0 0 30px rgba(239, 68, 68, 0.2);">
   <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
     <div>
       <div style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.75rem; font-weight: 700; color: #fb7185; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; background: rgba(239, 68, 68, 0.12); padding: 4px 12px; border-radius: var(--radius-full); border: 1px solid rgba(239, 68, 68, 0.3);">
         <i class="fa-solid fa-lock"></i> Gatekeeper Protocol Enforced
       </div>
-      <h2 style="color: #ffffff; font-size: 1.6rem; font-weight: 800; margin-bottom: 8px;">
+      <h2 style="color: #111827; font-size: 1.6rem; font-weight: 800; margin-bottom: 8px;">
         Personalized Market Recommendations Restricted
       </h2>
       <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.6; margin: 0; max-width: 680px;">
@@ -28,7 +28,7 @@
   </div>
 
   <!-- Why Block in Dark Navy Glass -->
-  <div style="background: rgba(5, 8, 17, 0.7); border: 1px solid var(--border-subtle); padding: 18px 22px; border-radius: var(--radius-md); margin-top: 22px;">
+  <div style="background: #FAF8F4; border: 1px solid #FDE68A; border: 1px solid var(--border-subtle); padding: 18px 22px; border-radius: var(--radius-md); margin-top: 22px;">
     <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; color: #fbbf24; font-size: 0.92rem; margin-bottom: 8px;">
       <i class="fa-solid fa-circle-exclamation"></i> Identified Stability Gaps Before Capital Can Be Allocated:
     </div>
@@ -47,7 +47,7 @@
 <div class="card" style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); padding: 28px 32px; margin-bottom: 28px;">
   <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 22px;">
     <div>
-      <h3 style="font-size: 1.25rem; font-weight: 800; color: #fff; margin: 0;">
+      <h3 style="font-size: 1.25rem; font-weight: 800; color: #111827; margin: 0;">
         <i class="fa-solid fa-layer-group" style="color: var(--cyan-accent); margin-right: 8px;"></i>
         Asset Classes You Will Unlock Once Ready
       </h3>
@@ -61,34 +61,34 @@
   </div>
 
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
-    <div style="background: rgba(5, 8, 17, 0.65); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px;">
+    <div style="background: #FAF8F4; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
         <span style="font-size: 1.2rem; color: var(--cyan-bright);"><i class="fa-solid fa-chart-line"></i></span>
         <span class="badge badge-primary" style="font-size: 0.72rem;">Large-Cap Index</span>
       </div>
-      <h4 style="font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 4px;">Nifty 50 Index Funds</h4>
+      <h4 style="font-size: 1rem; font-weight: 700; color: #111827; margin-bottom: 4px;">Nifty 50 Index Funds</h4>
       <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; margin: 0;">
         Low-cost exposure to India's top 50 bluechip enterprises for steady long-term compounding.
       </p>
     </div>
 
-    <div style="background: rgba(5, 8, 17, 0.65); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px;">
+    <div style="background: #FAF8F4; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
         <span style="font-size: 1.2rem; color: #fbbf24;"><i class="fa-solid fa-coins"></i></span>
         <span class="badge badge-warning" style="font-size: 0.72rem;">Hedge / Store of Value</span>
       </div>
-      <h4 style="font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 4px;">Sovereign Gold Bonds</h4>
+      <h4 style="font-size: 1rem; font-weight: 700; color: #111827; margin-bottom: 4px;">Sovereign Gold Bonds</h4>
       <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; margin: 0;">
         Government-backed physical gold alternative earning 2.5% annual interest with zero default risk.
       </p>
     </div>
 
-    <div style="background: rgba(5, 8, 17, 0.65); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px;">
+    <div style="background: #FAF8F4; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
         <span style="font-size: 1.2rem; color: #34d399;"><i class="fa-solid fa-landmark"></i></span>
         <span class="badge badge-success" style="font-size: 0.72rem;">Guaranteed Return</span>
       </div>
-      <h4 style="font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 4px;">Fixed Deposits & T-Bills</h4>
+      <h4 style="font-size: 1rem; font-weight: 700; color: #111827; margin-bottom: 4px;">Fixed Deposits & T-Bills</h4>
       <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; margin: 0;">
         Predictable interest income providing capital preservation and liquidity buffer.
       </p>
@@ -104,7 +104,7 @@
       <span style="font-size: 0.78rem; font-weight: 700; color: var(--cyan-bright); text-transform: uppercase; letter-spacing: 0.08em;">
         <i class="fa-solid fa-circle-check"></i> Verified Asset Allocation Strategy
       </span>
-      <div style="font-size: 2rem; font-weight: 800; color: #ffffff; margin-top: 4px;">
+      <div style="font-size: 2rem; font-weight: 800; color: #111827; margin-top: 4px;">
         {{ rec.primary_category }}
       </div>
     </div>
@@ -116,8 +116,8 @@
   </div>
 
   <!-- AI Allocation Rationale -->
-  <div style="background: rgba(5, 8, 17, 0.7); border: 1px solid var(--border-subtle); padding: 18px 22px; border-radius: var(--radius-md); margin-top: 20px;">
-    <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; color: #ffffff; font-size: 0.92rem; margin-bottom: 6px;">
+  <div style="background: #FAF8F4; border: 1px solid #FDE68A; border: 1px solid var(--border-subtle); padding: 18px 22px; border-radius: var(--radius-md); margin-top: 20px;">
+    <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; color: #111827; font-size: 0.92rem; margin-bottom: 6px;">
       <i class="fa-solid fa-robot" style="color: var(--cyan-accent);"></i> FinAI Allocation Rationale:
     </div>
     <p style="font-size: 0.92rem; color: var(--text-subtle); line-height: 1.6; margin: 0;">
@@ -129,15 +129,15 @@
 <!-- Recommended Asset Allocation Percentages -->
 <div class="card" style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); padding: 28px 32px; margin-bottom: 24px;">
   <div class="card-header" style="padding: 0 0 18px 0; border-bottom: 1px solid var(--border-subtle); margin-bottom: 20px;">
-    <div class="card-title" style="font-size: 1.15rem; color: #fff;">
+    <div class="card-title" style="font-size: 1.15rem; color: #111827;">
       <i class="fa-solid fa-chart-pie" style="color: var(--cyan-accent); margin-right: 8px;"></i>
       Target Portfolio Weightage & Ratios
     </div>
   </div>
   <div class="grid-2">
     {% for cat, pct in rec.allocation.items() %}
-    <div style="background: rgba(5, 8, 17, 0.65); border: 1px solid var(--border-subtle); padding: 18px 22px; border-radius: var(--radius-md);">
-      <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 1rem; color: #ffffff;">
+    <div style="background: #FAF8F4; border: 1px solid var(--border-subtle); padding: 18px 22px; border-radius: var(--radius-md);">
+      <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 1rem; color: #111827;">
         <span>{{ cat }}</span>
         <span style="color: var(--cyan-bright);">{{ pct }}%</span>
       </div>
@@ -151,7 +151,7 @@
 
 <!-- Suitable Investment Instruments -->
 <div style="margin-top: 28px; margin-bottom: 18px;">
-  <h3 style="font-size: 1.25rem; font-weight: 800; color: #ffffff;">
+  <h3 style="font-size: 1.25rem; font-weight: 800; color: #111827;">
     <i class="fa-solid fa-landmark" style="color: var(--cyan-accent); margin-right: 8px;"></i>
     Suggested Investment Instruments
   </h3>
@@ -162,7 +162,7 @@
   <div class="card" style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 22px 24px;">
     <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px;">
       <div>
-        <div style="font-size: 1.05rem; font-weight: 700; color: #ffffff;">{{ inst.name }}</div>
+        <div style="font-size: 1.05rem; font-weight: 700; color: #111827;">{{ inst.name }}</div>
         <span style="font-size: 0.78rem; color: var(--text-muted);">{{ inst.category }}</span>
       </div>
       <span class="badge badge-primary" style="font-size: 0.75rem;">Risk: {{ inst.risk }}</span>
@@ -181,7 +181,7 @@
 </div>
 
 <!-- Mandatory Disclaimer -->
-<div style="background: rgba(5, 8, 17, 0.7); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px 20px; font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px;">
+<div style="background: #FAF8F4; border: 1px solid #FDE68A; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px 20px; font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px;">
   <strong style="color: #fbbf24;"><i class="fa-solid fa-triangle-exclamation"></i> Mandatory Educational Disclaimer:</strong><br>
   {{ rec.disclaimer }}
 </div>

@@ -50,15 +50,15 @@
 
     <!-- Comparative Profile Match -->
     <div class="grid-3" style="margin-top: 16px;">
-      <div style="background: rgba(5, 8, 17, 0.7); padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+      <div style="background: #FAF8F4; border: 1px solid #E5E7EB; padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
         <div class="stat-label">Your Risk Profile</div>
         <div style="font-size: 1.1rem; font-weight: 700; color: var(--cyan-bright);">{{ analysis.user_risk_level }}</div>
       </div>
-      <div style="background: rgba(5, 8, 17, 0.7); padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+      <div style="background: #FAF8F4; border: 1px solid #E5E7EB; padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
         <div class="stat-label">Stock Volatility Rating</div>
-        <div style="font-size: 1.1rem; font-weight: 700; color: #ffffff;">{{ analysis.stock_risk_level }} Risk</div>
+        <div style="font-size: 1.1rem; font-weight: 700; color: #111827;">{{ analysis.stock_risk_level }} Risk</div>
       </div>
-      <div style="background: rgba(5, 8, 17, 0.7); padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+      <div style="background: #FAF8F4; border: 1px solid #E5E7EB; padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
         <div class="stat-label">Readiness Status</div>
         <div style="font-size: 1.1rem; font-weight: 700; color: {% if 'READY' in analysis.readiness_status %}var(--success){% else %}var(--danger){% endif %};">
           {{ analysis.readiness_status }}
@@ -91,7 +91,7 @@
       <div class="card-title"><i class="fa-solid fa-lightbulb" style="color: #fbbf24; margin-right: 6px;"></i> Strategic Recommendation</div>
     </div>
     <div class="card-body">
-      <div style="background: rgba(5, 8, 17, 0.7); border: 1px solid var(--border-subtle); padding: 18px; border-radius: var(--radius-md); font-size: 0.92rem; line-height: 1.6; color: var(--text-light);">
+      <div style="background: #FAF8F4; border: 1px solid #E5E7EB; border: 1px solid var(--border-subtle); padding: 18px; border-radius: var(--radius-md); font-size: 0.92rem; line-height: 1.6; color: var(--text-light);">
         {{ analysis.guidance }}
       </div>
 

@@ -5,10 +5,10 @@
 
 {% block content %}
 <!-- Gatekeeper Verdict Hero Card -->
-<div class="card" style="background: linear-gradient(135deg, rgba(13, 21, 39, 0.95) 0%, rgba(20, 30, 60, 0.85) 100%); border: 1px solid {% if readiness.is_ready %}rgba(16, 185, 129, 0.45){% else %}rgba(245, 158, 11, 0.45){% endif %}; border-radius: var(--radius-xl); padding: 32px 36px; margin-bottom: 28px; box-shadow: {% if readiness.is_ready %}0 0 35px rgba(16, 185, 129, 0.25){% else %}0 0 35px rgba(245, 158, 11, 0.2){% endif %};">
+<div class="card" style="background: linear-gradient(135deg, #FAF1DF 0%, #FAF7F0 60%, #FFFFFF 100%); border: 1px solid #FDE68A; border-radius: var(--radius-xl); padding: 32px 36px; margin-bottom: 28px; box-shadow: 0 4px 20px rgba(217, 119, 6, 0.06);">
   <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px;">
     <div>
-      <div style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.75rem; font-weight: 700; color: {% if readiness.is_ready %}#34d399{% else %}#fbbf24{% endif %}; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; background: rgba(5, 8, 17, 0.7); padding: 5px 14px; border-radius: var(--radius-full); border: 1px solid var(--border-subtle);">
+      <div style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.75rem; font-weight: 700; color: {% if readiness.is_ready %}#34d399{% else %}#fbbf24{% endif %}; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; background: #FEF3C7; border: 1px solid #FDE68A; padding: 5px 14px; border-radius: var(--radius-full); border: 1px solid var(--border-subtle);">
         <i class="fa-solid fa-shield-halved"></i> Gatekeeper Protocol Active
       </div>
       <div style="display: flex; align-items: baseline; gap: 16px; margin-top: 4px;">
@@ -35,7 +35,7 @@
           <i class="fa-solid fa-diagram-project" style="margin-right: 8px;"></i> Open Asset Allocation AI ➔
         </a>
       {% else %}
-        <a href="{{ url_for('goal.goals') }}" class="btn btn-warning btn-lg" style="padding: 16px 32px; font-size: 1rem; border-radius: var(--radius-full); background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #fff; border: none; font-weight: 700; box-shadow: 0 4px 22px rgba(245, 158, 11, 0.4);">
+        <a href="{{ url_for('goal.goals') }}" class="btn btn-warning btn-lg" style="padding: 16px 32px; font-size: 1rem; border-radius: var(--radius-full); background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #111827; border: none; font-weight: 700; box-shadow: 0 4px 22px rgba(245, 158, 11, 0.4);">
           <i class="fa-solid fa-bullseye" style="margin-right: 8px;"></i> Build Emergency Fund First ➔
         </a>
       {% endif %}
@@ -43,8 +43,8 @@
   </div>
 
   <!-- Core Academic Principle Alert -->
-  <div style="background: rgba(5, 8, 17, 0.7); border: 1px solid var(--border-subtle); padding: 16px 20px; border-radius: var(--radius-md); margin-top: 24px;">
-    <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; color: #ffffff; font-size: 0.92rem; margin-bottom: 4px;">
+  <div style="background: #FEF3C7; border: 1px solid #FDE68A; border: 1px solid var(--border-subtle); padding: 16px 20px; border-radius: var(--radius-md); margin-top: 24px;">
+    <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; color: #111827; font-size: 0.92rem; margin-bottom: 4px;">
       <i class="fa-solid fa-lightbulb" style="color: var(--cyan-accent);"></i> Core Principle: Financial Stability Precedes Market Risk
     </div>
     <p style="font-size: 0.88rem; color: var(--text-subtle); line-height: 1.6; margin: 0;">
@@ -67,7 +67,7 @@
     <div class="card-body" style="padding: 24px;">
       <div style="display: flex; flex-direction: column; gap: 16px;">
         {% for reason in readiness.reasons %}
-        <div style="display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; background: rgba(5, 8, 17, 0.6); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);">
+        <div style="display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px; background: #FAF8F4; border: 1px solid var(--border-subtle); border-radius: var(--radius-md);">
           <div style="width: 28px; height: 28px; border-radius: 50%; background: {% if 'Positive' in reason or 'Healthy' in reason or 'Strong' in reason %}rgba(16, 185, 129, 0.15){% else %}rgba(245, 158, 11, 0.15){% endif %}; border: 1px solid {% if 'Positive' in reason or 'Healthy' in reason or 'Strong' in reason %}#10b981{% else %}#f59e0b{% endif %}; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; color: {% if 'Positive' in reason or 'Healthy' in reason or 'Strong' in reason %}#34d399{% else %}#fbbf24{% endif %}; flex-shrink: 0; margin-top: 2px;">
             <i class="fa-solid fa-{% if 'Positive' in reason or 'Healthy' in reason or 'Strong' in reason %}check{% else %}triangle-exclamation{% endif %}"></i>
           </div>
@@ -93,7 +93,7 @@
       {% if readiness.suggestions %}
         <div style="display: flex; flex-direction: column; gap: 14px;">
           {% for sug in readiness.suggestions %}
-          <div style="display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; background: rgba(5, 8, 17, 0.6); border: 1px solid rgba(168, 85, 247, 0.25); border-radius: var(--radius-md);">
+          <div style="display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; background: #FAF8F4; border: 1px solid rgba(168, 85, 247, 0.25); border-radius: var(--radius-md);">
             <div style="color: #c084fc; font-size: 1rem; margin-top: 2px; flex-shrink: 0;">
               <i class="fa-solid fa-arrow-right"></i>
             </div>
@@ -122,7 +122,7 @@
 <div class="card" style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); padding: 28px 32px; margin-bottom: 28px;">
   <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 20px;">
     <div>
-      <h3 style="font-size: 1.25rem; font-weight: 800; color: #fff; margin: 0;">
+      <h3 style="font-size: 1.25rem; font-weight: 800; color: #111827; margin: 0;">
         <i class="fa-solid fa-route" style="color: var(--cyan-accent); margin-right: 8px;"></i>
         Milestone Roadmap to Achieve 100% Investment Readiness
       </h3>
@@ -137,12 +137,12 @@
 
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
     <!-- Step 1 -->
-    <div style="background: rgba(5, 8, 17, 0.65); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px;">
+    <div style="background: #FAF8F4; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
         <span style="font-size: 0.72rem; font-weight: 800; color: var(--cyan-bright); text-transform: uppercase; background: rgba(6, 182, 212, 0.12); padding: 2px 8px; border-radius: 4px;">Step 01</span>
         <span style="font-size: 0.75rem; color: #34d399; font-weight: 700;">+35 Pts</span>
       </div>
-      <h4 style="font-size: 0.95rem; font-weight: 700; color: #fff; margin-bottom: 6px;">Log Predictable Inflow</h4>
+      <h4 style="font-size: 0.95rem; font-weight: 700; color: #111827; margin-bottom: 6px;">Log Predictable Inflow</h4>
       <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 14px;">
         Record your salary, wages, or business earnings to demonstrate cashflow stability.
       </p>
@@ -152,12 +152,12 @@
     </div>
 
     <!-- Step 2 -->
-    <div style="background: rgba(5, 8, 17, 0.65); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px;">
+    <div style="background: #FAF8F4; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
         <span style="font-size: 0.72rem; font-weight: 800; color: var(--cyan-bright); text-transform: uppercase; background: rgba(6, 182, 212, 0.12); padding: 2px 8px; border-radius: 4px;">Step 02</span>
         <span style="font-size: 0.75rem; color: #34d399; font-weight: 700;">+20 Pts</span>
       </div>
-      <h4 style="font-size: 0.95rem; font-weight: 700; color: #fff; margin-bottom: 6px;">Maintain Healthy Outlay</h4>
+      <h4 style="font-size: 0.95rem; font-weight: 700; color: #111827; margin-bottom: 6px;">Maintain Healthy Outlay</h4>
       <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 14px;">
         Keep monthly living costs under 70% of total income to secure surplus margin.
       </p>
@@ -167,12 +167,12 @@
     </div>
 
     <!-- Step 3 -->
-    <div style="background: rgba(5, 8, 17, 0.65); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px;">
+    <div style="background: #FAF8F4; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
         <span style="font-size: 0.72rem; font-weight: 800; color: var(--cyan-bright); text-transform: uppercase; background: rgba(6, 182, 212, 0.12); padding: 2px 8px; border-radius: 4px;">Step 03</span>
         <span style="font-size: 0.75rem; color: #34d399; font-weight: 700;">+35 Pts</span>
       </div>
-      <h4 style="font-size: 0.95rem; font-weight: 700; color: #fff; margin-bottom: 6px;">Build Emergency Runway</h4>
+      <h4 style="font-size: 0.95rem; font-weight: 700; color: #111827; margin-bottom: 6px;">Build Emergency Runway</h4>
       <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 14px;">
         Create a 3–6 month liquid cash buffer so market drops never force early liquidation.
       </p>
@@ -182,12 +182,12 @@
     </div>
 
     <!-- Step 4 -->
-    <div style="background: rgba(5, 8, 17, 0.65); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px;">
+    <div style="background: #FAF8F4; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
         <span style="font-size: 0.72rem; font-weight: 800; color: var(--cyan-bright); text-transform: uppercase; background: rgba(6, 182, 212, 0.12); padding: 2px 8px; border-radius: 4px;">Step 04</span>
         <span style="font-size: 0.75rem; color: #34d399; font-weight: 700;">+10 Pts</span>
       </div>
-      <h4 style="font-size: 0.95rem; font-weight: 700; color: #fff; margin-bottom: 6px;">Complete Risk Profiler</h4>
+      <h4 style="font-size: 0.95rem; font-weight: 700; color: #111827; margin-bottom: 6px;">Complete Risk Profiler</h4>
       <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 14px;">
         Complete the 10-question psychometric evaluation to lock in your asset allocation ratios.
       </p>
