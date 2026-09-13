@@ -7,7 +7,7 @@
 <!-- 1. Top Highlight Cashflow Glass Cards -->
 <div class="grid-4" style="margin-bottom: 24px;">
   <!-- Income Card -->
-  <div class="stat-card" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(13, 21, 39, 0.8) 100%);">
+  <div class="stat-card" style="background: #FFFFFF; border: 1px solid var(--border-subtle); box-shadow: var(--shadow-sm);">
     <div style="display: flex; justify-content: space-between; align-items: flex-start;">
       <div class="stat-label">Total Monthly Inflows</div>
       <div style="width: 34px; height: 34px; border-radius: var(--radius-sm); background: var(--success-bg); border: 1px solid var(--success-border); display: flex; align-items: center; justify-content: center; color: var(--success);">
@@ -19,7 +19,7 @@
   </div>
 
   <!-- Expenses Card -->
-  <div class="stat-card" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(13, 21, 39, 0.8) 100%);">
+  <div class="stat-card" style="background: #FFFFFF; border: 1px solid var(--border-subtle); box-shadow: var(--shadow-sm);">
     <div style="display: flex; justify-content: space-between; align-items: flex-start;">
       <div class="stat-label">Total Living Outflows</div>
       <div style="width: 34px; height: 34px; border-radius: var(--radius-sm); background: var(--danger-bg); border: 1px solid var(--danger-border); display: flex; align-items: center; justify-content: center; color: var(--danger);">
@@ -27,11 +27,11 @@
       </div>
     </div>
     <div class="stat-value" style="color: var(--danger);">₹{{ "{:,.2f}".format(health.total_expenses) }}</div>
-    <div class="stat-desc">Burn Rate Ratio: <strong style="color: #fff;">{{ health.expense_ratio }}%</strong></div>
+    <div class="stat-desc">Burn Rate Ratio: <strong style="color: var(--text-white);">{{ health.expense_ratio }}%</strong></div>
   </div>
 
   <!-- Net Savings Card -->
-  <div class="stat-card" style="background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(13, 21, 39, 0.8) 100%);">
+  <div class="stat-card" style="background: #FFFFFF; border: 1px solid var(--border-subtle); box-shadow: var(--shadow-sm);">
     <div style="display: flex; justify-content: space-between; align-items: flex-start;">
       <div class="stat-label">Net Monthly Savings</div>
       <div style="width: 34px; height: 34px; border-radius: var(--radius-sm); background: rgba(6, 182, 212, 0.15); border: 1px solid rgba(6, 182, 212, 0.3); display: flex; align-items: center; justify-content: center; color: var(--cyan-bright);">
@@ -41,11 +41,11 @@
     <div class="stat-value" style="color: {% if health.savings >= 0 %}var(--cyan-bright){% else %}var(--danger){% endif %};">
       ₹{{ "{:,.2f}".format(health.savings) }}
     </div>
-    <div class="stat-desc">Savings Rate: <strong style="color: #fff;">{{ health.savings_rate }}%</strong></div>
+    <div class="stat-desc">Savings Rate: <strong style="color: var(--text-white);">{{ health.savings_rate }}%</strong></div>
   </div>
 
   <!-- Emergency Fund Runway -->
-  <div class="stat-card" style="background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(13, 21, 39, 0.8) 100%);">
+  <div class="stat-card" style="background: #FFFFFF; border: 1px solid var(--border-subtle); box-shadow: var(--shadow-sm);">
     <div style="display: flex; justify-content: space-between; align-items: flex-start;">
       <div class="stat-label">Emergency Safety Net</div>
       <div style="width: 34px; height: 34px; border-radius: var(--radius-sm); background: rgba(37, 99, 235, 0.15); border: 1px solid rgba(37, 99, 235, 0.3); display: flex; align-items: center; justify-content: center; color: var(--blue-light);">
@@ -95,7 +95,7 @@
       <p style="font-size: 0.84rem; color: var(--text-subtle); margin-bottom: 14px;">
         Determines volatility endurance and asset allocation models.
       </p>
-      <div style="background: rgba(5, 8, 17, 0.75); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 14px; margin-bottom: 16px;">
+      <div style="background: #FAF8F4; border: 1px solid #E5E7EB; border-radius: var(--radius-md); padding: 14px; margin-bottom: 16px;">
         <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Calibrated Profile:</div>
         <div style="font-size: 1.15rem; font-weight: 700; color: var(--text-white); margin-top: 2px;">{{ risk_level }}</div>
       </div>
@@ -117,7 +117,7 @@
       <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px;">
         {% if readiness.reasons %}{{ readiness.reasons[0] }}{% else %}Financial baseline is evaluated against emergency reserve and liquidity rules.{% endif %}
       </p>
-      <div style="background: rgba(5, 8, 17, 0.75); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 12px; margin-bottom: 16px;">
+      <div style="background: #FAF8F4; border: 1px solid #E5E7EB; border-radius: var(--radius-md); padding: 12px; margin-bottom: 16px;">
         <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Allocatable Monthly Surplus:</div>
         <div style="font-size: 1.2rem; font-weight: 800; color: var(--success);">
           ₹{{ "{:,.2f}".format(health.savings if health.savings > 0 else 0) }}
@@ -166,13 +166,13 @@
     </div>
     <div class="card-body">
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px;">
-        <div style="background: rgba(5, 8, 17, 0.75); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 14px;">
+        <div style="background: #FAF8F4; border: 1px solid #E5E7EB; border-radius: var(--radius-md); padding: 14px;">
           <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Portfolio Value</div>
           <div style="font-size: 1.3rem; font-weight: 800; color: var(--text-white);">₹{{ "{:,.2f}".format(portfolio.total_invested) }}</div>
         </div>
-        <div style="background: rgba(5, 8, 17, 0.75); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 14px;">
+        <div style="background: #FAF8F4; border: 1px solid #E5E7EB; border-radius: var(--radius-md); padding: 14px;">
           <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Watchlist Stocks</div>
-          <div style="font-size: 1.3rem; font-weight: 800; color: var(--cyan-bright);">{{ watchlist_count }} Securities</div>
+          <div style="font-size: 1.3rem; font-weight: 800; color: var(--blue-primary);">{{ watchlist_count }} Securities</div>
         </div>
       </div>
       <a href="{{ url_for('portfolio.watchlist') }}" class="btn btn-ghost btn-sm btn-block" style="border: 1px solid var(--border-subtle);">

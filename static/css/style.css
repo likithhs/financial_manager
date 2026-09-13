@@ -270,6 +270,11 @@ a:hover {
 /* ====================================================================
    APP SHELL (Sidebar, Topbar & Main Wrapper)
    ==================================================================== */
+body:has(.app-container) {
+  overflow: hidden !important;
+  height: 100vh !important;
+}
+
 .app-container {
   display: flex;
   height: 100vh;
@@ -731,4 +736,28 @@ tr:hover td {
   .sidebar.open {
     left: 0;
   }
+}
+
+
+/* Global Fallback for Inset Panels, Telemetry Tiles & Formula Blocks */
+[style*="background: rgba(5, 8, 17"],
+[style*="background: rgba(13, 21, 39"],
+[style*="background: rgba(8, 13, 26"],
+[style*="background: rgba(10, 15, 29"] {
+  background: #FAF8F4 !important;
+  border-color: #E5E7EB !important;
+  color: #18181B !important;
+}
+
+.card strong[style*="color: #fff"],
+.card strong[style*="color: #ffffff"],
+.stat-card strong[style*="color: #fff"],
+.stat-card strong[style*="color: #ffffff"],
+.stat-card [style*="color: #fff"],
+.stat-card [style*="color: #ffffff"] {
+  color: var(--text-white) !important;
+}
+
+#chatBox {
+  background: #FAF7F0 !important;
 }

@@ -78,11 +78,11 @@
         {{ summary.utilization }}% utilized
       </div>
 
-      <div style="background: rgba(5, 8, 17, 0.7); border: 1px solid var(--border-subtle); padding: 16px; border-radius: var(--radius-md); margin-top: 16px; font-size: 0.85rem;">
-        <strong style="color: #ffffff;"><i class="fa-solid fa-calculator" style="color: var(--cyan-accent); margin-right: 6px;"></i> Standard Financial Metrics:</strong>
-        <p style="margin-top: 6px; font-family: monospace; color: var(--cyan-bright);">• Net Savings = Income (₹{{ "{:,.2f}".format(health.total_income) }}) - Expenses (₹{{ "{:,.2f}".format(health.total_expenses) }}) = ₹{{ "{:,.2f}".format(health.savings) }}</p>
-        <p style="margin-top: 4px; font-family: monospace; color: var(--cyan-bright);">• Savings Rate = (Savings / Income) × 100 = {{ health.savings_rate }}%</p>
-        <p style="margin-top: 4px; font-family: monospace; color: var(--cyan-bright);">• Budget Utilization = (Expenses / Budget) × 100 = {{ summary.utilization }}%</p>
+      <div style="background: #FAF8F4; border: 1px solid #FDE68A; padding: 16px; border-radius: var(--radius-md); margin-top: 16px; font-size: 0.85rem; box-shadow: 0 2px 8px rgba(217, 119, 6, 0.04);">
+        <strong style="color: #111827;"><i class="fa-solid fa-calculator" style="color: #D97706; margin-right: 6px;"></i> Standard Financial Metrics:</strong>
+        <p style="margin-top: 6px; font-family: monospace; color: #4B5563;">• Net Savings = Income (₹{{ "{:,.2f}".format(health.total_income) }}) - Expenses (₹{{ "{:,.2f}".format(health.total_expenses) }}) = ₹{{ "{:,.2f}".format(health.savings) }}</p>
+        <p style="margin-top: 4px; font-family: monospace; color: #4B5563;">• Savings Rate = (Savings / Income) × 100 = {{ health.savings_rate }}%</p>
+        <p style="margin-top: 4px; font-family: monospace; color: #4B5563;">• Budget Utilization = (Expenses / Budget) × 100 = {{ summary.utilization }}%</p>
       </div>
     </div>
   </div>
