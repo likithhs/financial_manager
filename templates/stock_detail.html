@@ -7,7 +7,7 @@
 <div class="card" style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); padding: 28px 32px; margin-bottom: 24px;">
   <div class="card-header" style="padding: 0 0 20px 0; border-bottom: 1px solid var(--border-subtle); margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
     <div>
-      <div class="card-title" style="font-size: 1.35rem; color: #ffffff;">
+      <div class="card-title" style="font-size: 1.35rem; color: #111827;">
         <i class="fa-solid fa-chart-line" style="color: var(--cyan-accent); margin-right: 8px;"></i>
         {{ stock.name }} ({{ stock.symbol }})
       </div>
@@ -25,7 +25,7 @@
   <div class="card-body" style="padding: 0;">
     <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 20px; margin-bottom: 24px;">
       <div>
-        <div style="font-size: 2.3rem; font-weight: 800; color: #ffffff;">
+        <div style="font-size: 2.3rem; font-weight: 800; color: #111827;">
           ₹{{ "{:,.2f}".format((stock.price or stock.current_price or 0)|float) }}
         </div>
         {% set chg = (stock.change or stock.day_change or 0)|float %}
@@ -54,21 +54,21 @@
 
     <!-- Key Metrics Grid -->
     <div class="grid-4" style="margin-bottom: 24px;">
-      <div class="stat-card" style="background: rgba(5, 8, 17, 0.65);">
+      <div class="stat-card" style="background: #FAF8F4; border: 1px solid #E5E7EB;">
         <div class="stat-label">Market Capitalization</div>
-        <div style="font-size: 1.15rem; font-weight: 700; color: #ffffff;">{{ stock.market_cap or 'Large Cap' }}</div>
+        <div style="font-size: 1.15rem; font-weight: 700; color: #111827;">{{ stock.market_cap or 'Large Cap' }}</div>
       </div>
-      <div class="stat-card" style="background: rgba(5, 8, 17, 0.65);">
+      <div class="stat-card" style="background: #FAF8F4; border: 1px solid #E5E7EB;">
         <div class="stat-label">P/E Ratio</div>
         <div style="font-size: 1.15rem; font-weight: 700; color: var(--cyan-bright);">{{ stock.pe or stock.pe_ratio or 25.0 }}</div>
       </div>
-      <div class="stat-card" style="background: rgba(5, 8, 17, 0.65);">
+      <div class="stat-card" style="background: #FAF8F4; border: 1px solid #E5E7EB;">
         <div class="stat-label">52-Week High / Low</div>
-        <div style="font-size: 1.15rem; font-weight: 700; color: #ffffff;">
+        <div style="font-size: 1.15rem; font-weight: 700; color: #111827;">
           ₹{{ "{:,.0f}".format((stock.high_52w or ((stock.price or 0) * 1.15))|float) }} / ₹{{ "{:,.0f}".format((stock.low_52w or ((stock.price or 0) * 0.85))|float) }}
         </div>
       </div>
-      <div class="stat-card" style="background: rgba(5, 8, 17, 0.65);">
+      <div class="stat-card" style="background: #FAF8F4; border: 1px solid #E5E7EB;">
         <div class="stat-label">Risk & Volatility Tier</div>
         <div style="font-size: 1.15rem; font-weight: 700; color: {% if stock.risk_rating == 'Low' %}var(--success){% elif stock.risk_rating == 'Moderate' %}var(--warning){% else %}var(--danger){% endif %};">
           {{ stock.risk_rating or stock.volatility or 'Moderate' }} Risk
@@ -77,19 +77,19 @@
     </div>
 
     <!-- Company Description -->
-    <div style="background: rgba(5, 8, 17, 0.7); border: 1px solid var(--border-subtle); padding: 18px 22px; border-radius: var(--radius-md); margin-bottom: 20px;">
-      <strong style="color: #ffffff; font-size: 0.92rem;"><i class="fa-solid fa-circle-info" style="color: var(--cyan-accent); margin-right: 6px;"></i> About Company:</strong>
+    <div style="background: #FAF8F4; border: 1px solid #E5E7EB; border: 1px solid var(--border-subtle); padding: 18px 22px; border-radius: var(--radius-md); margin-bottom: 20px;">
+      <strong style="color: #111827; font-size: 0.92rem;"><i class="fa-solid fa-circle-info" style="color: var(--cyan-accent); margin-right: 6px;"></i> About Company:</strong>
       <p style="font-size: 0.92rem; color: var(--text-subtle); margin-top: 6px; line-height: 1.6; margin-bottom: 0;">
         {{ stock.description or 'A prominent listed enterprise on the National Stock Exchange of India (NSE).' }}
       </p>
     </div>
 
     <!-- Recent Trend Points -->
-    <div style="background: rgba(5, 8, 17, 0.7); border: 1px solid var(--border-subtle); padding: 18px 22px; border-radius: var(--radius-md);">
-      <strong style="color: #ffffff; font-size: 0.9rem;"><i class="fa-solid fa-chart-line" style="color: var(--cyan-accent); margin-right: 6px;"></i> Recent Price Trend (5-Day):</strong>
+    <div style="background: #FAF8F4; border: 1px solid #E5E7EB; border: 1px solid var(--border-subtle); padding: 18px 22px; border-radius: var(--radius-md);">
+      <strong style="color: #111827; font-size: 0.9rem;"><i class="fa-solid fa-chart-line" style="color: var(--cyan-accent); margin-right: 6px;"></i> Recent Price Trend (5-Day):</strong>
       <div style="display: flex; gap: 12px; margin-top: 12px; font-size: 0.88rem; flex-wrap: wrap;">
         {% for pt in stock.trend %}
-          <div style="background: rgba(13, 21, 39, 0.8); border: 1px solid var(--border-subtle); padding: 6px 14px; border-radius: var(--radius-sm); color: var(--text-light);">
+          <div style="background: #FAF8F4; border: 1px solid #E5E7EB; border: 1px solid var(--border-subtle); padding: 6px 14px; border-radius: var(--radius-sm); color: var(--text-light);">
             Day {{ loop.index }}: <strong style="color: var(--cyan-bright);">₹{{ "{:,.2f}".format(pt|float) }}</strong>
           </div>
         {% endfor %}
