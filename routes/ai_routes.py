@@ -4,18 +4,19 @@ from ai.financial_assistant import FinAIAssistant
 from services.investment_service import InvestmentService
 from database import query_db, execute_db
 
+from services.ai_service import AIService
+
 ai_bp = Blueprint('ai', __name__)
 
 QUICK_PROMPTS = [
-    "Where should I invest?",
-    "Should I invest in stocks?",
-    "What is my risk profile?",
-    "Why did you recommend this investment?",
-    "Why is my investment readiness low?",
-    "How can I improve my savings?",
-    "What is the difference between mutual funds and stocks?",
-    "Tell me about TCS",
-    "What is a Systematic Investment Plan (SIP)?"
+    "I'm feeling stressed about my finances, how do I start?",
+    "I want to become a crorepati, what is the realistic roadmap?",
+    "Can I afford to invest with my current cashflow?",
+    "I'm scared of losing money in stock market crashes, what should I do?",
+    "How do I stop impulse spending and build wealth?",
+    "Can you analyze my 6-pillar financial health score?",
+    "Explain the difference between index funds and stocks like I'm five",
+    "What if I invest ₹5,000 every month for 5 years?"
 ]
 
 @ai_bp.route('/ai-assistant', methods=['GET', 'POST'])
@@ -36,25 +37,32 @@ def ai_assistant():
         ORDER BY created_at ASC
     """, (user_id,))
 
+    provider_status = AIService.get_provider_status()
+
     return render_template(
         'ai_assistant.html',
         conversations=conversations or [],
-        quick_prompts=QUICK_PROMPTS
+        quick_prompts=QUICK_PROMPTS,
+        provider_status=provider_status
     )
 
 @ai_bp.route('/ai-assistant/chat', methods=['POST'])
 @login_required
 def ai_chat_api():
-    """Optional JSON endpoint for asynchronous calls if supported."""
+    """Asynchronous JSON endpoint for interactive chat."""
     user_id = session['user_id']
     data = request.get_json(silent=True) or request.form
     user_message = data.get('message', '').strip()
 
     if not user_message:
-        return jsonify({"error": "Empty message"}), 400
+        return jsonify({"error": "Empty message", "status": "error"}), 400
 
-    reply = FinAIAssistant.respond(user_id, user_message)
-    return jsonify({"reply": reply})
+    reply, provider = FinAIAssistant.respond(user_id, user_message, return_meta=True)
+    return jsonify({
+        "status": "success",
+        "reply": reply,
+        "provider": provider
+    })
 
 @ai_bp.route('/ai-assistant/clear', methods=['POST'])
 @login_required
