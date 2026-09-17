@@ -47,10 +47,17 @@ def ai_assistant():
     )
 
 @ai_bp.route('/ai-assistant/chat', methods=['POST'])
-@login_required
 def ai_chat_api():
-    """Asynchronous JSON endpoint for interactive chat."""
-    user_id = session['user_id']
+    """Asynchronous JSON endpoint for interactive chat. Requires active user login."""
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({
+            "status": "auth_required",
+            "reply": "FinAI is an exclusive personal wealth advisory system. To analyze your finances, evaluate your sentiment, and provide personalized guidance, you must be logged in.",
+            "login_url": url_for('auth.login'),
+            "register_url": url_for('auth.register')
+        }), 401
+
     data = request.get_json(silent=True) or request.form
     user_message = data.get('message', '').strip()
 

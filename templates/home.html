@@ -28,6 +28,36 @@
   </div>
 </div>
 
+<!-- Interactive FinAI Home Copilot Bar -->
+<div class="card" style="background: #FFFFFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 22px 26px; margin-bottom: 28px; box-shadow: var(--shadow-sm);">
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <div style="width: 36px; height: 36px; border-radius: 8px; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1rem;">
+        <i class="fa-solid fa-robot"></i>
+      </div>
+      <div>
+        <h4 style="font-size: 0.98rem; font-weight: 700; color: #111827; margin: 0;">FinAI Conversational Strategist</h4>
+        <span style="font-size: 0.74rem; color: #059669; display: flex; align-items: center; gap: 5px;">
+          <i class="fa-solid fa-circle" style="font-size: 0.45rem;"></i> Active • Sentiment-Aware Personal Wealth Advisor
+        </span>
+      </div>
+    </div>
+    <a href="{{ url_for('ai.ai_assistant') }}" class="btn btn-sm btn-ghost" style="color: #D97706; font-weight: 600; font-size: 0.8rem;">
+      Open Full Chat History <i class="fa-solid fa-arrow-right"></i>
+    </a>
+  </div>
+
+  <div id="homeAiResponseArea" style="display: none; margin-bottom: 14px; padding: 18px 20px; background: #FAF8F4; border: 1px solid #E5E7EB; border-radius: 12px; font-size: 0.92rem; line-height: 1.6; color: #18181B;">
+  </div>
+
+  <form id="homeAiForm" style="display: flex; gap: 10px; align-items: center;">
+    <input type="text" id="homeAiInput" class="form-control" placeholder="Talk to FinAI like ChatGPT... ask about cashflow, debts, how you feel about money, or investment goals..." required autocomplete="off" style="flex-grow: 1; padding: 12px 18px; font-size: 0.92rem; background: #FAF8F4; border: 1px solid #D1D5DB; border-radius: var(--radius-md);">
+    <button type="submit" id="homeAiSendBtn" class="btn btn-primary" style="padding: 12px 22px; font-weight: 600;">
+      <span id="homeAiBtnText">Ask FinAI</span> <i class="fa-solid fa-paper-plane" id="homeAiBtnIcon"></i>
+    </button>
+  </form>
+</div>
+
 <!-- Quick Navigation Modules -->
 <div style="margin-bottom: 16px;">
   <h3 style="font-size: 1.15rem; font-weight: 700; color: #111827; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
@@ -142,4 +172,79 @@
     </a>
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const homeAiForm = document.getElementById('homeAiForm');
+  const homeAiInput = document.getElementById('homeAiInput');
+  const homeAiSendBtn = document.getElementById('homeAiSendBtn');
+  const homeAiBtnText = document.getElementById('homeAiBtnText');
+  const homeAiBtnIcon = document.getElementById('homeAiBtnIcon');
+  const homeAiResponseArea = document.getElementById('homeAiResponseArea');
+
+  function formatMarkdown(text) {
+    if (!text) return '';
+    let div = document.createElement('div');
+    div.innerText = text;
+    let html = div.innerHTML;
+    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/^###\s*(.*$)/gim, '<h5 style="font-weight: 700; color: #111827; margin: 10px 0 4px;">$1</h5>');
+    html = html.replace(/^##\s*(.*$)/gim, '<h4 style="font-weight: 800; color: #111827; margin: 12px 0 6px;">$1</h4>');
+    html = html.replace(/^\s*[•*-]\s*(.*$)/gim, '<div style="display: flex; gap: 6px; margin: 3px 0;"><span style="color: #D97706;">•</span><span>$1</span></div>');
+    html = html.replace(/^\s*(\d+)\.\s*(.*$)/gim, '<div style="display: flex; gap: 6px; margin: 3px 0;"><span style="font-weight: 700; color: #D97706;">$1.</span><span>$2</span></div>');
+    html = html.replace(/\n\n/g, '<div style="height: 10px;"></div>');
+    html = html.replace(/\n/g, '<br>');
+    return html;
+  }
+
+  if (homeAiForm && homeAiInput) {
+    homeAiForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const val = homeAiInput.value.trim();
+      if (!val) return;
+
+      homeAiInput.disabled = true;
+      homeAiSendBtn.disabled = true;
+      homeAiBtnText.innerText = 'Thinking...';
+      homeAiBtnIcon.className = 'fa-solid fa-spinner fa-spin';
+
+      homeAiResponseArea.style.display = 'block';
+      homeAiResponseArea.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 8px; color: #6B7280;">
+          <i class="fa-solid fa-spinner fa-spin" style="color: #D97706;"></i>
+          <span>FinAI is reviewing your financial metrics and analyzing your question...</span>
+        </div>
+      `;
+
+      try {
+        const res = await fetch("{{ url_for('ai.ai_chat_api') }}", {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ message: val })
+        });
+        const data = await res.json();
+        if (res.ok && data.reply) {
+          const providerBadge = data.provider ? `<span style="font-size: 0.7rem; font-weight: 700; color: #D97706; background: #FEF3C7; padding: 2px 8px; border-radius: 6px; margin-left: 8px;">${data.provider}</span>` : '';
+          homeAiResponseArea.innerHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid #E5E7EB; padding-bottom: 6px;">
+              <span style="font-weight: 700; color: #D97706; font-size: 0.8rem; text-transform: uppercase;"><i class="fa-solid fa-robot"></i> FinAI Advisor</span>
+              ${providerBadge}
+            </div>
+            <div>${formatMarkdown(data.reply)}</div>
+          `;
+        } else {
+          homeAiResponseArea.innerHTML = `<span style="color: #DC2626;">Could not generate advice right now. Please try again or open the full assistant.</span>`;
+        }
+      } catch (err) {
+        homeAiResponseArea.innerHTML = `<span style="color: #DC2626;">Connection error. Please check your network or server status.</span>`;
+      } finally {
+        homeAiInput.disabled = false;
+        homeAiSendBtn.disabled = false;
+        homeAiBtnText.innerText = 'Ask FinAI';
+        homeAiBtnIcon.className = 'fa-solid fa-paper-plane';
+      }
+    });
+  }
+});
+</script>
 {% endblock %}
