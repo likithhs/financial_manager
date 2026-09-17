@@ -7,46 +7,65 @@
 <div class="card" style="background: #FFFFFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); box-shadow: var(--shadow-sm); overflow: hidden; margin-bottom: 20px;">
   
   <!-- Assistant Header Bar -->
-  <div class="card-header" style="background: #FAF8F4; padding: 18px 24px; border-bottom: 1px solid #E5E7EB; display: flex; justify-content: space-between; align-items: center;">
+  <div class="card-header" style="background: #FAF8F4; padding: 18px 24px; border-bottom: 1px solid #E5E7EB; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
     <div style="display: flex; align-items: center; gap: 12px;">
-      <div style="width: 42px; height: 42px; border-radius: var(--radius-sm); background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.1rem; box-shadow: 0 0 18px rgba(6, 182, 212, 0.4);">
+      <div style="width: 42px; height: 42px; border-radius: var(--radius-sm); background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.1rem; box-shadow: 0 2px 10px rgba(217, 119, 6, 0.28);">
         <i class="fa-solid fa-robot"></i>
       </div>
       <div>
         <h4 style="font-size: 1.05rem; font-weight: 700; color: #111827; line-height: 1.2;">FinAI Intelligence Core</h4>
         <span style="font-size: 0.75rem; color: var(--success); display: flex; align-items: center; gap: 6px;">
-          <i class="fa-solid fa-circle" style="font-size: 0.5rem;"></i> Active • Synchronized with your Live Database
+          <i class="fa-solid fa-circle" style="font-size: 0.5rem;"></i> Active • Empathetic Financial Strategist & Live Data
         </span>
       </div>
     </div>
 
-    <div style="display: flex; align-items: center; gap: 10px;">
-      <span class="badge badge-ai">v2.4 Precision</span>
+    <!-- Engine & Domain Badges -->
+    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+      <span class="badge" style="background: #FAF8F4; color: #4B5563; border: 1px solid #E5E7EB; font-size: 0.74rem;" title="Queries outside personal finance are strictly filtered">
+        <i class="fa-solid fa-shield-halved" style="color: #D97706;"></i> Financial Domain Locked
+      </span>
+      
+      {% if provider_status and provider_status.is_active %}
+        <span class="badge" id="activeProviderBadge" style="background: rgba(16, 185, 129, 0.1); color: #059669; border: 1px solid rgba(16, 185, 129, 0.3); font-size: 0.76rem; font-weight: 700;">
+          <i class="fa-solid fa-bolt"></i> {{ provider_status.display_name }}
+        </span>
+      {% else %}
+        <span class="badge" id="activeProviderBadge" style="background: rgba(217, 119, 6, 0.1); color: #D97706; border: 1px solid rgba(217, 119, 6, 0.25); font-size: 0.76rem; font-weight: 700;">
+          <i class="fa-solid fa-comments"></i> FinAI Conversational Engine
+        </span>
+      {% endif %}
+
       <form action="{{ url_for('ai.clear_chat') }}" method="POST" style="margin: 0;">
-        <button type="submit" class="btn btn-sm btn-ghost" style="color: #f87171; border: 1px solid rgba(239, 68, 68, 0.25);" onclick="return confirm('Clear chat history?');" title="Clear History">
-          <i class="fa-solid fa-trash-can"></i> Clear History
+        <button type="submit" class="btn btn-sm btn-ghost" style="color: #f87171; border: 1px solid rgba(239, 68, 68, 0.25); padding: 5px 12px;" onclick="return confirm('Clear conversation history?');" title="Clear History">
+          <i class="fa-solid fa-trash-can"></i> Clear
         </button>
       </form>
     </div>
   </div>
 
   <!-- Conversation Area -->
-  <div style="display: flex; flex-direction: column; height: 520px;">
+  <div style="display: flex; flex-direction: column; height: 530px;">
     <!-- Message History Scrollbox -->
     <div id="chatBox" style="flex-grow: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 20px; background: #FAF7F0;">
       
       <!-- Welcome AI Greeting -->
-      <div style="display: flex; gap: 12px; max-width: 82%;">
+      <div class="chat-row-ai" style="display: flex; gap: 12px; max-width: 82%;">
         <div style="width: 34px; height: 34px; border-radius: 50%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.88rem; flex-shrink: 0; margin-top: 2px;">
           <i class="fa-solid fa-robot"></i>
         </div>
         <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 4px 18px 18px 18px; padding: 16px 20px; color: #18181B; line-height: 1.6; font-size: 0.92rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
-          <div style="font-weight: 700; color: #D97706; font-size: 0.78rem; text-transform: uppercase; margin-bottom: 6px;">
-            FinAI Strategist
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <span style="font-weight: 700; color: #D97706; font-size: 0.78rem; text-transform: uppercase;">
+              FinAI Strategist
+            </span>
+            <span style="font-size: 0.7rem; color: #9CA3AF;">System</span>
           </div>
-          Hello! I am your <strong>FinAI Financial Assistant</strong>. I am directly connected to your active cashflow numbers, emergency reserves, 6-pillar health rating, and behavioral risk tier.
+          Hello! I am your <strong>FinAI Personal Financial Strategist</strong>. I am directly connected to your active financial metrics—including your monthly cashflow, 6-pillar health rating, emergency reserves, and behavioral risk tier.
           <br><br>
-          How can I optimize your finances today? You can select any prompt below or ask me about budget cuts, mutual fund allocations, or stock suitability.
+          <div style="font-size: 0.84rem; background: #FAF8F4; padding: 10px 14px; border-radius: 8px; border-left: 3px solid #D97706;">
+            <strong>Domain Advisory:</strong> I specialize strictly in personal finance, budget optimization, emergency reserves, mutual funds, stocks, and wealth goals.
+          </div>
         </div>
       </div>
 
@@ -55,44 +74,43 @@
         <!-- User Bubble -->
         <div style="display: flex; justify-content: flex-end; width: 100%;">
           <div style="max-width: 75%; background: linear-gradient(135deg, #D97706 0%, #EA580C 100%); color: #ffffff; border-radius: 18px 18px 4px 18px; padding: 14px 20px; font-size: 0.92rem; line-height: 1.5; box-shadow: 0 4px 14px rgba(217, 119, 6, 0.25);">
-            <div style="font-size: 0.72rem; color: rgba(255,255,255,0.7); font-weight: 700; text-transform: uppercase; margin-bottom: 4px;">You</div>
+            <div style="font-size: 0.72rem; color: rgba(255,255,255,0.75); font-weight: 700; text-transform: uppercase; margin-bottom: 4px;">You</div>
             {{ chat.user_message }}
           </div>
         </div>
 
         <!-- AI Bubble -->
-        <div style="display: flex; gap: 12px; max-width: 82%;">
+        <div class="chat-row-ai" style="display: flex; gap: 12px; max-width: 82%;">
           <div style="width: 34px; height: 34px; border-radius: 50%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.88rem; flex-shrink: 0; margin-top: 2px;">
             <i class="fa-solid fa-robot"></i>
           </div>
-          <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 4px 18px 18px 18px; padding: 16px 20px; color: #18181B; line-height: 1.6; font-size: 0.92rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); white-space: pre-wrap;">
-            <div style="font-weight: 700; color: #D97706; font-size: 0.78rem; text-transform: uppercase; margin-bottom: 6px;">
-              FinAI Strategist
+          <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 4px 18px 18px 18px; padding: 16px 20px; color: #18181B; line-height: 1.6; font-size: 0.92rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <span style="font-weight: 700; color: #D97706; font-size: 0.78rem; text-transform: uppercase;">
+                FinAI Strategist
+              </span>
             </div>
-            {{ chat.ai_response }}
+            <div class="formatted-ai-response" data-raw="{{ chat.ai_response }}">{{ chat.ai_response }}</div>
           </div>
         </div>
       {% endfor %}
     </div>
 
     <!-- Suggested Quick Prompts Strip -->
-    <div style="padding: 12px 24px; background: #FAF8F4; border-top: 1px solid #E5E7EB; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none;">
+    <div style="padding: 10px 24px; background: #FAF8F4; border-top: 1px solid #E5E7EB; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none;">
       {% for prompt in quick_prompts %}
-        <form action="{{ url_for('ai.ai_assistant') }}" method="POST" style="margin: 0; flex-shrink: 0;">
-          <input type="hidden" name="message" value="{{ prompt }}">
-          <button type="submit" class="btn btn-sm btn-secondary" style="font-size: 0.78rem; padding: 6px 14px; border-radius: var(--radius-full); background: #FEF3C7; border: 1px solid #FDE68A; color: #92400E; font-weight: 600;">
-            <i class="fa-solid fa-sparkles"></i> {{ prompt }}
-          </button>
-        </form>
+        <button type="button" class="quick-prompt-btn btn btn-sm" data-prompt="{{ prompt }}" style="font-size: 0.78rem; padding: 6px 14px; border-radius: var(--radius-full); background: #FEF3C7; border: 1px solid #FDE68A; color: #92400E; font-weight: 600; white-space: nowrap; cursor: pointer; transition: all 0.2s;">
+          <i class="fa-solid fa-sparkles"></i> {{ prompt }}
+        </button>
       {% endfor %}
     </div>
 
     <!-- Input Bar Form -->
-    <div style="padding: 18px 24px; background: #FFFFFF; border-top: 1px solid #E5E7EB;">
-      <form action="{{ url_for('ai.ai_assistant') }}" method="POST" style="display: flex; gap: 12px; align-items: center;">
-        <input type="text" name="message" class="form-control" placeholder="Ask FinAI about your cashflow, health score, emergency fund, or stock market suitability..." required autofocus style="flex-grow: 1; padding: 14px 18px; font-size: 0.95rem; background: #FAF8F4; border: 1px solid #D1D5DB; color: #18181B;">
-        <button type="submit" class="btn btn-primary btn-lg" style="padding: 14px 28px;">
-          <span>Send</span> <i class="fa-solid fa-paper-plane"></i>
+    <div style="padding: 16px 24px; background: #FFFFFF; border-top: 1px solid #E5E7EB;">
+      <form id="chatForm" action="{{ url_for('ai.ai_assistant') }}" method="POST" style="display: flex; gap: 12px; align-items: center;">
+        <input type="text" id="chatInput" name="message" class="form-control" placeholder="Talk to FinAI like ChatGPT... share your money goals, debts, feelings, or ask for guidance..." required autofocus autocomplete="off" style="flex-grow: 1; padding: 13px 18px; font-size: 0.95rem; background: #FAF8F4; border: 1px solid #D1D5DB; color: #18181B; border-radius: var(--radius-md);">
+        <button type="submit" id="sendBtn" class="btn btn-primary btn-lg" style="padding: 13px 26px;">
+          <span id="btnText">Send</span> <i class="fa-solid fa-paper-plane" id="btnIcon"></i>
         </button>
       </form>
     </div>
@@ -101,15 +119,206 @@
 
 <div style="padding: 14px 18px; background: #FEF3C7; border: 1px solid #FDE68A; border-radius: var(--radius-md); font-size: 0.8rem; color: #92400E; display: flex; align-items: center; gap: 10px;">
   <i class="fa-solid fa-circle-exclamation" style="color: #D97706; font-size: 1rem;"></i>
-  <span><strong>AI Advisory Note:</strong> FinAI delivers algorithmic financial intelligence based on your verified numbers and objective mathematical formulas. Always verify critical transactions with your primary banking institution.</span>
+  <span><strong>AI Advisory Note:</strong> FinAI operates strictly as a personalized financial intelligence tool based on verified numbers and quantitative formulas. Market investments carry inherent risk.</span>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const chatBox = document.getElementById('chatBox');
+  const chatForm = document.getElementById('chatForm');
+  const chatInput = document.getElementById('chatInput');
+  const sendBtn = document.getElementById('sendBtn');
+  const btnText = document.getElementById('btnText');
+  const btnIcon = document.getElementById('btnIcon');
+  const activeBadge = document.getElementById('activeProviderBadge');
+
+  // Scroll chat to bottom initially
   if (chatBox) {
     chatBox.scrollTop = chatBox.scrollHeight;
   }
+
+  // Format existing server-rendered responses with markdown
+  document.querySelectorAll('.formatted-ai-response').forEach(el => {
+    const raw = el.getAttribute('data-raw') || el.innerText;
+    el.innerHTML = formatMarkdown(raw);
+  });
+
+  // Client-side markdown formatting helper
+  function formatMarkdown(text) {
+    if (!text) return '';
+    let html = escapeHtml(text);
+
+    // Bold: **text**
+    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+    // Headers: ### text or ## text
+    html = html.replace(/^###\s*(.*$)/gim, '<h5 style="font-weight: 700; color: #111827; margin: 10px 0 4px;">$1</h5>');
+    html = html.replace(/^##\s*(.*$)/gim, '<h4 style="font-weight: 800; color: #111827; margin: 12px 0 6px;">$1</h4>');
+
+    // Bullet points: • or * or -
+    html = html.replace(/^\s*[•*-]\s*(.*$)/gim, '<div style="display: flex; gap: 8px; margin: 4px 0;"><span style="color: #D97706;">•</span><span>$1</span></div>');
+
+    // Numbered lists: 1. text
+    html = html.replace(/^\s*(\d+)\.\s*(.*$)/gim, '<div style="display: flex; gap: 8px; margin: 4px 0;"><span style="font-weight: 700; color: #D97706;">$1.</span><span>$2</span></div>');
+
+    // Line breaks
+    html = html.replace(/\n\n/g, '<div style="height: 10px;"></div>');
+    html = html.replace(/\n/g, '<br>');
+
+    return html;
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.innerText = str;
+    return div.innerHTML;
+  }
+
+  // Append User Message to Chat Box
+  function appendUserMessage(message) {
+    const row = document.createElement('div');
+    row.style.cssText = 'display: flex; justify-content: flex-end; width: 100%;';
+    row.innerHTML = `
+      <div style="max-width: 75%; background: linear-gradient(135deg, #D97706 0%, #EA580C 100%); color: #ffffff; border-radius: 18px 18px 4px 18px; padding: 14px 20px; font-size: 0.92rem; line-height: 1.5; box-shadow: 0 4px 14px rgba(217, 119, 6, 0.25);">
+        <div style="font-size: 0.72rem; color: rgba(255,255,255,0.75); font-weight: 700; text-transform: uppercase; margin-bottom: 4px;">You</div>
+        ${escapeHtml(message)}
+      </div>
+    `;
+    chatBox.appendChild(row);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  // Append AI Message to Chat Box
+  function appendAIMessage(responseHtml, providerName) {
+    const row = document.createElement('div');
+    row.className = 'chat-row-ai';
+    row.style.cssText = 'display: flex; gap: 12px; max-width: 82%; animation: fadeIn 0.3s ease-out;';
+    
+    const providerLabel = providerName ? `<span style="font-size: 0.68rem; color: #6B7280; font-weight: 600; background: #FAF8F4; padding: 2px 8px; border-radius: 10px; border: 1px solid #E5E7EB;">${escapeHtml(providerName)}</span>` : '';
+
+    row.innerHTML = `
+      <div style="width: 34px; height: 34px; border-radius: 50%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.88rem; flex-shrink: 0; margin-top: 2px;">
+        <i class="fa-solid fa-robot"></i>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 4px 18px 18px 18px; padding: 16px 20px; color: #18181B; line-height: 1.6; font-size: 0.92rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <span style="font-weight: 700; color: #D97706; font-size: 0.78rem; text-transform: uppercase;">
+            FinAI Strategist
+          </span>
+          ${providerLabel}
+        </div>
+        <div>${responseHtml}</div>
+      </div>
+    `;
+    chatBox.appendChild(row);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  // Show Typing Indicator
+  function showTypingIndicator() {
+    const id = 'typing-' + Date.now();
+    const row = document.createElement('div');
+    row.id = id;
+    row.style.cssText = 'display: flex; gap: 12px; max-width: 82%;';
+    row.innerHTML = `
+      <div style="width: 34px; height: 34px; border-radius: 50%; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 0.88rem; flex-shrink: 0; margin-top: 2px;">
+        <i class="fa-solid fa-robot"></i>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 4px 18px 18px 18px; padding: 14px 20px; color: #6B7280; font-size: 0.88rem; display: flex; align-items: center; gap: 8px;">
+        <i class="fa-solid fa-spinner fa-spin" style="color: #D97706;"></i>
+        <span>Analyzing financial metrics & portfolio...</span>
+      </div>
+    `;
+    chatBox.appendChild(row);
+    chatBox.scrollTop = chatBox.scrollHeight;
+    return id;
+  }
+
+  // Asynchronous message submission
+  async function sendMessage(messageText) {
+    if (!messageText || !messageText.trim()) return;
+    const text = messageText.trim();
+
+    appendUserMessage(text);
+    chatInput.value = '';
+    
+    // Disable send button while awaiting response
+    sendBtn.disabled = true;
+    btnText.innerText = 'Thinking...';
+    btnIcon.className = 'fa-solid fa-spinner fa-spin';
+
+    const typingId = showTypingIndicator();
+
+    try {
+      const response = await fetch("{{ url_for('ai.ai_chat_api') }}", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ message: text })
+      });
+
+      const data = await response.json();
+
+      const typingEl = document.getElementById(typingId);
+      if (typingEl) typingEl.remove();
+
+      if (response.ok && data.reply) {
+        const formatted = formatMarkdown(data.reply);
+        appendAIMessage(formatted, data.provider || 'FinAI Engine');
+        
+        // Update header badge if provider info returned
+        if (data.provider && activeBadge) {
+          if (data.provider.includes('Local') || data.provider.includes('Guardrail')) {
+            activeBadge.style.background = 'rgba(217, 119, 6, 0.1)';
+            activeBadge.style.color = '#D97706';
+            activeBadge.style.borderColor = 'rgba(217, 119, 6, 0.25)';
+            activeBadge.innerHTML = `<i class="fa-solid fa-microchip"></i> ${escapeHtml(data.provider)}`;
+          } else {
+            activeBadge.style.background = 'rgba(16, 185, 129, 0.1)';
+            activeBadge.style.color = '#059669';
+            activeBadge.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+            activeBadge.innerHTML = `<i class="fa-solid fa-bolt"></i> ${escapeHtml(data.provider)}`;
+          }
+        }
+      } else {
+        appendAIMessage(
+          "I encountered a temporary issue processing that query. Please check your network connection or try again.",
+          "System Notice"
+        );
+      }
+    } catch (err) {
+      console.error('Chat API Error:', err);
+      const typingEl = document.getElementById(typingId);
+      if (typingEl) typingEl.remove();
+      appendAIMessage(
+        "Could not connect to the assistant server. Please verify your connection.",
+        "System Notice"
+      );
+    } finally {
+      sendBtn.disabled = false;
+      btnText.innerText = 'Send';
+      btnIcon.className = 'fa-solid fa-paper-plane';
+      chatInput.focus();
+    }
+  }
+
+  // Hook Form Submit
+  chatForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    sendMessage(chatInput.value);
+  });
+
+  // Hook Quick Prompt Chips
+  document.querySelectorAll('.quick-prompt-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const promptText = btn.getAttribute('data-prompt');
+      if (promptText) {
+        sendMessage(promptText);
+      }
+    });
+  });
 });
 </script>
 {% endblock %}
