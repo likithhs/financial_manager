@@ -418,7 +418,7 @@ Current Portfolio Holdings:
         )
         return (local_reply, provider_label) if return_meta else local_reply
 
-    # =============================================================
+        # =============================================================
     # LOCAL CONVERSATIONAL ENGINE (FALLBACK)
     # =============================================================
 
