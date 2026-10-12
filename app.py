@@ -7,7 +7,7 @@ import os
 import logging
 from flask import Flask, redirect, url_for, session
 from config import Config
-from database import init_db
+from database import init_db, query_db
 from routes.error_handlers import register_error_handlers
 
 # Import Core Feature Blueprints
@@ -68,6 +68,39 @@ def create_app(config_class=Config):
 
     # Register Centralized Error Handlers (400, 401, 403, 404, 500)
     register_error_handlers(app)
+
+    @app.context_processor
+    def inject_user_context():
+        """
+        Inject currently authenticated user profile dynamically into all templates.
+        Ensures strict tenant data isolation (queries only the current session user_id).
+        """
+        user_id = session.get('user_id')
+        if not user_id:
+            return {'current_user': None}
+        try:
+            user = query_db(
+                "SELECT id, name, email, role, created_at FROM users WHERE id = %s",
+                (user_id,),
+                one=True
+            )
+            if user:
+                created = user.get('created_at')
+                if hasattr(created, 'strftime'):
+                    user['joined_date'] = created.strftime('%b %d, %Y')
+                elif isinstance(created, str) and len(created) >= 10:
+                    try:
+                        from datetime import datetime
+                        dt = datetime.strptime(created[:10], '%Y-%m-%d')
+                        user['joined_date'] = dt.strftime('%b %d, %Y')
+                    except Exception:
+                        user['joined_date'] = created[:10]
+                else:
+                    user['joined_date'] = 'Active Member'
+            return {'current_user': user or {}}
+        except Exception as err:
+            logger.warning(f"Error injecting user context: {err}")
+            return {'current_user': {}}
 
     # Root route alias
     @app.route('/', endpoint='index')
