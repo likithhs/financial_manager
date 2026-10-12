@@ -13,7 +13,7 @@ class UserService:
     def get_by_id(user_id):
         """Fetches user record by ID (excluding password hash)."""
         return query_db(
-            "SELECT id, name, email, role, age, occupation, financial_exp, investment_exp, created_at, updated_at "
+            "SELECT id, name, email, phone, address, role, age, occupation, financial_exp, investment_exp, created_at, updated_at "
             "FROM users WHERE id = %s",
             (user_id,),
             one=True
@@ -43,13 +43,19 @@ class UserService:
         return profile
 
     @staticmethod
-    def update_profile(user_id, name, age=25, occupation="Student / Professional", financial_exp="Beginner", investment_exp="None"):
+    def update_profile(user_id, name, email=None, phone=None, address=None, age=25, occupation="Student / Professional", financial_exp="Beginner", investment_exp="None"):
         """Updates user profile baseline details."""
+        if email:
+            return execute_db("""
+                UPDATE users
+                SET name = %s, email = %s, phone = %s, address = %s, age = %s, occupation = %s, financial_exp = %s, investment_exp = %s, updated_at = CURRENT_TIMESTAMP
+                WHERE id = %s
+            """, (name, email, phone, address, age, occupation, financial_exp, investment_exp, user_id))
         return execute_db("""
             UPDATE users
-            SET name = %s, age = %s, occupation = %s, financial_exp = %s, investment_exp = %s
+            SET name = %s, phone = %s, address = %s, age = %s, occupation = %s, financial_exp = %s, investment_exp = %s, updated_at = CURRENT_TIMESTAMP
             WHERE id = %s
-        """, (name, age, occupation, financial_exp, investment_exp, user_id))
+        """, (name, phone, address, age, occupation, financial_exp, investment_exp, user_id))
 
     @staticmethod
     def update_password(user_id, new_password):

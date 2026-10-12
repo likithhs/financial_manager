@@ -1,0 +1,855 @@
+{% extends "base.html" %}
+
+{% block title %}Account Settings & User Profile - FinAI Platform{% endblock %}
+{% block page_title %}Settings & Profile Management{% endblock %}
+
+{% block content %}
+<div class="settings-page-container">
+
+  <!-- Header Section with Page Summary & Navigation Tabs -->
+  <div class="settings-header-card">
+    <div class="settings-header-top">
+      <div>
+        <h2 class="settings-page-heading">
+          <i class="fa-solid fa-sliders" style="color: var(--cyan-accent); margin-right: 8px;"></i>
+          Account Settings & Profile
+        </h2>
+        <p class="settings-page-subheading">
+          Manage your personal details, financial baseline calibration, and security preferences.
+        </p>
+      </div>
+      <div class="settings-header-badge-box">
+        <span class="badge badge-ai">
+          <i class="fa-solid fa-database"></i> Database Synchronized
+        </span>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="settings-tabs-nav" role="tablist">
+      <button type="button" 
+              class="settings-tab-btn {% if active_tab == 'account' %}active{% endif %}" 
+              data-tab="account" 
+              onclick="switchSettingsTab('account')"
+              role="tab" 
+              aria-selected="{% if active_tab == 'account' %}true{% else %}false{% endif %}"
+              id="tab-btn-account">
+        <i class="fa-solid fa-id-card"></i>
+        <span>Account Information</span>
+      </button>
+
+      <button type="button" 
+              class="settings-tab-btn {% if active_tab == 'edit' %}active{% endif %}" 
+              data-tab="edit" 
+              onclick="switchSettingsTab('edit')"
+              role="tab" 
+              aria-selected="{% if active_tab == 'edit' %}true{% else %}false{% endif %}"
+              id="tab-btn-edit">
+        <i class="fa-solid fa-user-pen"></i>
+        <span>Edit Profile</span>
+      </button>
+
+      <button type="button" 
+              class="settings-tab-btn {% if active_tab == 'security' %}active{% endif %}" 
+              data-tab="security" 
+              onclick="switchSettingsTab('security')"
+              role="tab" 
+              aria-selected="{% if active_tab == 'security' %}true{% else %}false{% endif %}"
+              id="tab-btn-security">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span>Security & Password</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= TAB 1: READ-ONLY ACCOUNT INFORMATION ================= -->
+  <div id="tab-pane-account" class="settings-tab-pane {% if active_tab == 'account' %}active{% endif %}" role="tabpanel">
+    
+    <!-- User Overview Hero Banner Card -->
+    <div class="card settings-hero-card">
+      <div class="settings-hero-left">
+        <div class="settings-avatar-circle">
+          {{ user.name[:1] | upper }}
+        </div>
+        <div class="settings-hero-details">
+          <div class="settings-hero-name-row">
+            <h3 class="settings-hero-name">{{ user.name }}</h3>
+            <span class="badge badge-ai" style="text-transform: uppercase;">
+              <i class="fa-solid fa-shield-halved"></i> {{ user.role }}
+            </span>
+            <span class="badge badge-success">
+              <i class="fa-solid fa-circle-check"></i> Active
+            </span>
+          </div>
+          <div class="settings-hero-meta">
+            <span><i class="fa-solid fa-envelope"></i> {{ user.email }}</span>
+            <span class="meta-separator">•</span>
+            <span><i class="fa-solid fa-id-badge"></i> User ID #{{ user.id }}</span>
+            <span class="meta-separator">•</span>
+            <span><i class="fa-solid fa-calendar-check"></i> Joined {{ user.joined_date }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-hero-actions">
+        <button type="button" class="btn btn-primary" onclick="switchSettingsTab('edit')">
+          <i class="fa-solid fa-user-pen"></i> Edit Profile
+        </button>
+        <button type="button" class="btn btn-outline" onclick="switchSettingsTab('security')">
+          <i class="fa-solid fa-key"></i> Security
+        </button>
+      </div>
+    </div>
+
+    <!-- Read-Only Detailed Information Grid -->
+    <div class="settings-grid-layout">
+
+      <!-- Section: Personal & Contact Information -->
+      <div class="card settings-section-card">
+        <div class="card-header">
+          <div class="card-title">
+            <i class="fa-solid fa-user" style="color: var(--cyan-accent); margin-right: 8px;"></i>
+            Personal & Contact Information
+          </div>
+          <button type="button" class="btn btn-sm btn-ghost" onclick="switchSettingsTab('edit')" title="Modify Personal Information">
+            <i class="fa-solid fa-pen-to-square"></i> Edit
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="profile-info-list">
+            
+            <div class="profile-info-item">
+              <div class="profile-info-label">
+                <i class="fa-solid fa-user-tag"></i> Full Name
+              </div>
+              <div class="profile-info-value bold-value">{{ user.name }}</div>
+            </div>
+
+            <div class="profile-info-item">
+              <div class="profile-info-label">
+                <i class="fa-solid fa-envelope"></i> Email Address
+              </div>
+              <div class="profile-info-value" style="display: flex; align-items: center; gap: 6px;">
+                <span>{{ user.email }}</span>
+                <span class="badge badge-success" style="font-size: 0.72rem; padding: 2px 6px;">Verified</span>
+              </div>
+            </div>
+
+            <div class="profile-info-item">
+              <div class="profile-info-label">
+                <i class="fa-solid fa-phone"></i> Phone Number
+              </div>
+              <div class="profile-info-value {% if not user.phone %}text-muted{% endif %}">
+                {{ user.phone or 'Not provided' }}
+              </div>
+            </div>
+
+            <div class="profile-info-item">
+              <div class="profile-info-label">
+                <i class="fa-solid fa-location-dot"></i> Residential Address
+              </div>
+              <div class="profile-info-value {% if not user.address %}text-muted{% endif %}">
+                {{ user.address or 'Not provided' }}
+              </div>
+            </div>
+
+            <div class="profile-info-item">
+              <div class="profile-info-label">
+                <i class="fa-solid fa-fingerprint"></i> Account ID
+              </div>
+              <div class="profile-info-value font-mono">#{{ user.id }}</div>
+            </div>
+
+            <div class="profile-info-item">
+              <div class="profile-info-label">
+                <i class="fa-solid fa-user-shield"></i> Account Type / Role
+              </div>
+              <div class="profile-info-value" style="text-transform: capitalize;">{{ user.role }}</div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Section: Financial Baseline & Experience -->
+      <div class="card settings-section-card">
+        <div class="card-header">
+          <div class="card-title">
+            <i class="fa-solid fa-chart-line" style="color: var(--cyan-accent); margin-right: 8px;"></i>
+            Financial Baseline & Experience
+          </div>
+          <button type="button" class="btn btn-sm btn-ghost" onclick="switchSettingsTab('edit')" title="Calibrate Financial Baseline">
+            <i class="fa-solid fa-pen-to-square"></i> Calibrate
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="profile-info-list">
+
+            <div class="profile-info-item">
+              <div class="profile-info-label">
+                <i class="fa-solid fa-cake-candles"></i> Age
+              </div>
+              <div class="profile-info-value {% if not user.age %}text-muted{% endif %}">
+                {% if user.age %}{{ user.age }} years{% else %}Not specified{% endif %}
+              </div>
+            </div>
+
+            <div class="profile-info-item">
+              <div class="profile-info-label">
+                <i class="fa-solid fa-briefcase"></i> Occupation / Profession
+              </div>
+              <div class="profile-info-value {% if not user.occupation %}text-muted{% endif %}">
+                {{ user.occupation or 'Student / Professional' }}
+              </div>
+            </div>
+
+            <div class="profile-info-item">
+              <div class="profile-info-label">
+                <i class="fa-solid fa-scale-balanced"></i> Financial Experience Tier
+              </div>
+              <div class="profile-info-value">
+                <span class="badge badge-ai" style="font-size: 0.82rem;">
+                  {{ user.financial_exp or 'Beginner' }}
+                </span>
+              </div>
+            </div>
+
+            <div class="profile-info-item">
+              <div class="profile-info-label">
+                <i class="fa-solid fa-layer-group"></i> Investment Asset Experience
+              </div>
+              <div class="profile-info-value bold-value">
+                {{ user.investment_exp or 'None' }}
+              </div>
+            </div>
+
+            <div class="profile-info-item">
+              <div class="profile-info-label">
+                <i class="fa-solid fa-circle-check"></i> Account Status
+              </div>
+              <div class="profile-info-value" style="color: var(--success); font-weight: 600;">
+                <i class="fa-solid fa-circle-check"></i> Active & Calibrated
+              </div>
+            </div>
+
+            <div class="profile-info-item">
+              <div class="profile-info-label">
+                <i class="fa-solid fa-clock-rotate-left"></i> Member Since
+              </div>
+              <div class="profile-info-value">{{ user.joined_date }}</div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Quick Navigation Bottom Action Bar -->
+    <div class="settings-bottom-actions-card">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <i class="fa-solid fa-circle-info" style="color: var(--cyan-accent); font-size: 1.2rem;"></i>
+        <span style="font-size: 0.9rem; color: var(--text-subtle);">
+          Need to update your contact details or recalibrate your investment experience?
+        </span>
+      </div>
+      <button type="button" class="btn btn-primary" onclick="switchSettingsTab('edit')">
+        <i class="fa-solid fa-user-pen"></i> Open Edit Profile Form
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ================= TAB 2: EDIT PROFILE FORM ================= -->
+  <div id="tab-pane-edit" class="settings-tab-pane {% if active_tab == 'edit' %}active{% endif %}" role="tabpanel">
+    <div class="card settings-form-card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">
+            <i class="fa-solid fa-user-pen" style="color: var(--cyan-accent); margin-right: 8px;"></i>
+            Edit Profile & Financial Parameters
+          </div>
+          <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">
+            Modify your personal information and financial baseline. Updates are saved immediately.
+          </div>
+        </div>
+        <button type="button" class="btn btn-sm btn-ghost" onclick="switchSettingsTab('account')">
+          <i class="fa-solid fa-arrow-left"></i> Back to Profile
+        </button>
+      </div>
+
+      <div class="card-body">
+        <form action="{{ url_for('auth.settings') }}" method="POST" class="settings-form" id="editProfileForm">
+          <input type="hidden" name="action" value="update_profile">
+
+          <!-- Section 1: Personal Information -->
+          <div class="form-section-header">
+            <i class="fa-solid fa-address-card"></i> Personal Information
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="edit_name">Full Name <span class="required-star">*</span></label>
+              <input type="text" 
+                     id="edit_name" 
+                     name="name" 
+                     class="form-control" 
+                     value="{{ user.name }}" 
+                     required 
+                     maxlength="100"
+                     placeholder="Enter your full name">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="edit_email">Email Address <span class="required-star">*</span></label>
+              <input type="email" 
+                     id="edit_email" 
+                     name="email" 
+                     class="form-control" 
+                     value="{{ user.email }}" 
+                     required 
+                     maxlength="120"
+                     placeholder="name@example.com">
+              <small class="form-hint">Used for authentication and security notifications.</small>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="edit_phone">Phone Number</label>
+              <input type="tel" 
+                     id="edit_phone" 
+                     name="phone" 
+                     class="form-control" 
+                     value="{{ user.phone or '' }}" 
+                     maxlength="20"
+                     placeholder="+91 98765 43210">
+              <small class="form-hint">Optional. Include country code if applicable.</small>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="edit_address">Residential Address</label>
+              <input type="text" 
+                     id="edit_address" 
+                     name="address" 
+                     class="form-control" 
+                     value="{{ user.address or '' }}" 
+                     maxlength="255"
+                     placeholder="City, State, Country">
+            </div>
+          </div>
+
+          <!-- Section 2: Financial Calibration -->
+          <div class="form-section-header" style="margin-top: 14px;">
+            <i class="fa-solid fa-sliders"></i> Financial Baseline Calibration
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="edit_age">Age</label>
+              <input type="number" 
+                     id="edit_age" 
+                     name="age" 
+                     class="form-control" 
+                     value="{{ user.age or '' }}" 
+                     min="18" 
+                     max="120"
+                     placeholder="e.g. 28">
+              <small class="form-hint">Must be 18 or older.</small>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="edit_occupation">Occupation / Role</label>
+              <input type="text" 
+                     id="edit_occupation" 
+                     name="occupation" 
+                     class="form-control" 
+                     value="{{ user.occupation or '' }}" 
+                     maxlength="100"
+                     placeholder="e.g. Software Engineer, Business Owner">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="edit_financial_exp">Financial Experience Level</label>
+              <select id="edit_financial_exp" name="financial_exp" class="form-select">
+                <option value="Beginner" {% if user.financial_exp == 'Beginner' %}selected{% endif %}>Beginner (Cashflow & Budgeting)</option>
+                <option value="Intermediate" {% if user.financial_exp == 'Intermediate' %}selected{% endif %}>Intermediate (Active Saver & Planner)</option>
+                <option value="Advanced" {% if user.financial_exp == 'Advanced' %}selected{% endif %}>Advanced (Experienced Asset Manager)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="edit_investment_exp">Investment Asset Experience</label>
+              <select id="edit_investment_exp" name="investment_exp" class="form-select">
+                <option value="None" {% if user.investment_exp == 'None' %}selected{% endif %}>None (First time exploring markets)</option>
+                <option value="Fixed Deposits / Gold" {% if user.investment_exp == 'Fixed Deposits / Gold' %}selected{% endif %}>Fixed Deposits / Gold</option>
+                <option value="Mutual Funds / SIP" {% if user.investment_exp == 'Mutual Funds / SIP' %}selected{% endif %}>Mutual Funds & Systematic Investment Plans (SIP)</option>
+                <option value="Direct Stocks / Equity" {% if user.investment_exp == 'Direct Stocks / Equity' %}selected{% endif %}>Direct Stocks & Equity Portfolios</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Form Buttons -->
+          <div class="form-actions-row">
+            <button type="button" class="btn btn-outline" onclick="switchSettingsTab('account')">
+              <i class="fa-solid fa-xmark"></i> Cancel
+            </button>
+            <button type="submit" class="btn btn-primary btn-lg">
+              <i class="fa-solid fa-floppy-disk"></i> Save Profile Details
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TAB 3: SECURITY & PASSWORD ================= -->
+  <div id="tab-pane-security" class="settings-tab-pane {% if active_tab == 'security' %}active{% endif %}" role="tabpanel">
+    <div class="grid-2" style="gap: 24px; align-items: start;">
+      
+      <!-- Change Password Card -->
+      <div class="card settings-form-card">
+        <div class="card-header">
+          <div class="card-title">
+            <i class="fa-solid fa-lock" style="color: var(--cyan-accent); margin-right: 8px;"></i>
+            Change Account Password
+          </div>
+        </div>
+        <div class="card-body">
+          <form action="{{ url_for('auth.settings') }}" method="POST" class="settings-form" id="securityForm">
+            <input type="hidden" name="action" value="update_security">
+
+            <div class="form-group">
+              <label class="form-label" for="current_password">Current Password <span class="required-star">*</span></label>
+              <input type="password" 
+                     id="current_password" 
+                     name="current_password" 
+                     class="form-control" 
+                     required 
+                     placeholder="Enter your current password">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="new_password">New Password <span class="required-star">*</span></label>
+              <input type="password" 
+                     id="new_password" 
+                     name="new_password" 
+                     class="form-control" 
+                     required 
+                     minlength="6"
+                     placeholder="Enter new password (min. 6 characters)">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="confirm_password">Confirm New Password <span class="required-star">*</span></label>
+              <input type="password" 
+                     id="confirm_password" 
+                     name="confirm_password" 
+                     class="form-control" 
+                     required 
+                     minlength="6"
+                     placeholder="Confirm your new password">
+            </div>
+
+            <div class="form-actions-row">
+              <button type="button" class="btn btn-outline" onclick="switchSettingsTab('account')">
+                Cancel
+              </button>
+              <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-shield-check"></i> Update Password
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Security Status & Isolation Overview -->
+      <div class="card settings-section-card">
+        <div class="card-header">
+          <div class="card-title">
+            <i class="fa-solid fa-shield-halved" style="color: var(--cyan-accent); margin-right: 8px;"></i>
+            Security & Tenant Protection
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="profile-info-list">
+            
+            <div class="profile-info-item">
+              <div class="profile-info-label">
+                <i class="fa-solid fa-key"></i> Password Encryption
+              </div>
+              <div class="profile-info-value">
+                <span class="badge badge-success">PBKDF2 / SHA256</span>
+              </div>
+            </div>
+
+            <div class="profile-info-item">
+              <div class="profile-info-label">
+                <i class="fa-solid fa-user-lock"></i> Session Isolation
+              </div>
+              <div class="profile-info-value" style="color: var(--success); font-weight: 600;">
+                <i class="fa-solid fa-circle-check"></i> Strict Single-Tenant
+              </div>
+            </div>
+
+            <div class="profile-info-item">
+              <div class="profile-info-label">
+                <i class="fa-solid fa-id-badge"></i> Authenticated Session
+              </div>
+              <div class="profile-info-value font-mono">User #{{ user.id }}</div>
+            </div>
+
+            <div class="profile-info-item">
+              <div class="profile-info-label">
+                <i class="fa-solid fa-clock"></i> Last Activity
+              </div>
+              <div class="profile-info-value">Active Session</div>
+            </div>
+
+          </div>
+
+          <div style="margin-top: 20px; padding: 14px 16px; background: var(--bg-dark-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); font-size: 0.85rem; color: var(--text-subtle);">
+            <div style="font-weight: 700; color: var(--text-white); margin-bottom: 4px;">
+              <i class="fa-solid fa-circle-info" style="color: var(--cyan-accent);"></i> Data Privacy & Protection
+            </div>
+            Your personal financial records and portfolios are strictly isolated by authenticated account ID. FinAI never shares or exposes your telemetry across accounts.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- Styles Specific to Settings & Profile Tabs -->
+<style>
+.settings-page-container {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.settings-header-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-xl);
+  padding: 24px 28px 0 28px;
+  box-shadow: var(--shadow-sm);
+}
+
+.settings-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.settings-page-heading {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text-white);
+  margin-bottom: 4px;
+}
+
+.settings-page-subheading {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.settings-tabs-nav {
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid var(--border-subtle);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.settings-tabs-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.settings-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.settings-tab-btn:hover {
+  color: var(--cyan-accent);
+}
+
+.settings-tab-btn.active {
+  color: var(--cyan-accent);
+  border-bottom-color: var(--cyan-accent);
+  font-weight: 700;
+}
+
+.settings-tab-pane {
+  display: none;
+  animation: settingsFadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.settings-tab-pane.active {
+  display: block;
+}
+
+@keyframes settingsFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Hero Identity Banner */
+.settings-hero-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 26px 30px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-xl);
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.settings-hero-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.settings-avatar-circle {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.9rem;
+  color: #fff;
+  font-weight: 800;
+  box-shadow: var(--shadow-glow);
+  flex-shrink: 0;
+}
+
+.settings-hero-name-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.settings-hero-name {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--text-white);
+}
+
+.settings-hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+}
+
+.meta-separator {
+  color: var(--border-medium);
+}
+
+.settings-hero-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Grid Layout for Read-Only Cards */
+.settings-grid-layout {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 860px) {
+  .settings-grid-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.settings-section-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.profile-info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.profile-info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 0.88rem;
+  gap: 14px;
+}
+
+.profile-info-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.profile-info-label {
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+.profile-info-label i {
+  color: var(--cyan-accent);
+  font-size: 0.9rem;
+  width: 16px;
+  text-align: center;
+}
+
+.profile-info-value {
+  color: var(--text-light);
+  font-weight: 600;
+  text-align: right;
+  word-break: break-word;
+}
+
+.profile-info-value.bold-value {
+  color: var(--text-white);
+  font-weight: 700;
+}
+
+.font-mono {
+  font-family: monospace;
+  font-size: 0.88rem;
+}
+
+.settings-bottom-actions-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-xl);
+  padding: 18px 24px;
+  box-shadow: var(--shadow-sm);
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+/* Edit Form Styling */
+.settings-form-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.form-section-header {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-white);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-section-header i {
+  color: var(--cyan-accent);
+}
+
+.required-star {
+  color: var(--danger);
+}
+
+.form-hint {
+  display: block;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.form-actions-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-subtle);
+}
+</style>
+
+<!-- JavaScript to Handle Tab Switching and URL Sync -->
+<script>
+function switchSettingsTab(tabName) {
+  if (!['account', 'edit', 'security'].includes(tabName)) {
+    tabName = 'account';
+  }
+
+  // Update Tab Buttons
+  document.querySelectorAll('.settings-tab-btn').forEach(btn => {
+    const isTarget = btn.getAttribute('data-tab') === tabName;
+    btn.classList.toggle('active', isTarget);
+    btn.setAttribute('aria-selected', isTarget ? 'true' : 'false');
+  });
+
+  // Update Tab Content Panels
+  document.querySelectorAll('.settings-tab-pane').forEach(pane => {
+    pane.classList.toggle('active', pane.id === 'tab-pane-' + tabName);
+  });
+
+  // Sync browser URL without full-page refresh
+  if (window.history && window.history.replaceState) {
+    const currentUrl = new URL(window.location);
+    currentUrl.searchParams.set('tab', tabName);
+    window.history.replaceState({}, '', currentUrl);
+  }
+}
+
+// Ensure active tab corresponds to URL search param or default
+document.addEventListener('DOMContentLoaded', function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const requestedTab = urlParams.get('tab') || '{{ active_tab }}' || 'account';
+  if (['account', 'edit', 'security'].includes(requestedTab)) {
+    switchSettingsTab(requestedTab);
+  }
+});
+</script>
+{% endblock %}

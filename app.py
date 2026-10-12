@@ -80,7 +80,7 @@ def create_app(config_class=Config):
             return {'current_user': None}
         try:
             user = query_db(
-                "SELECT id, name, email, role, created_at FROM users WHERE id = %s",
+                "SELECT id, name, email, phone, address, role, age, occupation, financial_exp, investment_exp, created_at, updated_at FROM users WHERE id = %s",
                 (user_id,),
                 one=True
             )

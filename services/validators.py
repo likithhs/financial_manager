@@ -97,3 +97,21 @@ def validate_id(id_val, field_name="id"):
         return int_id
     except (TypeError, ValueError):
         raise ValidationError(f"Invalid {field_name}. Must be a positive integer.", field=field_name)
+
+
+def validate_phone(phone):
+    """
+    Validates phone number format if provided.
+    Allows digits, spaces, hyphens, parentheses, and leading plus sign. Max 20 chars.
+    """
+    if not phone:
+        return None
+    phone = phone.strip()
+    if not phone:
+        return None
+    if len(phone) > 20:
+        raise ValidationError("Phone number cannot exceed 20 characters.", field="phone")
+    if not re.match(r"^\+?[0-9\s\-().]{7,20}$", phone):
+        raise ValidationError("Invalid phone number format.", field="phone")
+    return phone
+
