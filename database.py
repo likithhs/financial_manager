@@ -132,6 +132,14 @@ def init_db():
                         except Exception as err:
                             # Table or column already exists / benign warning
                             pass
+                try:
+                    cursor.execute("ALTER TABLE users ADD COLUMN phone VARCHAR(20) DEFAULT NULL")
+                except Exception:
+                    pass
+                try:
+                    cursor.execute("ALTER TABLE users ADD COLUMN address VARCHAR(255) DEFAULT NULL")
+                except Exception:
+                    pass
                 conn.commit()
             cursor.close()
             conn.close()
@@ -341,6 +349,10 @@ def init_db():
                 cursor.execute("ALTER TABLE users ADD COLUMN password TEXT")
             if 'password_hash' not in user_cols:
                 cursor.execute("ALTER TABLE users ADD COLUMN password_hash TEXT")
+            if 'phone' not in user_cols:
+                cursor.execute("ALTER TABLE users ADD COLUMN phone TEXT")
+            if 'address' not in user_cols:
+                cursor.execute("ALTER TABLE users ADD COLUMN address TEXT")
 
             cursor.execute("PRAGMA table_info(expenses)")
             expense_cols = [c[1] for c in cursor.fetchall()]

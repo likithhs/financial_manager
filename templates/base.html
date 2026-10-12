@@ -62,6 +62,9 @@
         <a href="{{ url_for('admin.health') }}" class="nav-link {% if request.endpoint and 'admin.health' in request.endpoint %}active{% endif %}">
           <i class="fa-solid fa-heart-pulse"></i> <span>System Health & Diagnostics</span>
         </a>
+        <a href="{{ url_for('auth.settings') }}" class="nav-link {% if request.endpoint in ['auth.settings', 'auth.profile'] %}active{% endif %}">
+          <i class="fa-solid fa-gear"></i> <span>Settings</span>
+        </a>
 
         {% else %}
         <!-- ================= USER PERSONAL FINANCE SUITE ================= -->
@@ -119,6 +122,11 @@
         <a href="{{ url_for('portfolio.portfolio') }}" class="nav-link {% if request.endpoint in ['portfolio.portfolio'] %}active{% endif %}">
           <i class="fa-solid fa-briefcase"></i> <span>Virtual Portfolio</span>
         </a>
+
+        <div class="nav-section-title">System & Account</div>
+        <a href="{{ url_for('auth.settings') }}" class="nav-link {% if request.endpoint in ['auth.settings', 'auth.profile'] %}active{% endif %}">
+          <i class="fa-solid fa-gear"></i> <span>Settings</span>
+        </a>
         {% endif %}
       </nav>
 
@@ -128,7 +136,7 @@
           <div style="font-size: 0.72rem; color: #D97706; text-transform: uppercase; font-weight: 600;">{{ session.get('user_role', 'user') }}</div>
         </div>
         <div style="display: flex; gap: 10px; align-items: center;">
-          <a href="{{ url_for('auth.profile') }}" style="color: var(--text-subtle); font-size: 0.9rem;" title="My Profile">
+          <a href="{{ url_for('auth.settings') }}" style="color: var(--text-subtle); font-size: 0.9rem;" title="Settings">
             <i class="fa-solid fa-gear"></i>
           </a>
           <a href="{{ url_for('auth.logout') }}" style="color: var(--danger); font-size: 0.9rem;" title="Logout">
@@ -232,15 +240,15 @@
                 </div>
               </div>
 
-              <!-- Action Link: My Profile -->
+              <!-- Action Link: My Profile & Settings -->
               <div class="user-profile-dropdown-footer">
-                <a href="{{ url_for('auth.profile') }}" class="user-profile-action-link" id="userProfileLink">
+                <a href="{{ url_for('auth.settings') }}" class="user-profile-action-link" id="userProfileLink">
                   <div class="action-link-content">
                     <div class="action-link-icon-box">
-                      <i class="fa-solid fa-user-pen"></i>
+                      <i class="fa-solid fa-user-gear"></i>
                     </div>
                     <div class="action-link-text">
-                      <span class="action-link-title">My Profile</span>
+                      <span class="action-link-title">My Profile & Settings</span>
                       <span class="action-link-subtitle">Manage personal info & settings</span>
                     </div>
                   </div>
