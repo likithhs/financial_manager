@@ -22,6 +22,8 @@ CREATE TABLE IF NOT EXISTS users (
     occupation VARCHAR(100) DEFAULT 'Student / Professional',
     financial_exp VARCHAR(50) DEFAULT 'Beginner',
     investment_exp VARCHAR(50) DEFAULT 'None',
+    phone VARCHAR(20) DEFAULT NULL,
+    address VARCHAR(255) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_user_email (email),
