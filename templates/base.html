@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   
   <!-- FinAI Design System CSS -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=2.2">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=2.4">
   {% block extra_css %}{% endblock %}
 </head>
 <body>
@@ -142,10 +142,115 @@
     <div class="main-wrapper">
       <header class="topbar">
         <div class="topbar-title">{% block page_title %}Dashboard{% endblock %}</div>
-        <div style="display: flex; align-items: center; gap: 14px;">
-          <span style="background: rgba(217, 119, 6, 0.1); border: 1px solid rgba(217, 119, 6, 0.25); color: #B45309; padding: 6px 14px; border-radius: var(--radius-full); font-size: 0.82rem; font-weight: 600;">
-            <i class="fa-solid fa-circle-user"></i> {{ session.get('user_name') }}
-          </span>
+        <div class="topbar-actions" style="display: flex; align-items: center; gap: 14px; position: relative;">
+          <!-- Floating User Profile Dropdown Menu -->
+          <div class="user-profile-menu-wrapper" id="userProfileMenuWrapper">
+            <button type="button" 
+                    id="userProfileTrigger" 
+                    class="user-profile-trigger-btn" 
+                    aria-expanded="false" 
+                    aria-haspopup="true" 
+                    title="View Profile Details">
+              <i class="fa-solid fa-circle-user profile-trigger-icon"></i>
+              <span class="profile-trigger-name">{{ (current_user and current_user.name) or session.get('user_name', 'User') }}</span>
+              <i class="fa-solid fa-chevron-down profile-trigger-chevron"></i>
+            </button>
+
+            <!-- Floating Profile Card Dropdown -->
+            <div id="userProfileDropdown" class="user-profile-card-dropdown" role="menu" aria-labelledby="userProfileTrigger">
+              <!-- User Identity Header -->
+              <div class="user-profile-dropdown-header">
+                <div class="user-profile-avatar-circle">
+                  {{ ((current_user and current_user.name) or session.get('user_name', 'U'))[:1] | upper }}
+                </div>
+                <div class="user-profile-header-info">
+                  <div class="user-profile-display-name" title="{{ (current_user and current_user.name) or session.get('user_name', 'User') }}">
+                    {{ (current_user and current_user.name) or session.get('user_name', 'User') }}
+                  </div>
+                  <div class="user-profile-badges">
+                    <span class="user-role-badge">
+                      <i class="fa-solid fa-shield-halved"></i>
+                      {{ (current_user and current_user.role) or session.get('user_role', 'user') }}
+                    </span>
+                    <span class="user-status-badge">
+                      <span class="status-indicator-dot"></span> Active
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Information Inset Box -->
+              <div class="user-profile-info-card">
+                <!-- User ID -->
+                <div class="user-info-row">
+                  <span class="user-info-label">
+                    <i class="fa-solid fa-id-badge user-info-icon"></i> User ID
+                  </span>
+                  <span class="user-info-value user-id-value">
+                    #{{ (current_user and current_user.id) or session.get('user_id', '1') }}
+                  </span>
+                </div>
+
+                <!-- Email Address -->
+                <div class="user-info-row">
+                  <span class="user-info-label">
+                    <i class="fa-solid fa-envelope user-info-icon"></i> Email
+                  </span>
+                  <span class="user-info-value" title="{{ (current_user and current_user.email) or session.get('user_email', 'Not provided') }}">
+                    {{ (current_user and current_user.email) or session.get('user_email', 'Not provided') }}
+                  </span>
+                </div>
+
+                <!-- Phone Number -->
+                <div class="user-info-row">
+                  <span class="user-info-label">
+                    <i class="fa-solid fa-phone user-info-icon"></i> Phone
+                  </span>
+                  <span class="user-info-value text-muted-value">
+                    {{ (current_user and current_user.phone) or 'Not provided' }}
+                  </span>
+                </div>
+
+                <!-- Account Status -->
+                <div class="user-info-row">
+                  <span class="user-info-label">
+                    <i class="fa-solid fa-circle-check user-info-icon text-success"></i> Status
+                  </span>
+                  <span class="user-info-value status-verified-value">
+                    <span class="status-verified-dot"></span> Active Verified
+                  </span>
+                </div>
+
+                <!-- Registration Date / Member Since -->
+                <div class="user-info-row">
+                  <span class="user-info-label">
+                    <i class="fa-solid fa-calendar-check user-info-icon"></i> Joined
+                  </span>
+                  <span class="user-info-value">
+                    {{ (current_user and current_user.joined_date) or 'Active Member' }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Action Link: My Profile -->
+              <div class="user-profile-dropdown-footer">
+                <a href="{{ url_for('auth.profile') }}" class="user-profile-action-link" id="userProfileLink">
+                  <div class="action-link-content">
+                    <div class="action-link-icon-box">
+                      <i class="fa-solid fa-user-pen"></i>
+                    </div>
+                    <div class="action-link-text">
+                      <span class="action-link-title">My Profile</span>
+                      <span class="action-link-subtitle">Manage personal info & settings</span>
+                    </div>
+                  </div>
+                  <i class="fa-solid fa-chevron-right action-link-arrow"></i>
+                </a>
+              </div>
+
+            </div>
+          </div>
+
           <a href="{{ url_for('auth.logout') }}" class="btn btn-sm btn-ghost" style="color: #f87171;" title="Logout">
             <i class="fa-solid fa-arrow-right-from-bracket"></i>
           </a>
@@ -284,6 +389,83 @@
       // 4. Save on window unload
       window.addEventListener('beforeunload', function() {
         sessionStorage.setItem('finai_sidebar_scroll', sidebarNav.scrollTop);
+      });
+    })();
+  </script>
+
+  <!-- Floating User Profile Dropdown Controller -->
+  <script>
+    (function() {
+      const wrapper = document.getElementById('userProfileMenuWrapper');
+      const trigger = document.getElementById('userProfileTrigger');
+      const dropdown = document.getElementById('userProfileDropdown');
+      if (!wrapper || !trigger || !dropdown) return;
+
+      function adjustDropdownBoundary() {
+        if (!wrapper.classList.contains('is-open')) return;
+        dropdown.style.right = '';
+        
+        // Measure viewport bounds
+        const rect = dropdown.getBoundingClientRect();
+        const viewportWidth = window.innerWidth || document.documentElement.clientWidth;
+        
+        // Prevent clipping on the left edge
+        if (rect.left < 14) {
+          const overflowLeft = 14 - rect.left;
+          const currentRight = parseFloat(window.getComputedStyle(dropdown).right) || 0;
+          dropdown.style.right = (currentRight - overflowLeft) + 'px';
+        }
+        // Prevent clipping on the right edge
+        else if (rect.right > viewportWidth - 14) {
+          const overflowRight = rect.right - (viewportWidth - 14);
+          const currentRight = parseFloat(window.getComputedStyle(dropdown).right) || 0;
+          dropdown.style.right = (currentRight + overflowRight) + 'px';
+        }
+      }
+
+      function openMenu() {
+        wrapper.classList.add('is-open');
+        trigger.setAttribute('aria-expanded', 'true');
+        // Ensure dropdown fits viewport cleanly
+        requestAnimationFrame(adjustDropdownBoundary);
+      }
+
+      function closeMenu() {
+        wrapper.classList.remove('is-open');
+        trigger.setAttribute('aria-expanded', 'false');
+        dropdown.style.right = '';
+      }
+
+      trigger.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (wrapper.classList.contains('is-open')) {
+          closeMenu();
+        } else {
+          openMenu();
+        }
+      });
+
+      // Close when clicking anywhere outside the profile menu
+      document.addEventListener('click', function(e) {
+        if (!wrapper.contains(e.target)) {
+          closeMenu();
+        }
+      });
+
+      // Close on Escape key and return keyboard focus to trigger button
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && wrapper.classList.contains('is-open')) {
+          closeMenu();
+          trigger.focus();
+        }
+      });
+
+      // Re-align on window resize
+      window.addEventListener('resize', function() {
+        if (wrapper.classList.contains('is-open')) {
+          adjustDropdownBoundary();
+        }
       });
     })();
   </script>
