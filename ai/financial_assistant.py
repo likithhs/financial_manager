@@ -175,7 +175,7 @@ class FinAIAssistant:
         greetings = [
             "hello", "hi", "hey", "good morning", "good afternoon", "good evening",
             "who are you", "what can you do", "help", "how does this work",
-            "what is finai", "tell me about yourself", "start"
+            "what is finora", "what is finai", "tell me about yourself", "start"
         ]
         if any(msg == g or msg.startswith(g + " ") or msg.endswith(" " + g) for g in greetings):
             return True
@@ -286,7 +286,7 @@ class FinAIAssistant:
             avg = float(h.get('buy_price', 0))
             holdings_summary.append(f"- {sym}: {qty} shares @ ₹{avg:,.2f}")
 
-        prompt = f"""You are FinAI, an empathetic, world-class Certified Financial Planner (CFP), wealth strategist, and behavioral finance coach.
+        prompt = f"""You are Finora, an empathetic, world-class Certified Financial Planner (CFP), wealth strategist, and behavioral finance coach.
 You communicate with the natural warmth, emotional intelligence, conversational brilliance, and nuance of ChatGPT.
 
 === CORE PERSONA & BEHAVIORAL INTELLIGENCE ===
@@ -306,7 +306,7 @@ You communicate with the natural warmth, emotional intelligence, conversational 
 3. Strict Domain Focus:
    - Your expertise is strictly dedicated to personal finance, budgeting, emergency reserves, cashflow, debt elimination, mutual funds, stocks, financial goals, retirement, and tax optimization.
    - If the user asks something completely outside personal finance (e.g., coding, sports scores, cooking recipes, general pop culture):
-     Politely decline with warmth: "I'd love to chat, but as your personal FinAI Financial Advisor, my specialty is strictly dedicated to the Financial Advisory & Wealth Management domain. Let's focus on your savings, investments, or any financial questions you have on your mind!"
+     Politely decline with warmth: "I'd love to chat, but as your personal Finora Financial Advisor, my specialty is strictly dedicated to the Financial Advisory & Wealth Management domain. Let's focus on your savings, investments, or any financial questions you have on your mind!"
 
 === USER'S LIVE FINANCIAL DASHBOARD (GROUND YOUR ADVICE HERE) ===
 User Name: {user_name}
@@ -373,14 +373,14 @@ Current Portfolio Holdings:
         # 1. Strict Financial Domain Guardrail
         if not FinAIAssistant.is_financial_domain_query(user_message):
             refusal = (
-                f"Hello {user_name}! I would love to chat, but as your specialized **FinAI Financial Assistant**, "
+                f"Hello {user_name}! I would love to chat, but as your specialized **Finora Financial Assistant**, "
                 "my capabilities and expertise are strictly dedicated to the **Financial Advisory & Wealth Management domain**.\n\n"
                 "I am here to help you master your money—including cashflow optimization, budgeting, emergency reserves, "
                 "6-pillar health diagnostics, investment readiness, mutual funds, stocks, debt freedom, and retirement goals.\n\n"
                 "What personal finance question or goal can we work on together today?"
             )
             FinAIAssistant._save_conversation(user_id, user_message, refusal, {"guardrail_triggered": True})
-            return (refusal, "FinAI Domain Guardrail") if return_meta else refusal
+            return (refusal, "Finora Domain Guardrail") if return_meta else refusal
 
         # 2. Attempt External Multi-Provider LLM (Gemini, OpenAI, Groq)
         if AIService.is_api_configured():
@@ -409,7 +409,7 @@ Current Portfolio Holdings:
         # 3. Conversational Engine (ChatGPT Caliber with Sentiment Awareness)
         local_reply = ConversationalEngine.generate_chat_response(user_id, user_message, ctx)
         sentiment_info = SentimentEngine.analyze_sentiment(user_message)
-        provider_label = "FinAI Conversational Engine"
+        provider_label = "Finora Conversational Engine"
         FinAIAssistant._save_conversation(
             user_id,
             user_message,
@@ -433,5 +433,5 @@ Current Portfolio Holdings:
         sentiment_info = SentimentEngine.analyze_sentiment(user_message)
         return reply, {
             'sentiment': sentiment_info.get('sentiment'),
-            'provider': 'FinAI Conversational Engine'
+            'provider': 'Finora Conversational Engine'
         }

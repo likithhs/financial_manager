@@ -26,7 +26,7 @@ def api_health():
     """System health check endpoint."""
     return jsonify({
         "status": "ok",
-        "service": "FinAI REST API",
+        "service": "Finora REST API",
         "version": "2.4.0"
     }), 200
 

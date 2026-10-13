@@ -45,6 +45,6 @@ def health_check():
 
     return jsonify({
         "status": "ok" if db_status == "connected" else "degraded",
-        "service": "FinAI Financial Manager",
+        "service": "Finora Financial Manager",
         "database": db_status
     }), 200 if db_status == "connected" else 503

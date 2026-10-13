@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Home - FinAI Financial Platform{% endblock %}
+{% block title %}Home - Finora Financial Platform{% endblock %}
 {% block page_title %}Welcome Home{% endblock %}
 
 {% block content %}
@@ -22,13 +22,13 @@
         <i class="fa-solid fa-chart-pie"></i> Open Financial Cockpit
       </a>
       <a href="{{ url_for('ai.ai_assistant') }}" class="btn btn-secondary" style="padding: 10px 22px; font-weight: 600;">
-        <i class="fa-solid fa-robot"></i> Ask FinAI Assistant
+        <i class="fa-solid fa-robot"></i> Ask Finora Assistant
       </a>
     </div>
   </div>
 </div>
 
-<!-- Interactive FinAI Home Copilot Bar -->
+<!-- Interactive Finora Home Copilot Bar -->
 <div class="card" style="background: #FFFFFF; border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 22px 26px; margin-bottom: 28px; box-shadow: var(--shadow-sm);">
   <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
     <div style="display: flex; align-items: center; gap: 10px;">
@@ -36,7 +36,7 @@
         <i class="fa-solid fa-robot"></i>
       </div>
       <div>
-        <h4 style="font-size: 0.98rem; font-weight: 700; color: #111827; margin: 0;">FinAI Conversational Strategist</h4>
+        <h4 style="font-size: 0.98rem; font-weight: 700; color: #111827; margin: 0;">Finora Conversational Strategist</h4>
         <span style="font-size: 0.74rem; color: #059669; display: flex; align-items: center; gap: 5px;">
           <i class="fa-solid fa-circle" style="font-size: 0.45rem;"></i> Active • Sentiment-Aware Personal Wealth Advisor
         </span>
@@ -51,9 +51,9 @@
   </div>
 
   <form id="homeAiForm" style="display: flex; gap: 10px; align-items: center;">
-    <input type="text" id="homeAiInput" class="form-control" placeholder="Talk to FinAI like ChatGPT... ask about cashflow, debts, how you feel about money, or investment goals..." required autocomplete="off" style="flex-grow: 1; padding: 12px 18px; font-size: 0.92rem; background: #FAF8F4; border: 1px solid #D1D5DB; border-radius: var(--radius-md);">
+    <input type="text" id="homeAiInput" class="form-control" placeholder="Talk to Finora like ChatGPT... ask about cashflow, debts, how you feel about money, or investment goals..." required autocomplete="off" style="flex-grow: 1; padding: 12px 18px; font-size: 0.92rem; background: #FAF8F4; border: 1px solid #D1D5DB; border-radius: var(--radius-md);">
     <button type="submit" id="homeAiSendBtn" class="btn btn-primary" style="padding: 12px 22px; font-weight: 600;">
-      <span id="homeAiBtnText">Ask FinAI</span> <i class="fa-solid fa-paper-plane" id="homeAiBtnIcon"></i>
+      <span id="homeAiBtnText">Ask Finora</span> <i class="fa-solid fa-paper-plane" id="homeAiBtnIcon"></i>
     </button>
   </form>
 </div>
@@ -156,13 +156,13 @@
     </a>
   </div>
 
-  <!-- FinAI Copilot Card -->
+  <!-- Finora Copilot Card -->
   <div class="card" style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 18px; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 18px rgba(0,0,0,0.03);">
     <div>
       <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(37, 99, 235, 0.1); border: 1px solid rgba(37, 99, 235, 0.25); display: flex; align-items: center; justify-content: center; color: #2563EB; font-size: 1.25rem; margin-bottom: 14px;">
         <i class="fa-solid fa-robot"></i>
       </div>
-      <h4 style="font-size: 1.05rem; font-weight: 700; color: #111827; margin-bottom: 6px;">FinAI Assistant</h4>
+      <h4 style="font-size: 1.05rem; font-weight: 700; color: #111827; margin-bottom: 6px;">Finora Assistant</h4>
       <p style="font-size: 0.88rem; color: #6B7280; line-height: 1.5; margin-bottom: 18px;">
         Ask questions about your finances, generate budget optimizations, or get stock analysis on demand.
       </p>
@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
       homeAiResponseArea.innerHTML = `
         <div style="display: flex; align-items: center; gap: 8px; color: #6B7280;">
           <i class="fa-solid fa-spinner fa-spin" style="color: #D97706;"></i>
-          <span>FinAI is reviewing your financial metrics and analyzing your question...</span>
+          <span>Finora is reviewing your financial metrics and analyzing your question...</span>
         </div>
       `;
 
@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const providerBadge = data.provider ? `<span style="font-size: 0.7rem; font-weight: 700; color: #D97706; background: #FEF3C7; padding: 2px 8px; border-radius: 6px; margin-left: 8px;">${data.provider}</span>` : '';
           homeAiResponseArea.innerHTML = `
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid #E5E7EB; padding-bottom: 6px;">
-              <span style="font-weight: 700; color: #D97706; font-size: 0.8rem; text-transform: uppercase;"><i class="fa-solid fa-robot"></i> FinAI Advisor</span>
+              <span style="font-weight: 700; color: #D97706; font-size: 0.8rem; text-transform: uppercase;"><i class="fa-solid fa-robot"></i> Finora Advisor</span>
               ${providerBadge}
             </div>
             <div>${formatMarkdown(data.reply)}</div>
@@ -240,7 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } finally {
         homeAiInput.disabled = false;
         homeAiSendBtn.disabled = false;
-        homeAiBtnText.innerText = 'Ask FinAI';
+        homeAiBtnText.innerText = 'Ask Finora';
         homeAiBtnIcon.className = 'fa-solid fa-paper-plane';
       }
     });

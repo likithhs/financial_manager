@@ -88,7 +88,7 @@ def register_error_handlers(app):
             'error.html',
             status_code=429,
             title="Server Busy / High Traffic (429)",
-            error_message="The FinAI server is experiencing elevated request traffic. Please wait a moment and refresh."
+            error_message="The Finora server is experiencing elevated request traffic. Please wait a moment and refresh."
         ), 429
 
     @app.errorhandler(500)
@@ -120,5 +120,5 @@ def register_error_handlers(app):
             'error.html',
             status_code=503,
             title="Server Temporarily Busy (503)",
-            error_message="The FinAI database or computing cluster is temporarily busy under heavy workload. Please retry in a few moments."
+            error_message="The Finora database or computing cluster is temporarily busy under heavy workload. Please retry in a few moments."
         ), 503

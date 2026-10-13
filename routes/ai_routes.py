@@ -53,7 +53,7 @@ def ai_chat_api():
     if not user_id:
         return jsonify({
             "status": "auth_required",
-            "reply": "FinAI is an exclusive personal wealth advisory system. To analyze your finances, evaluate your sentiment, and provide personalized guidance, you must be logged in.",
+            "reply": "Finora is an exclusive personal wealth advisory system. To analyze your finances, evaluate your sentiment, and provide personalized guidance, you must be logged in.",
             "login_url": url_for('auth.login'),
             "register_url": url_for('auth.register')
         }), 401

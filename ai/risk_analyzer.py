@@ -181,7 +181,7 @@ def evaluate_risk_profile(answers_dict):
         explanation = (
             "Your profile indicates a Conservative risk tolerance. You strongly prioritize capital security, "
             "steady predictable returns, and low volatility over aggressive capital appreciation. "
-            "FinAI recommends allocating predominantly to Fixed Deposits (50%), Sovereign Gold Bonds (20%), "
+            "Finora recommends allocating predominantly to Fixed Deposits (50%), Sovereign Gold Bonds (20%), "
             "and Liquid Debt Instruments (20%), with a minimal exposure to Large-Cap Index Funds (10%)."
         )
         color_theme = "good"
@@ -191,7 +191,7 @@ def evaluate_risk_profile(answers_dict):
         explanation = (
             "Your profile indicates a Moderate / Balanced risk tolerance. You are comfortable accepting calculated "
             "market fluctuations in exchange for healthy wealth compounding over a 3 to 7 year horizon. "
-            "FinAI recommends a balanced 50:50 allocation: 50% in Broad Market Equity Index Funds & Mid-Caps, "
+            "Finora recommends a balanced 50:50 allocation: 50% in Broad Market Equity Index Funds & Mid-Caps, "
             "30% in Fixed Income / Debt Instruments, and 20% in Gold or Liquid Emergency Assets."
         )
         color_theme = "warning"
@@ -201,7 +201,7 @@ def evaluate_risk_profile(answers_dict):
         explanation = (
             "Your profile indicates an Aggressive / Growth risk tolerance. You have substantial risk capacity, "
             "a long-term horizon, and the psychological discipline to navigate significant market drawdowns. "
-            "FinAI recommends a high-growth allocation: 70% in Equities (Large-Cap, Mid-Cap, Multi-Cap & Direct Stocks), "
+            "Finora recommends a high-growth allocation: 70% in Equities (Large-Cap, Mid-Cap, Multi-Cap & Direct Stocks), "
             "15% in Thematic / Small-Cap funds, 10% in Debt for tactical rebalancing, and 5% in Gold."
         )
         color_theme = "excellent"

@@ -1,4 +1,4 @@
-# FinAI — AI-Powered Personal Financial Assistant & Investment Readiness Platform
+# Finora — AI-Powered Personal Financial Assistant & Investment Readiness Platform
 
 **Academic Context**: BCA Final Year Major Project (2026)  
 **Architecture**: Modular Flask Blueprints + Service Layer Architecture + MySQL 8.0 + Modern Dark Fintech Glassmorphic UI  
@@ -7,12 +7,12 @@
 
 ## 📌 Project Overview & Core Philosophy
 
-FinAI is an institutional-grade, rule-based AI financial intelligence suite designed on one foundational premise:
+Finora is an institutional-grade, rule-based AI financial intelligence suite designed on one foundational premise:
 
 > **"Financial stability must precede market risk."**  
 > An investor should never take market risks (direct equities, mutual funds, speculative assets) if they lack an emergency runway or positive cashflow.
 
-FinAI enforces this principle through an automated **Investment Readiness Gatekeeper** and a **10-Factor Psychometric Risk Profiler** before unlocking asset allocation and securities analytics.
+Finora enforces this principle through an automated **Investment Readiness Gatekeeper** and a **10-Factor Psychometric Risk Profiler** before unlocking asset allocation and securities analytics.
 
 ```
                          USER FINANCIAL CASHFLOW

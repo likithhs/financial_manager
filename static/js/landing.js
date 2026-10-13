@@ -1,5 +1,5 @@
 /**
- * FinAI Landing Page Micro-Interactions & UI Controls
+ * Finora Landing Page Micro-Interactions & UI Controls
  * Infosys-Style Interactive Solution Filter & Chat Demo
  */
 document.addEventListener('DOMContentLoaded', () => {
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 3. Live Interactive AI Chat on Landing Page (Powered by FinAI Engine)
+  // 3. Live Interactive AI Chat on Landing Page (Powered by Finora Engine)
   const chatInput = document.getElementById('landingChatInput');
   const chatSendBtn = document.getElementById('landingChatSend');
   const chatMessages = document.getElementById('landingChatMessages');
@@ -59,9 +59,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const DEMO_RESPONSES = [
     {
       keywords: ['health', 'score', 'pillar', 'diagnostic', 'analyze my financial health'],
-      reply: `### 📊 FinAI 6-Pillar Health Diagnostic (Demo Preview)
+      reply: `### 📊 Finora 6-Pillar Health Diagnostic (Demo Preview)
 
-Here is a sample preview of how FinAI continuously analyzes your financial vitals:
+Here is a sample preview of how Finora continuously analyzes your financial vitals:
 
 • **Savings Surplus (Score: 85/100)**: Net monthly savings rate is 45.5% (₹38,650 saved from ₹85,000 income).
 • **Expense Efficiency (Score: 78/100)**: Essential living expenses are well-contained under 55%.
@@ -69,23 +69,23 @@ Here is a sample preview of how FinAI continuously analyzes your financial vital
 • **Debt-to-Income (DTI)**: 12% — well below the risk threshold (35%).
 • **Asset Allocation**: 60% Equity Index Funds, 25% Debt/FDs, 15% Gold.
 
-**FinAI Next Best Action**:
+**Finora Next Best Action**:
 Your safety net is solid. Redirect ₹8,000/month into low-cost Nifty 50 Index Funds to accelerate compounding.
 
-*(💡 **Demo Preview**: When logged into your account, FinAI generates this score directly from your live income, expenses, and bank records).*`
+*(💡 **Demo Preview**: When logged into your account, Finora generates this score directly from your live income, expenses, and bank records).*`
     },
     {
       keywords: ['stressed about debt', 'debt', 'where do i start', 'credit card', 'avalanche', 'snowball', 'stressed'],
       reply: `I completely understand—carrying debt can feel overwhelming, but you're taking the right step by facing it today. Take a deep breath: debt is just math, and we can solve it systematically.
 
-Here is FinAI's step-by-step debt elimination demo framework:
+Here is Finora's step-by-step debt elimination demo framework:
 
 1. **Pause New Debt Immediately**: Freeze credit card swipes for non-essentials.
 2. **The Avalanche Method (Recommended)**: Pay minimums on all obligations, and throw every extra rupee at the single highest-interest debt first (like credit cards at 36–42% APR). This saves maximum money in interest.
 3. **Emergency Buffer**: Keep ₹15,000 to ₹25,000 in a savings account so an unexpected emergency doesn't push you back into credit debt.
 4. **Snowball Roll**: Once that card is zeroed, roll its entire payment into the next debt.
 
-*(💡 **Demo Preview**: Log in to let FinAI automatically scan your liabilities, calculate your exact debt-free date, and build your custom repayment plan).*`
+*(💡 **Demo Preview**: Log in to let Finora automatically scan your liabilities, calculate your exact debt-free date, and build your custom repayment plan).*`
     },
     {
       keywords: ['crorepati', '1 crore', 'ten million', 'millionaire', 'retire early', 'wealth'],
@@ -103,7 +103,7 @@ Building ₹1 Crore does not require speculative gambles or lottery picks. It is
 2. Never interrupt compounding during market dips or corrections.
 3. Increase your SIP whenever your income grows.
 
-*(💡 **Demo Preview**: When you log in, FinAI calculates your exact personalized crorepati timeline based on your real monthly surplus).*`
+*(💡 **Demo Preview**: When you log in, Finora calculates your exact personalized crorepati timeline based on your real monthly surplus).*`
     },
     {
       keywords: ['afford to invest', 'invest in mutual funds', 'mutual funds', 'afford', 'invest this month'],
@@ -115,10 +115,10 @@ Based on a standard cashflow profile:
 • **Discretionary Buffer**: ₹10,000
 • **Net Available Surplus**: **₹28,650**
 
-**FinAI Verdict**:
+**Finora Verdict**:
 **Yes, absolutely!** You can comfortably allocate **₹15,000 to ₹20,000 per month** into diversified mutual funds (such as low-cost Nifty 50 index funds) without putting any strain on your monthly obligations or lifestyle.
 
-*(💡 **Demo Preview**: When logged into your account, FinAI cross-references your live bank balances and upcoming bills before recommending exact investment amounts).*`
+*(💡 **Demo Preview**: When logged into your account, Finora cross-references your live bank balances and upcoming bills before recommending exact investment amounts).*`
     }
   ];
 
@@ -180,7 +180,7 @@ Based on a standard cashflow profile:
       </div>
       <div class="message-bubble" style="color: #6B7280; display: flex; align-items: center; gap: 8px;">
         <i class="fa-solid fa-spinner fa-spin" style="color: #D97706;"></i>
-        <span>FinAI is preparing response...</span>
+        <span>Finora is preparing response...</span>
       </div>
     `;
     chatMessages.appendChild(typingRow);
@@ -201,7 +201,7 @@ Based on a standard cashflow profile:
           </div>
           <div class="message-bubble">
             <div style="margin-bottom: 6px; font-size: 0.68rem; font-weight: 700; color: #D97706; text-transform: uppercase; display: flex; align-items: center; gap: 5px;">
-              <i class="fa-solid fa-sparkles"></i> FinAI Interactive Demo
+              <i class="fa-solid fa-sparkles"></i> Finora Interactive Demo
             </div>
             <div>${formatMarkdown(demoReply)}</div>
           </div>
@@ -244,7 +244,7 @@ Based on a standard cashflow profile:
               <i class="fa-solid fa-circle-info"></i> Interactive Demo Preview
             </div>
             <p style="margin: 0 0 10px 0; color: #78350F; font-size: 0.86rem; line-height: 1.5;">
-              This homepage assistant is an interactive demonstration. Without logging into your account, FinAI cannot access your live income, expenses, debts, or investment portfolio.
+              This homepage assistant is an interactive demonstration. Without logging into your account, Finora cannot access your live income, expenses, debts, or investment portfolio.
             </p>
             <p style="margin: 0 0 12px 0; color: #92400E; font-size: 0.86rem; font-weight: 600; line-height: 1.5;">
               For further details, personalized analysis, and complete financial guidance, please log in or create an account.
@@ -303,7 +303,7 @@ Based on a standard cashflow profile:
           <i class="fa-solid fa-robot"></i>
         </div>
         <div class="message-bubble" style="color: #DC2626;">
-          <p>Could not connect to the FinAI assistant server. Please check your connection.</p>
+          <p>Could not connect to the Finora assistant server. Please check your connection.</p>
         </div>
       `;
       chatMessages.appendChild(errRow);

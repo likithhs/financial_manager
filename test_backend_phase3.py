@@ -28,7 +28,7 @@ def run_phase3_tests():
     try:
         res = client.get('/')
         assert res.status_code == 200, f"Expected 200, got {res.status_code}"
-        assert b"FinAI" in res.data, "Expected FinAI in page output"
+        assert b"Finora" in res.data, "Expected Finora in page output"
         results["Test 2: Root route (/) loads home page"] = ("PASS", f"HTTP {res.status_code} OK (HTML returned)")
     except Exception as e:
         results["Test 2: Root route (/) loads home page"] = ("FAIL", str(e))

@@ -51,7 +51,7 @@ class AIService:
         if not api_key or provider == 'local':
             return {
                 "provider": "local",
-                "display_name": "FinAI Local Engine",
+                "display_name": "Finora Local Engine",
                 "model": "Rule-Based Deterministic",
                 "is_active": False
             }
