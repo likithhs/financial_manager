@@ -132,14 +132,19 @@ def init_db():
                         except Exception as err:
                             # Table or column already exists / benign warning
                             pass
-                try:
-                    cursor.execute("ALTER TABLE users ADD COLUMN phone VARCHAR(20) DEFAULT NULL")
-                except Exception:
-                    pass
-                try:
-                    cursor.execute("ALTER TABLE users ADD COLUMN address VARCHAR(255) DEFAULT NULL")
-                except Exception:
-                    pass
+                for col_def in [
+                    "phone VARCHAR(20) DEFAULT NULL",
+                    "address VARCHAR(255) DEFAULT NULL",
+                    "age INT DEFAULT 25",
+                    "occupation VARCHAR(100) DEFAULT 'Student / Professional'",
+                    "financial_exp VARCHAR(50) DEFAULT 'Beginner'",
+                    "investment_exp VARCHAR(50) DEFAULT 'None'",
+                    "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+                ]:
+                    try:
+                        cursor.execute(f"ALTER TABLE users ADD COLUMN {col_def}")
+                    except Exception:
+                        pass
                 conn.commit()
             cursor.close()
             conn.close()
@@ -353,6 +358,16 @@ def init_db():
                 cursor.execute("ALTER TABLE users ADD COLUMN phone TEXT")
             if 'address' not in user_cols:
                 cursor.execute("ALTER TABLE users ADD COLUMN address TEXT")
+            if 'age' not in user_cols:
+                cursor.execute("ALTER TABLE users ADD COLUMN age INTEGER DEFAULT 25")
+            if 'occupation' not in user_cols:
+                cursor.execute("ALTER TABLE users ADD COLUMN occupation TEXT DEFAULT 'Student / Professional'")
+            if 'financial_exp' not in user_cols:
+                cursor.execute("ALTER TABLE users ADD COLUMN financial_exp TEXT DEFAULT 'Beginner'")
+            if 'investment_exp' not in user_cols:
+                cursor.execute("ALTER TABLE users ADD COLUMN investment_exp TEXT DEFAULT 'None'")
+            if 'updated_at' not in user_cols:
+                cursor.execute("ALTER TABLE users ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 
             cursor.execute("PRAGMA table_info(expenses)")
             expense_cols = [c[1] for c in cursor.fetchall()]
