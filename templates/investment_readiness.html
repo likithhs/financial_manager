@@ -8,9 +8,6 @@
 <div class="card" style="background: linear-gradient(135deg, #FAF1DF 0%, #FAF7F0 60%, #FFFFFF 100%); border: 1px solid #FDE68A; border-radius: var(--radius-xl); padding: 32px 36px; margin-bottom: 28px; box-shadow: 0 4px 20px rgba(217, 119, 6, 0.06);">
   <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px;">
     <div>
-      <div style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.75rem; font-weight: 700; color: {% if readiness.is_ready %}#34d399{% else %}#fbbf24{% endif %}; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; background: #FEF3C7; border: 1px solid #FDE68A; padding: 5px 14px; border-radius: var(--radius-full); border: 1px solid var(--border-subtle);">
-        <i class="fa-solid fa-shield-halved"></i> Gatekeeper Protocol Active
-      </div>
       <div style="display: flex; align-items: baseline; gap: 16px; margin-top: 4px;">
         <h1 style="font-size: 2.3rem; font-weight: 800; color: {% if readiness.is_ready %}#34d399{% else %}#fbbf24{% endif %}; margin: 0; line-height: 1.1;">
           {{ readiness.status_label }}
@@ -130,9 +127,6 @@
         Follow this 4-step pathway to build financial security and unlock personalized AI recommendations.
       </p>
     </div>
-    <span style="font-size: 0.8rem; font-weight: 700; color: var(--cyan-bright); background: rgba(37, 99, 235, 0.15); padding: 6px 14px; border-radius: var(--radius-full); border: 1px solid rgba(6, 182, 212, 0.3);">
-      Standard CFP Safety Protocol
-    </span>
   </div>
 
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">

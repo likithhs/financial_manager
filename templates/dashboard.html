@@ -66,9 +66,8 @@
       <span class="badge badge-{{ health.health_status | lower | replace(' ', '-') }}">{{ health.health_status }}</span>
     </div>
     <div class="card-body">
-      <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+      <div style="margin-bottom: 8px;">
         <span style="font-size: 2.2rem; font-weight: 800; color: var(--text-white);">{{ health.score }}<span style="font-size: 1rem; color: var(--text-muted);">/100</span></span>
-        <span style="font-size: 0.85rem; font-weight: 600; color: var(--cyan-accent);">6-Pillar Matrix</span>
       </div>
 
       <div class="progress-bar-container" style="margin-bottom: 12px;">

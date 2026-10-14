@@ -200,9 +200,6 @@ Based on a standard cashflow profile:
             <i class="fa-solid fa-robot"></i>
           </div>
           <div class="message-bubble">
-            <div style="margin-bottom: 6px; font-size: 0.68rem; font-weight: 700; color: #D97706; text-transform: uppercase; display: flex; align-items: center; gap: 5px;">
-              <i class="fa-solid fa-sparkles"></i> Finora Interactive Demo
-            </div>
             <div>${formatMarkdown(demoReply)}</div>
           </div>
         `;
@@ -240,9 +237,6 @@ Based on a standard cashflow profile:
             <i class="fa-solid fa-lock"></i>
           </div>
           <div class="message-bubble" style="border-left: 3px solid #D97706; background: #FFFBEB; padding: 14px 18px;">
-            <div style="font-weight: 700; color: #92400E; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; font-size: 0.88rem;">
-              <i class="fa-solid fa-circle-info"></i> Interactive Demo Preview
-            </div>
             <p style="margin: 0 0 10px 0; color: #78350F; font-size: 0.86rem; line-height: 1.5;">
               This homepage assistant is an interactive demonstration. Without logging into your account, Finora cannot access your live income, expenses, debts, or investment portfolio.
             </p>

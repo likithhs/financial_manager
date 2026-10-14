@@ -8,9 +8,6 @@
 <div class="card" style="background: linear-gradient(135deg, #FAF1DF 0%, #FAF7F0 60%, #FFFFFF 100%); border: 1px solid #FDE68A; border-radius: var(--radius-lg); padding: 36px 32px; margin-bottom: 28px; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(217, 119, 6, 0.06);">
   <div style="position: absolute; right: -20px; top: -20px; width: 220px; height: 220px; background: radial-gradient(circle, rgba(217, 119, 6, 0.12) 0%, transparent 70%); pointer-events: none;"></div>
   <div style="position: relative; z-index: 1;">
-    <div style="display: inline-flex; align-items: center; gap: 8px; background: #FEF3C7; border: 1px solid #FDE68A; border-radius: var(--radius-full); padding: 5px 14px; font-size: 0.8rem; font-weight: 600; color: #92400E; margin-bottom: 14px;">
-      <span style="width: 7px; height: 7px; border-radius: 50%; background: #D97706; display: inline-block;"></span> Financial Intelligence Hub
-    </div>
     <h1 style="font-size: 2.15rem; font-weight: 800; color: #111827; margin-bottom: 10px; letter-spacing: -0.5px;">
       Welcome, <span style="color: #D97706;">{{ session.get('user_name', user_name) }}</span>!
     </h1>
@@ -37,9 +34,6 @@
       </div>
       <div>
         <h4 style="font-size: 0.98rem; font-weight: 700; color: #111827; margin: 0;">Finora Conversational Strategist</h4>
-        <span style="font-size: 0.74rem; color: #059669; display: flex; align-items: center; gap: 5px;">
-          <i class="fa-solid fa-circle" style="font-size: 0.45rem;"></i> Active • Sentiment-Aware Personal Wealth Advisor
-        </span>
       </div>
     </div>
     <a href="{{ url_for('ai.ai_assistant') }}" class="btn btn-sm btn-ghost" style="color: #D97706; font-weight: 600; font-size: 0.8rem;">

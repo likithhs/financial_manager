@@ -1,23 +1,13 @@
 {% extends "base.html" %}
 
 {% block title %}Finora Admin - System Health & Diagnostics Console{% endblock %}
-{% block page_title %}
-<div style="display: flex; align-items: center; gap: 12px;">
-  <span>System Health & Diagnostics Console</span>
-  <span style="font-size: 0.72rem; padding: 4px 10px; border-radius: 999px; background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #34d399; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;">
-    <i class="fa-solid fa-circle-check"></i> System Operational
-  </span>
-</div>
-{% endblock %}
+{% block page_title %}System Health & Diagnostics Console{% endblock %}
 
 {% block content %}
 <!-- System Health Overview Banner -->
 <div class="card" style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 27, 75, 0.8) 100%); border: 1px solid rgba(245, 158, 11, 0.35); margin-bottom: 24px; padding: 22px 26px; border-radius: var(--radius-lg); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);">
   <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
     <div>
-      <div style="font-size: 0.8rem; font-weight: 700; color: #fbbf24; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px;">
-        <i class="fa-solid fa-heart-pulse"></i> Service Diagnostics & Telemetry
-      </div>
       <h2 style="font-size: 1.45rem; font-weight: 800; color: #111827; margin: 0;">Finora Infrastructure Health & Connectivity</h2>
       <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; margin-bottom: 0;">
         Real-time telemetry monitoring database connection latency, service state, table integrity, and environment specs.
