@@ -42,9 +42,8 @@
 <div class="card" style="margin-bottom: 28px;">
   <div class="card-header">
     <div class="card-title">
-      <i class="fa-solid fa-circle-plus" style="color: var(--cyan-accent); margin-right: 6px;"></i> Initialize New Financial Goal
+      <i class="fa-solid fa-circle-plus" style="color: var(--cyan-accent); margin-right: 6px;"></i> Create New Financial Goal
     </div>
-    <span class="badge badge-ai">Automated SIP Modeling</span>
   </div>
   <div class="card-body">
     <form action="{{ url_for('goal.add_goal') }}" method="POST" style="display: flex; flex-direction: column; gap: 16px;">
@@ -117,7 +116,7 @@
           Priority: <strong style="color: {% if g.priority == 'High' %}var(--cyan-bright){% else %}var(--text-light){% endif %};">{{ g.priority }}</strong>
         </span>
       </div>
-      <span class="badge badge-{% if g.is_completed %}success{% else %}ai{% endif %}">
+      <span class="badge badge-{% if g.is_completed %}success{% else %}secondary{% endif %}">
         {{ g.status }}
       </span>
     </div>

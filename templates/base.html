@@ -108,13 +108,13 @@
           <i class="fa-solid fa-landmark"></i> <span>Investment Categories</span>
         </a>
         <a href="{{ url_for('investment.investment_recommendation') }}" class="nav-link {% if request.endpoint in ['investment.investment_recommendation'] %}active{% endif %}">
-          <i class="fa-solid fa-diagram-project"></i> <span>Asset Allocation AI</span>
+          <i class="fa-solid fa-diagram-project"></i> <span>Asset Allocation</span>
         </a>
         <a href="{{ url_for('stock.stocks') }}" class="nav-link {% if request.endpoint in ['stock.stocks', 'market.market', 'market.stocks'] %}active{% endif %}">
-          <i class="fa-solid fa-arrow-trend-up"></i> <span>Market Telemetry</span>
+          <i class="fa-solid fa-arrow-trend-up"></i> <span>Stock Market</span>
         </a>
         <a href="{{ url_for('stock.stock_analysis') }}" class="nav-link {% if request.endpoint in ['stock.stock_analysis'] %}active{% endif %}">
-          <i class="fa-solid fa-microchip"></i> <span>AI Stock Analysis</span>
+          <i class="fa-solid fa-microchip"></i> <span>Stock Analysis</span>
         </a>
         <a href="{{ url_for('portfolio.watchlist') }}" class="nav-link {% if request.endpoint in ['portfolio.watchlist'] %}active{% endif %}">
           <i class="fa-solid fa-star"></i> <span>Stock Watchlist</span>

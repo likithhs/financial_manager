@@ -63,7 +63,6 @@
   <div class="card" style="margin-bottom: 0;">
     <div class="card-header">
       <div class="card-title"><i class="fa-solid fa-heart-pulse" style="color: var(--cyan-accent); margin-right: 6px;"></i> Financial Health</div>
-      <span class="badge badge-{{ health.health_status | lower | replace(' ', '-') }}">{{ health.health_status }}</span>
     </div>
     <div class="card-body">
       <div style="margin-bottom: 8px;">
@@ -88,7 +87,6 @@
   <div class="card" style="margin-bottom: 0;">
     <div class="card-header">
       <div class="card-title"><i class="fa-solid fa-scale-balanced" style="color: var(--cyan-accent); margin-right: 6px;"></i> Behavioral Risk Tier</div>
-      <span class="badge badge-ai">{{ risk_level }}</span>
     </div>
     <div class="card-body">
       <p style="font-size: 0.84rem; color: var(--text-subtle); margin-bottom: 14px;">
@@ -108,9 +106,6 @@
   <div class="card" style="margin-bottom: 0;">
     <div class="card-header">
       <div class="card-title"><i class="fa-solid fa-shield-halved" style="color: var(--cyan-accent); margin-right: 6px;"></i> Investment Readiness</div>
-      <span class="badge badge-{% if readiness.is_ready %}success{% else %}warning{% endif %}">
-        {% if readiness.is_ready %}Ready to Invest{% else %}Gated / Protect Buffer{% endif %}
-      </span>
     </div>
     <div class="card-body">
       <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px;">

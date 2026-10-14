@@ -43,7 +43,6 @@
       <div class="card-title">
         <i class="fa-solid fa-minus-circle" style="color: var(--danger); margin-right: 6px;"></i> Log Outflow Entry
       </div>
-      <span class="badge badge-ai">Auto Categorize</span>
     </div>
     <div class="card-body">
       <form action="{{ url_for('financial.add_expense') }}" method="POST" style="display: flex; flex-direction: column; gap: 16px;">
@@ -91,7 +90,6 @@
       <div class="card-title">
         <i class="fa-solid fa-clock-rotate-left" style="color: var(--cyan-accent); margin-right: 6px;"></i> Outflow History
       </div>
-      <span class="badge badge-ai">{{ expenses | length }} Logged</span>
     </div>
     <div class="card-body" style="padding: 0;">
       <div class="table-responsive">
@@ -110,7 +108,7 @@
             <tr>
               <td style="font-size: 0.82rem; color: var(--text-muted);">{{ exp.date }}</td>
               <td><strong style="color: #fff;">{{ exp.title }}</strong></td>
-              <td><span class="badge badge-ai" style="font-size: 0.7rem;">{{ exp.category }}</span></td>
+              <td><span class="badge badge-secondary" style="font-size: 0.7rem;">{{ exp.category }}</span></td>
               <td style="color: var(--danger); font-weight: 700;">-₹{{ "{:,.2f}".format(exp.amount) }}</td>
               <td>
                 <form action="{{ url_for('financial.delete_expense', expense_id=exp.id) }}" method="POST" style="display:inline;">

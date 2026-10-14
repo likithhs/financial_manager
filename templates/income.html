@@ -32,7 +32,7 @@
       <i class="fa-solid fa-robot" style="color: var(--blue-light); font-size: 1.1rem;"></i>
     </div>
     <div class="stat-value" style="color: var(--cyan-bright);">Verified</div>
-    <div class="stat-desc">Synchronized with 6-Pillar Health Score</div>
+    <div class="stat-desc">Synchronized with Financial Health</div>
   </div>
 </div>
 
@@ -43,7 +43,6 @@
       <div class="card-title">
         <i class="fa-solid fa-plus-circle" style="color: var(--cyan-accent); margin-right: 6px;"></i> Record Inflow Entry
       </div>
-      <span class="badge badge-ai">Instant Sync</span>
     </div>
     <div class="card-body">
       <form action="{{ url_for('financial.add_income') }}" method="POST" style="display: flex; flex-direction: column; gap: 16px;">
@@ -91,7 +90,6 @@
       <div class="card-title">
         <i class="fa-solid fa-receipt" style="color: var(--cyan-accent); margin-right: 6px;"></i> Recorded Inflows
       </div>
-      <span class="badge badge-ai">{{ incomes | length }} Logged</span>
     </div>
     <div class="card-body" style="padding: 0;">
       <div class="table-responsive">
@@ -110,7 +108,7 @@
             <tr>
               <td style="font-size: 0.82rem; color: var(--text-muted);">{{ inc.date }}</td>
               <td><strong style="color: #fff;">{{ inc.source }}</strong></td>
-              <td><span class="badge badge-ai" style="font-size: 0.7rem;">{{ inc.category }}</span></td>
+              <td><span class="badge badge-secondary" style="font-size: 0.7rem;">{{ inc.category }}</span></td>
               <td style="color: var(--success); font-weight: 700;">+₹{{ "{:,.2f}".format(inc.amount) }}</td>
               <td>
                 <form action="{{ url_for('financial.delete_income', income_id=inc.id) }}" method="POST" style="display:inline;">

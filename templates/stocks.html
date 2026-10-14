@@ -27,7 +27,7 @@
   <div class="stat-card">
     <div style="display: flex; justify-content: space-between; align-items: flex-start;">
       <div class="stat-label">Market Volatility (India VIX)</div>
-      <span class="badge badge-ai">Stable</span>
+      <span class="badge badge-success">Stable</span>
     </div>
     <div class="stat-value" style="color: var(--cyan-bright);">13.42</div>
     <div class="stat-desc">Low volatility • Favorable for SIPs</div>
@@ -99,7 +99,7 @@
               <div style="font-size: 0.75rem; color: var(--text-muted);">{{ s.market_cap or 'Large Cap' }}</div>
             </td>
             <td>
-              <span class="badge badge-ai" style="font-size: 0.7rem;">{{ s.sector }}</span>
+              <span class="badge badge-secondary" style="font-size: 0.7rem;">{{ s.sector }}</span>
             </td>
             <td style="font-weight: 700; font-size: 1rem; color: var(--text-white);">
               ₹{{ "{:,.2f}".format((s.price or s.current_price or 0)|float) }}

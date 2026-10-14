@@ -13,11 +13,11 @@
         <i class="fa-solid fa-robot"></i>
       </div>
       <div>
-        <h4 style="font-size: 1.05rem; font-weight: 700; color: #111827; line-height: 1.2;">Finora Intelligence Core</h4>
+        <h4 style="font-size: 1.05rem; font-weight: 700; color: #111827; line-height: 1.2;">Finora Assistant</h4>
       </div>
     </div>
 
-    <!-- Engine & Domain Badges -->
+    <!-- Status & Actions -->
     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
       
       {% if provider_status and provider_status.is_active %}
@@ -25,8 +25,8 @@
           <i class="fa-solid fa-bolt"></i> {{ provider_status.display_name }}
         </span>
       {% else %}
-        <span class="badge" id="activeProviderBadge" style="background: rgba(217, 119, 6, 0.1); color: #D97706; border: 1px solid rgba(217, 119, 6, 0.25); font-size: 0.76rem; font-weight: 700;">
-          <i class="fa-solid fa-comments"></i> Finora Conversational Engine
+        <span class="badge" id="activeProviderBadge" style="background: rgba(16, 185, 129, 0.1); color: #059669; border: 1px solid rgba(16, 185, 129, 0.3); font-size: 0.76rem; font-weight: 700;">
+          <i class="fa-solid fa-circle" style="font-size: 0.5rem;"></i> Online
         </span>
       {% endif %}
 

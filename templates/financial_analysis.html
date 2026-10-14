@@ -42,7 +42,7 @@
       <div>
         <div style="margin-bottom: 12px;">
           <h2 style="font-size: 1.6rem; font-weight: 800; color: #fff;">
-            Diagnostic Stability Matrix: <span class="gradient-text-cyan">{{ health.health_status }}</span>
+            Financial Health Status: <span class="gradient-text-cyan">{{ health.health_status }}</span>
           </h2>
         </div>
 
@@ -165,7 +165,7 @@
         <div style="background: #FAF8F4; border: 1px solid #E5E7EB; border-left: 4px solid {% if sug.priority == 'Critical' %}var(--danger){% elif sug.priority == 'High' %}var(--warning){% else %}var(--cyan-accent){% endif %}; padding: 16px; border-radius: var(--radius-md);">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
             <strong style="color: #111827; font-size: 0.95rem;">{{ sug.title }}</strong>
-            <span class="badge badge-{% if sug.priority == 'Critical' %}danger{% elif sug.priority == 'High' %}warning{% else %}ai{% endif %}">
+            <span class="badge badge-{% if sug.priority == 'Critical' %}danger{% elif sug.priority == 'High' %}warning{% else %}secondary{% endif %}">
               {{ sug.priority }} Priority
             </span>
           </div>

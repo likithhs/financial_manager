@@ -18,11 +18,6 @@
           Manage your personal details, financial baseline calibration, and security preferences.
         </p>
       </div>
-      <div class="settings-header-badge-box">
-        <span class="badge badge-ai">
-          <i class="fa-solid fa-database"></i> Database Synchronized
-        </span>
-      </div>
     </div>
 
     <!-- Navigation Tabs -->
@@ -74,7 +69,7 @@
         <div class="settings-hero-details">
           <div class="settings-hero-name-row">
             <h3 class="settings-hero-name">{{ user.name }}</h3>
-            <span class="badge badge-ai" style="text-transform: uppercase;">
+            <span class="badge badge-primary" style="text-transform: uppercase;">
               <i class="fa-solid fa-shield-halved"></i> {{ user.role }}
             </span>
             <span class="badge badge-success">
@@ -208,7 +203,7 @@
                 <i class="fa-solid fa-scale-balanced"></i> Financial Experience Tier
               </div>
               <div class="profile-info-value">
-                <span class="badge badge-ai" style="font-size: 0.82rem;">
+                <span class="badge badge-neutral" style="font-size: 0.82rem;">
                   {{ user.financial_exp or 'Beginner' }}
                 </span>
               </div>
