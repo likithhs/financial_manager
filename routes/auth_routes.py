@@ -179,7 +179,7 @@ def settings():
         except Exception:
             user['joined_date'] = created[:10]
     else:
-        user['joined_date'] = 'Active Member'
+        user['joined_date'] = 'Member'
 
     active_tab = request.args.get('tab', 'account')
     if active_tab not in ['account', 'edit', 'security']:

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}Dashboard - Finora Financial Platform{% endblock %}
-{% block page_title %}Executive Financial Intelligence Cockpit{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
 
 {% block content %}
 <!-- 1. Top Highlight Cashflow Glass Cards -->
@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="stat-value" style="color: var(--success);">₹{{ "{:,.2f}".format(health.total_income) }}</div>
-    <div class="stat-desc" style="color: var(--text-muted);"><i class="fa-solid fa-bolt" style="color: var(--cyan-accent);"></i> Active Recorded Incomes</div>
+    <div class="stat-desc" style="color: var(--text-muted);"><i class="fa-solid fa-bolt" style="color: var(--cyan-accent);"></i> Recorded Inflows</div>
   </div>
 
   <!-- Expenses Card -->

@@ -15,7 +15,7 @@
           Account Settings & Profile
         </h2>
         <p class="settings-page-subheading">
-          Manage your personal details, financial baseline calibration, and security preferences.
+          Manage your personal details, financial baseline, and account password.
         </p>
       </div>
     </div>
@@ -51,8 +51,8 @@
               role="tab" 
               aria-selected="{% if active_tab == 'security' %}true{% else %}false{% endif %}"
               id="tab-btn-security">
-        <i class="fa-solid fa-shield-halved"></i>
-        <span>Security & Password</span>
+        <i class="fa-solid fa-key"></i>
+        <span>Change Password</span>
       </button>
     </div>
   </div>
@@ -69,17 +69,9 @@
         <div class="settings-hero-details">
           <div class="settings-hero-name-row">
             <h3 class="settings-hero-name">{{ user.name }}</h3>
-            <span class="badge badge-primary" style="text-transform: uppercase;">
-              <i class="fa-solid fa-shield-halved"></i> {{ user.role }}
-            </span>
-            <span class="badge badge-success">
-              <i class="fa-solid fa-circle-check"></i> Active
-            </span>
           </div>
           <div class="settings-hero-meta">
             <span><i class="fa-solid fa-envelope"></i> {{ user.email }}</span>
-            <span class="meta-separator">•</span>
-            <span><i class="fa-solid fa-id-badge"></i> User ID #{{ user.id }}</span>
             <span class="meta-separator">•</span>
             <span><i class="fa-solid fa-calendar-check"></i> Joined {{ user.joined_date }}</span>
           </div>
@@ -89,9 +81,6 @@
       <div class="settings-hero-actions">
         <button type="button" class="btn btn-primary" onclick="switchSettingsTab('edit')">
           <i class="fa-solid fa-user-pen"></i> Edit Profile
-        </button>
-        <button type="button" class="btn btn-outline" onclick="switchSettingsTab('security')">
-          <i class="fa-solid fa-key"></i> Security
         </button>
       </div>
     </div>
@@ -150,9 +139,21 @@
 
             <div class="profile-info-item">
               <div class="profile-info-label">
-                <i class="fa-solid fa-fingerprint"></i> Account ID
+                <i class="fa-solid fa-id-badge"></i> User ID
               </div>
               <div class="profile-info-value font-mono">#{{ user.id }}</div>
+            </div>
+
+            <div class="profile-info-item">
+              <div class="profile-info-label">
+                <i class="fa-solid fa-lock"></i> Account Password
+              </div>
+              <div class="profile-info-value" style="display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%;">
+                <span style="letter-spacing: 2px; color: var(--text-muted); font-size: 1.05rem;">••••••••</span>
+                <button type="button" class="btn btn-sm btn-outline" onclick="switchSettingsTab('security')" style="padding: 4px 12px; font-size: 0.8rem;">
+                  <i class="fa-solid fa-key"></i> Change Password
+                </button>
+              </div>
             </div>
 
             <div class="profile-info-item">
@@ -223,7 +224,7 @@
                 <i class="fa-solid fa-circle-check"></i> Account Status
               </div>
               <div class="profile-info-value" style="color: var(--success); font-weight: 600;">
-                <i class="fa-solid fa-circle-check"></i> Active & Calibrated
+                <i class="fa-solid fa-circle-check"></i> Verified
               </div>
             </div>
 
@@ -240,18 +241,7 @@
 
     </div>
 
-    <!-- Quick Navigation Bottom Action Bar -->
-    <div class="settings-bottom-actions-card">
-      <div style="display: flex; align-items: center; gap: 12px;">
-        <i class="fa-solid fa-circle-info" style="color: var(--cyan-accent); font-size: 1.2rem;"></i>
-        <span style="font-size: 0.9rem; color: var(--text-subtle);">
-          Need to update your contact details or recalibrate your investment experience?
-        </span>
-      </div>
-      <button type="button" class="btn btn-primary" onclick="switchSettingsTab('edit')">
-        <i class="fa-solid fa-user-pen"></i> Open Edit Profile Form
-      </button>
-    </div>
+
 
   </div>
 
@@ -400,9 +390,9 @@
     </div>
   </div>
 
-  <!-- ================= TAB 3: SECURITY & PASSWORD ================= -->
+  <!-- ================= TAB 3: CHANGE PASSWORD ================= -->
   <div id="tab-pane-security" class="settings-tab-pane {% if active_tab == 'security' %}active{% endif %}" role="tabpanel">
-    <div class="grid-2" style="gap: 24px; align-items: start;">
+    <div style="max-width: 620px; margin: 0 auto; width: 100%;">
       
       <!-- Change Password Card -->
       <div class="card settings-form-card">
@@ -433,7 +423,7 @@
                      name="new_password" 
                      class="form-control" 
                      required 
-                     minlength="6"
+                     minlength="6" 
                      placeholder="Enter new password (min. 6 characters)">
             </div>
 
@@ -444,73 +434,19 @@
                      name="confirm_password" 
                      class="form-control" 
                      required 
-                     minlength="6"
+                     minlength="6" 
                      placeholder="Confirm your new password">
             </div>
 
             <div class="form-actions-row">
               <button type="button" class="btn btn-outline" onclick="switchSettingsTab('account')">
-                Cancel
+                <i class="fa-solid fa-xmark"></i> Cancel
               </button>
               <button type="submit" class="btn btn-primary">
                 <i class="fa-solid fa-shield-check"></i> Update Password
               </button>
             </div>
           </form>
-        </div>
-      </div>
-
-      <!-- Security Status & Isolation Overview -->
-      <div class="card settings-section-card">
-        <div class="card-header">
-          <div class="card-title">
-            <i class="fa-solid fa-shield-halved" style="color: var(--cyan-accent); margin-right: 8px;"></i>
-            Security & Tenant Protection
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="profile-info-list">
-            
-            <div class="profile-info-item">
-              <div class="profile-info-label">
-                <i class="fa-solid fa-key"></i> Password Encryption
-              </div>
-              <div class="profile-info-value">
-                <span class="badge badge-success">PBKDF2 / SHA256</span>
-              </div>
-            </div>
-
-            <div class="profile-info-item">
-              <div class="profile-info-label">
-                <i class="fa-solid fa-user-lock"></i> Session Isolation
-              </div>
-              <div class="profile-info-value" style="color: var(--success); font-weight: 600;">
-                <i class="fa-solid fa-circle-check"></i> Strict Single-Tenant
-              </div>
-            </div>
-
-            <div class="profile-info-item">
-              <div class="profile-info-label">
-                <i class="fa-solid fa-id-badge"></i> Authenticated Session
-              </div>
-              <div class="profile-info-value font-mono">User #{{ user.id }}</div>
-            </div>
-
-            <div class="profile-info-item">
-              <div class="profile-info-label">
-                <i class="fa-solid fa-clock"></i> Last Activity
-              </div>
-              <div class="profile-info-value">Active Session</div>
-            </div>
-
-          </div>
-
-          <div style="margin-top: 20px; padding: 14px 16px; background: var(--bg-dark-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); font-size: 0.85rem; color: var(--text-subtle);">
-            <div style="font-weight: 700; color: var(--text-white); margin-bottom: 4px;">
-              <i class="fa-solid fa-circle-info" style="color: var(--cyan-accent);"></i> Data Privacy & Protection
-            </div>
-            Your personal financial records and portfolios are strictly isolated by authenticated account ID. Finora never shares or exposes your telemetry across accounts.
-          </div>
         </div>
       </div>
 
