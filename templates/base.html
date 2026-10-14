@@ -24,7 +24,7 @@
     <!-- Sidebar Navigation -->
     <aside class="sidebar">
       <div class="sidebar-header">
-        <a href="{{ url_for('main.home') }}" class="brand-logo">
+        <a href="{{ url_for('main.home') }}" class="brand-logo" id="sidebarBrandLogo" title="Finora Home">
           <div class="fa-logo-icon" style="display: inline-flex; align-items: flex-end; gap: 3.5px; height: 24px; padding-bottom: 2px;">
             <span style="width: 5px; height: 14px; background: #D97706; border-radius: 4px; display: inline-block;"></span>
             <span style="width: 5px; height: 24px; background: #D97706; border-radius: 4px; display: inline-block;"></span>
@@ -32,7 +32,6 @@
           </div>
           <div class="brand-info">
             <span class="brand-title">Fin<span>ora</span></span>
-            <span class="brand-tagline">AI Financial Assistant</span>
           </div>
         </a>
       </div>
@@ -365,34 +364,72 @@
       const sidebarNav = document.querySelector('.sidebar-nav');
       if (!sidebarNav) return;
 
-      // 1. Restore exact scroll position from previous navigation
-      const savedPos = sessionStorage.getItem('finai_sidebar_scroll');
-      if (savedPos !== null) {
-        sidebarNav.scrollTop = parseInt(savedPos, 10);
+      const isHome = {% if request.endpoint in ['main.home'] %}true{% else %}false{% endif %};
+
+      // 1. If visiting Home, always ensure scroller is at top (the starting button)
+      if (isHome) {
+        sessionStorage.setItem('finai_sidebar_scroll', '0');
+        sidebarNav.scrollTop = 0;
       } else {
-        // First visit: scroll active module into comfortable view
-        const activeLink = sidebarNav.querySelector('.nav-link.active');
-        if (activeLink) {
-          activeLink.scrollIntoView({ block: 'nearest', behavior: 'auto' });
+        // Restore scroll position from previous navigation
+        const savedPos = sessionStorage.getItem('finai_sidebar_scroll');
+        if (savedPos !== null) {
+          sidebarNav.scrollTop = parseInt(savedPos, 10);
+        } else {
+          // Fallback: scroll active module into comfortable view
+          const activeLink = sidebarNav.querySelector('.nav-link.active');
+          if (activeLink) {
+            activeLink.scrollIntoView({ block: 'nearest', behavior: 'auto' });
+          }
         }
       }
 
-      // 2. Save scroll position on user scrolling
+      // 2. Clicking the brand logo always resets scroller to Home (the starting button at top)
+      const brandLogo = document.getElementById('sidebarBrandLogo') || document.querySelector('.brand-logo');
+      if (brandLogo) {
+        brandLogo.addEventListener('click', function() {
+          sessionStorage.setItem('finai_sidebar_scroll', '0');
+          if (sidebarNav) {
+            sidebarNav.scrollTop = 0;
+            if (isHome) {
+              sidebarNav.scrollTo({ top: 0, behavior: 'smooth' });
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          }
+        });
+      }
+
+      // 3. Clicking Home link directly also resets scroller to top
+      const homeLink = sidebarNav.querySelector('a[href="{{ url_for('main.home') }}"]');
+      if (homeLink) {
+        homeLink.addEventListener('click', function() {
+          sessionStorage.setItem('finai_sidebar_scroll', '0');
+          sidebarNav.scrollTop = 0;
+        });
+      }
+
+      // 4. Save scroll position on user scrolling (only when not on top of Home)
       sidebarNav.addEventListener('scroll', function() {
-        sessionStorage.setItem('finai_sidebar_scroll', sidebarNav.scrollTop);
+        if (!isHome || sidebarNav.scrollTop > 0) {
+          sessionStorage.setItem('finai_sidebar_scroll', sidebarNav.scrollTop);
+        }
       }, { passive: true });
 
-      // 3. Save scroll position immediately whenever any navigation link is clicked
+      // 5. Save scroll position immediately whenever any other navigation link is clicked
       const navLinks = sidebarNav.querySelectorAll('.nav-link');
       navLinks.forEach(function(link) {
-        link.addEventListener('click', function() {
-          sessionStorage.setItem('finai_sidebar_scroll', sidebarNav.scrollTop);
-        });
+        if (link !== homeLink) {
+          link.addEventListener('click', function() {
+            sessionStorage.setItem('finai_sidebar_scroll', sidebarNav.scrollTop);
+          });
+        }
       });
 
-      // 4. Save on window unload
+      // 6. Save on window unload
       window.addEventListener('beforeunload', function() {
-        sessionStorage.setItem('finai_sidebar_scroll', sidebarNav.scrollTop);
+        if (!isHome) {
+          sessionStorage.setItem('finai_sidebar_scroll', sidebarNav.scrollTop);
+        }
       });
     })();
   </script>
