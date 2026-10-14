@@ -2,8 +2,13 @@ import os
 import sys
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
-load_dotenv()
+# Load environment variables from .env file (resolved relative to this file)
+basedir = os.path.abspath(os.path.dirname(__file__))
+env_file = os.path.join(basedir, '.env')
+if os.path.exists(env_file):
+    load_dotenv(env_file)
+else:
+    load_dotenv()
 
 def _get_secret_key():
     """
