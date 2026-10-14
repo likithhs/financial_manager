@@ -1053,8 +1053,11 @@
     .fa-features-grid { grid-template-columns: 1fr; }
     .fa-footer-grid { grid-template-columns: 1fr; }
     .fa-cta-row { flex-direction: column; width: 100%; }
-    .fa-btn-primary, .fa-btn-secondary { width: 100%; justify-content: center; }
+    .fa-btn-primary, .fa-btn-secondary, .fa-btn-demo { width: 100%; justify-content: center; }
     .fa-metric-grid { grid-template-columns: 1fr; }
+    .fa-nav-actions { gap: 8px; }
+    .fa-btn-signin { padding: 6px 12px; font-size: 0.85rem; }
+    .fa-btn-getstarted { padding: 7px 16px; font-size: 0.85rem; }
   }
 </style>
 {% endblock %}
@@ -1114,13 +1117,10 @@
         Track cashflow, diagnose your financial health score, evaluate investment readiness, and build sustainable wealth with your personal AI financial assistant.
       </p>
 
-      <!-- 3 CTA Action Buttons -->
+      <!-- CTA Action Buttons -->
       <div class="fa-cta-row">
         <a href="{{ url_for('auth.register') }}" class="fa-btn-primary">
-          Get Started Free <i class="fa-solid fa-arrow-right"></i>
-        </a>
-        <a href="{{ url_for('auth.login') }}" class="fa-btn-secondary">
-          Sign In to Account
+          Get Started <i class="fa-solid fa-arrow-right"></i>
         </a>
         <a href="#ai" class="fa-btn-demo">
           <span class="fa-play-circle"><i class="fa-solid fa-play"></i></span>
@@ -1347,7 +1347,7 @@
           </div>
 
           <a href="{{ url_for('auth.register') }}" class="fa-btn-primary" style="padding: 13px 28px;">
-            Try Finora Assistant Free <i class="fa-solid fa-arrow-right"></i>
+            Get Started <i class="fa-solid fa-arrow-right"></i>
           </a>
         </div>
 
@@ -1440,13 +1440,16 @@
         <p>
           Experience intelligent cashflow management, automated health scores, and personalized investment guidance.
         </p>
-        <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
-          <a href="{{ url_for('auth.register') }}" class="fa-btn-primary" style="padding: 14px 32px; font-size: 1rem;">
-            Create Free Account <i class="fa-solid fa-arrow-right"></i>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 14px;">
+          <a href="{{ url_for('auth.register') }}" class="fa-btn-primary" style="padding: 14px 36px; font-size: 1rem;">
+            Get Started <i class="fa-solid fa-arrow-right"></i>
           </a>
-          <a href="{{ url_for('auth.login') }}" class="fa-btn-secondary" style="padding: 14px 28px; font-size: 1rem;">
-            Sign In to Account
-          </a>
+          <div style="font-size: 0.9rem; color: #6B7280;">
+            Already have an account? 
+            <a href="{{ url_for('auth.login') }}" style="color: var(--fa-orange); font-weight: 600; text-decoration: none;">
+              Sign In
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -1486,8 +1489,8 @@
           <h5>Platform Access</h5>
           <ul class="fa-footer-links">
             <li><a href="{{ url_for('auth.login') }}">Sign In</a></li>
-            <li><a href="{{ url_for('auth.register') }}">Create Account</a></li>
-            <li><a href="{{ url_for('dashboard') }}">Financial Cockpit</a></li>
+            <li><a href="{{ url_for('auth.register') }}">Get Started</a></li>
+            <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
           </ul>
         </div>
 

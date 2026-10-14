@@ -241,14 +241,14 @@ Based on a standard cashflow profile:
               This homepage assistant is an interactive demonstration. Without logging into your account, Finora cannot access your live income, expenses, debts, or investment portfolio.
             </p>
             <p style="margin: 0 0 12px 0; color: #92400E; font-size: 0.86rem; font-weight: 600; line-height: 1.5;">
-              For further details, personalized analysis, and complete financial guidance, please log in or create an account.
+              For further details, personalized analysis, and complete financial guidance, please sign in or get started.
             </p>
-            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-              <a href="/login" class="fa-btn-primary" style="padding: 7px 16px; font-size: 0.82rem; text-decoration: none; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px;">
-                <i class="fa-solid fa-right-to-bracket"></i> Log In
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px;">
+              <a href="/login" class="fa-btn-signin" style="padding: 6px 16px; font-size: 0.82rem; text-decoration: none; border: 1px solid #D1D5DB; background: #FAF8F4; border-radius: 999px; display: inline-flex; align-items: center;">
+                Sign In
               </a>
-              <a href="/register" class="fa-btn-secondary" style="padding: 7px 16px; font-size: 0.82rem; text-decoration: none; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px; background: #FFFFFF;">
-                <i class="fa-solid fa-user-plus"></i> Create Free Account
+              <a href="/register" class="fa-btn-getstarted" style="padding: 6px 18px; font-size: 0.82rem; text-decoration: none; border-radius: 999px; display: inline-flex; align-items: center; gap: 6px;">
+                Get Started <i class="fa-solid fa-arrow-right"></i>
               </a>
             </div>
           </div>
