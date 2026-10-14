@@ -4,10 +4,12 @@ Core Flask Application Factory & Module Orchestrator
 """
 
 import os
+import sys
 import logging
+import click
 from flask import Flask, redirect, url_for, session
 from config import Config
-from database import init_db, query_db
+from database import init_db, query_db, create_admin_user
 from routes.error_handlers import register_error_handlers
 
 # Import Core Feature Blueprints
@@ -124,8 +126,44 @@ def create_app(config_class=Config):
 
 app = create_app()
 
+@app.cli.command("init-admin")
+@click.option("--email", prompt="Admin Email", help="Administrator email address")
+@click.option("--password", prompt="Admin Password", hide_input=True, confirmation_prompt=True, help="Secure administrator password")
+@click.option("--name", default="System Administrator", help="Administrator display name")
+def init_admin_command(email, password, name):
+    """Securely initialize or reset an administrator account."""
+    try:
+        user_id, is_new = create_admin_user(email, password, name)
+        status = "Created new" if is_new else "Updated existing"
+        click.echo(f"SUCCESS: {status} administrator account for '{email}' (User ID #{user_id}).")
+    except ValueError as val_err:
+        click.echo(f"VALIDATION ERROR: {val_err}", err=True)
+        sys.exit(1)
+    except Exception as err:
+        click.echo(f"ADMIN PROVISIONING ERROR: {err}", err=True)
+        sys.exit(1)
+
 if __name__ == '__main__':
-    port = int(os.getenv('PORT', 5000))
-    debug = os.getenv('FLASK_DEBUG', 'True').lower() in ('true', '1', 't')
-    logger.info(f"Starting FinAI on port {port} (Debug: {debug})")
-    app.run(host='0.0.0.0', port=port, debug=debug)
+    # Check if invoked directly with init-admin argument: python app.py init-admin
+    if len(sys.argv) > 1 and sys.argv[1] == 'init-admin':
+        import getpass
+        admin_email = input("Administrator Email: ").strip()
+        admin_pass = getpass.getpass("Administrator Password (min 8 chars): ")
+        admin_confirm = getpass.getpass("Confirm Password: ")
+        if admin_pass != admin_confirm:
+            print("ERROR: Passwords do not match.")
+            sys.exit(1)
+        admin_name = input("Administrator Name [System Administrator]: ").strip() or "System Administrator"
+        try:
+            uid, created = create_admin_user(admin_email, admin_pass, admin_name)
+            print(f"SUCCESS: {'Created new' if created else 'Updated existing'} administrator account for '{admin_email}' (User ID #{uid}).")
+        except Exception as e:
+            print(f"ERROR: {e}")
+            sys.exit(1)
+        sys.exit(0)
+
+    host = Config.FLASK_HOST
+    port = Config.PORT
+    debug = Config.FLASK_DEBUG
+    logger.info(f"Starting FinAI on http://{host}:{port} (Debug: {debug})")
+    app.run(host=host, port=port, debug=debug)

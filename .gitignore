@@ -30,3 +30,18 @@ Thumbs.db
 # Accidental Nested Folders & Backups
 financial_manager/
 *_backup.py
+*.bak
+
+# Database & Storage Files
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+database/*.db
+database/*.sqlite
+database/*.sqlite3
+database/*.bak
+
+# Local Developer Scripts & Logs
+view_db.py
+*.log

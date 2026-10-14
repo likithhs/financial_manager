@@ -381,14 +381,17 @@ def init_db():
             if 'current_savings' not in goal_cols:
                 cursor.execute("ALTER TABLE financial_goals ADD COLUMN current_savings REAL DEFAULT 0.00")
 
-            # Check if admin user exists
-            cursor.execute("SELECT id FROM users WHERE email = 'admin@financialmanager.com'")
-            if not cursor.fetchone():
-                admin_hash = generate_password_hash('admin123')
-                cursor.execute("""
-                    INSERT INTO users (name, email, password_hash, age, occupation, financial_exp, investment_exp, role)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                """, ('System Administrator', 'admin@financialmanager.com', admin_hash, 35, 'Financial Admin', 'Expert', 'Advanced', 'admin'))
+            # Optional: Seed initial admin only if explicitly configured in environment variables
+            admin_env_email = os.environ.get('ADMIN_INITIAL_EMAIL', '').strip().lower()
+            admin_env_pass = os.environ.get('ADMIN_INITIAL_PASSWORD', '').strip()
+            if admin_env_email and admin_env_pass:
+                cursor.execute("SELECT id FROM users WHERE email = ?", (admin_env_email,))
+                if not cursor.fetchone():
+                    admin_hash = generate_password_hash(admin_env_pass)
+                    cursor.execute("""
+                        INSERT INTO users (name, email, password, password_hash, age, occupation, financial_exp, investment_exp, role)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """, ('System Administrator', admin_env_email, admin_hash, admin_hash, 35, 'Financial Admin', 'Expert', 'Advanced', 'admin'))
 
             # Check if default stocks exist
             cursor.execute("SELECT COUNT(*) as count FROM stocks")
@@ -415,3 +418,34 @@ def init_db():
             conn.close()
     except Exception as e:
         print(f"init_db error: {e}")
+
+def create_admin_user(email, password, name="System Administrator"):
+    """
+    Securely creates or promotes an administrator user account with hashed credentials.
+    Enforces password complexity requirements.
+    Returns (user_id, is_new).
+    """
+    email = (email or '').strip().lower()
+    if not email or '@' not in email:
+        raise ValueError("A valid administrator email address is required.")
+    if not password or len(password) < 8:
+        raise ValueError("Administrator password must be at least 8 characters long.")
+
+    password_hash = generate_password_hash(password)
+
+    # Check if user already exists
+    existing = query_db("SELECT id, role FROM users WHERE email = %s", (email,), one=True)
+    if existing:
+        execute_db("""
+            UPDATE users 
+            SET password = %s, password_hash = %s, role = 'admin', name = %s
+            WHERE id = %s
+        """, (password_hash, password_hash, name, existing['id']))
+        return existing['id'], False
+    else:
+        user_id = execute_db("""
+            INSERT INTO users (name, email, password, password_hash, age, occupation, financial_exp, investment_exp, role)
+            VALUES (%s, %s, %s, %s, 35, 'Financial Admin', 'Expert', 'Advanced', 'admin')
+        """, (name, email, password_hash, password_hash))
+        return user_id, True
+

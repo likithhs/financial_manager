@@ -104,12 +104,23 @@ mysql -u root -p < database/schema.sql
 *(Or open `database/schema.sql` in MySQL Workbench / phpMyAdmin and execute it).*
 
 ### 5. Configure Environment
-Copy `.env.example` to `.env` and set your local MySQL password:
+Copy `.env.example` to `.env`:
+```bash
+cp .env.example .env
+```
+Generate a cryptographically secure 32-byte secret key and paste it into `.env`:
+```bash
+python -c "import secrets; print(secrets.token_hex(32))"
+```
+> **Security Note:** Never commit `.env` or your `SECRET_KEY` to source control. If you rotate your `SECRET_KEY`, all existing user sessions will be invalidated and users will need to log in again.
+
+Configure `.env` settings:
 ```ini
 FLASK_APP=app.py
-FLASK_ENV=development
-FLASK_DEBUG=True
-SECRET_KEY=finai_supersecret_academic_key_2026
+FLASK_ENV=production
+FLASK_DEBUG=False
+FLASK_HOST=127.0.0.1
+SECRET_KEY=<your_generated_32_byte_secret_key>
 
 # Local MySQL Configuration
 DB_HOST=127.0.0.1
@@ -119,24 +130,44 @@ DB_PASSWORD=YOUR_PASSWORD_HERE
 DB_NAME=financial_manager
 ```
 
-### 6. Run Verification Test Suites
+### 6. Initialize Administrator Account Securely
+FinAI does not ship with hardcoded administrator credentials. Create or update your administrator account securely using the interactive CLI command:
+```bash
+flask init-admin
+```
+*(Or alternately: `python app.py init-admin`)*
+
+You will be prompted to enter the administrator's email and password (minimum 8 characters) securely with password masking and confirmation.
+
+### 7. Run Verification Test Suites
 Verify that both database schema and service layers pass all tests:
 ```bash
 python test_database_phase2.py
 python test_backend_phase3.py
 ```
 
-### 7. Run the Application
+### 8. Run the Application
+
+**Development Mode (Local Loopback 127.0.0.1):**
 ```bash
 python app.py
 ```
+
+**Production Deployment (WSGI Server):**
+Use Waitress (recommended for Windows/cross-platform) or Gunicorn (Linux):
+```bash
+# Using Waitress
+python wsgi.py
+# or
+waitress-serve --host=127.0.0.1 --port=5000 wsgi:app
+
+# Using Gunicorn (Linux/macOS)
+gunicorn -w 4 -b 127.0.0.1:5000 wsgi:app
+```
 Open **`http://127.0.0.1:5000`** in your browser.
 
-- **Default Administrator Account:**
-  - **Email:** `admin@financialmanager.com`
-  - **Password:** `admin123`
-- **User Account:** Click **"Get Started"** on the landing page to register a clean user profile.
-
+- **Administrator:** Log in with the administrator email and password provisioned in Step 6.
+- **Regular Users:** Click **"Get Started"** on the landing page to register a new user profile.
 ---
 
 ## 📂 Project Directory Structure

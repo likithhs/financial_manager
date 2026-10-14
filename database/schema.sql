@@ -433,14 +433,10 @@ CREATE TABLE IF NOT EXISTS stock_analysis (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------------------
--- 16. SEED DATA (Academic Demo Admin & Predefined Stocks)
+-- 16. SEED DATA (Predefined Stocks)
 -- --------------------------------------------------------------------
--- Insert default Admin user if not present (Password: admin123)
-INSERT IGNORE INTO users (id, name, email, password, password_hash, role)
-VALUES (1, 'System Administrator', 'admin@financialmanager.com', 
-        'scrypt:32768:8:1$JkuN89kpZ9Qmmv7F$86b14a702a0a9f23bc4e21b7ed103f46e94a843b6fdec24f7ac5f58d99b83635aa2c5e5133931ceb56397f48e919180697a5639024a421605f8fd6cf9fcb26a0',
-        'scrypt:32768:8:1$JkuN89kpZ9Qmmv7F$86b14a702a0a9f23bc4e21b7ed103f46e94a843b6fdec24f7ac5f58d99b83635aa2c5e5133931ceb56397f48e919180697a5639024a421605f8fd6cf9fcb26a0',
-        'admin');
+-- Note: Administrator accounts must be created using the secure CLI tool:
+--   flask init-admin
 
 -- Pre-seed Stocks
 INSERT IGNORE INTO stocks (symbol, company_name, sector, market, current_price, previous_close, pe_ratio, market_cap, high_52w, low_52w, volatility, risk_rating, description) VALUES 

@@ -115,13 +115,13 @@ def seed_academic_scenarios():
     evaluate_user_financial_health(u4_id)
     evaluate_investment_readiness(u4_id)
 
-    print("\n✅ Successfully seeded 4 Academic Demonstration Users & Admin Account:")
+    print("\n✅ Successfully seeded 4 Demonstration Users:")
     print("----------------------------------------------------------------------")
     print("1. Balanced User (Rahul):      user1@test.com   | Pass: user123 (Good Health, Moderate Risk)")
     print("2. Unready User (Amit):        user2@test.com   | Pass: user123 (Poor Health, NOT READY)")
     print("3. Conservative User (Priya):  user3@test.com   | Pass: user123 (Excellent Health, Conservative Risk)")
     print("4. Aggressive User (Vikram):   user4@test.com   | Pass: user123 (Excellent Health, Aggressive Risk)")
-    print("5. System Admin:               admin@financialmanager.com | Pass: admin123")
+    print("Note: To initialize an administrator account securely, run 'flask init-admin'.")
     print("----------------------------------------------------------------------")
 
 if __name__ == '__main__':
