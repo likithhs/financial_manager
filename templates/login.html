@@ -71,6 +71,7 @@
       {% endwith %}
 
       <form action="{{ url_for('auth.login') }}" method="POST" style="display: flex; flex-direction: column; gap: 20px;">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <!-- Email Input -->
         <div>
           <label for="email" style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-subtle); margin-bottom: 8px;">

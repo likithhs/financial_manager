@@ -12,6 +12,7 @@
     </div>
     <div class="card-body">
       <form action="{{ url_for('portfolio.add_watchlist') }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="form-group">
           <label class="form-label" for="symbol">Select Stock from Directory</label>
           <select id="symbol" name="symbol" class="form-select">
@@ -73,6 +74,7 @@
               <div style="display: flex; gap: 8px;">
                 <a href="{{ url_for('stock.stock_analysis', symbol=item.symbol) }}" class="btn btn-primary btn-sm">AI Analysis</a>
                 <form action="{{ url_for('portfolio.delete_watchlist', item_id=item.id) }}" method="POST" style="display:inline;">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                   <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Remove from watchlist?');">Remove</button>
                 </form>
               </div>

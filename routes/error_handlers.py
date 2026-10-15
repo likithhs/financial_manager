@@ -6,11 +6,28 @@ Does not expose raw Python stack traces in production responses.
 
 import logging
 from flask import render_template, request, jsonify
+from flask_wtf.csrf import CSRFError
 
 logger = logging.getLogger(__name__)
 
 
 def register_error_handlers(app):
+    @app.errorhandler(CSRFError)
+    def handle_csrf_error(error):
+        logger.warning(f"CSRF validation failed on {request.path}: {error.description}")
+        if request.path.startswith('/api/') or request.is_json:
+            return jsonify({
+                "error": "CSRF Token Missing or Invalid",
+                "status_code": 400,
+                "message": error.description or "Session security token was rejected or expired."
+            }), 400
+        return render_template(
+            'error.html',
+            status_code=400,
+            title="Security Verification Failed (CSRF)",
+            error_message="The session security token was missing or expired. Please refresh the page and resubmit your request."
+        ), 400
+
     @app.errorhandler(400)
     def bad_request(error):
         logger.warning(f"400 Bad Request on {request.path}: {error}")

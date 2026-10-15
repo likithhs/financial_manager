@@ -46,6 +46,7 @@
     </div>
     <div class="card-body">
       <form action="{{ url_for('financial.add_expense') }}" method="POST" style="display: flex; flex-direction: column; gap: 16px;">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="form-group" style="margin-bottom: 0;">
           <label class="form-label" for="title">Expense Title / Payee *</label>
           <input type="text" id="title" name="title" class="form-control" placeholder="e.g. Grocery store, Internet bill, Rent" required>
@@ -112,6 +113,7 @@
               <td style="color: var(--danger); font-weight: 700;">-₹{{ "{:,.2f}".format(exp.amount) }}</td>
               <td>
                 <form action="{{ url_for('financial.delete_expense', expense_id=exp.id) }}" method="POST" style="display:inline;">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                   <button type="submit" class="btn btn-sm btn-ghost" style="color: #f87171; padding: 4px 8px;" onclick="return confirm('Delete this expense record?');" title="Delete">
                     <i class="fa-solid fa-trash"></i>
                   </button>

@@ -47,6 +47,7 @@
   </div>
   <div class="card-body">
     <form action="{{ url_for('goal.add_goal') }}" method="POST" style="display: flex; flex-direction: column; gap: 16px;">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <div class="form-row">
         <div class="form-group" style="margin-bottom: 0;">
           <label class="form-label" for="name">Goal Name / Milestone *</label>
@@ -151,6 +152,7 @@
       <!-- Cumulative Add Funds Form -->
       <div style="background: #FAF8F4; border: 1px solid #FDE68A; border-radius: var(--radius-md); padding: 12px 14px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(217, 119, 6, 0.04);">
         <form action="{{ url_for('goal.add_funds', goal_id=g.id) }}" method="POST" style="display: flex; gap: 8px;">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <input type="number" name="added_amount" class="form-control" placeholder="+ Deposit amount (₹)" min="1" step="100" required style="padding: 8px 12px; font-size: 0.88rem;">
           <button type="submit" class="btn btn-sm btn-primary" style="white-space: nowrap;">
             <i class="fa-solid fa-plus"></i> Deposit
@@ -160,6 +162,7 @@
 
       <div style="display: flex; justify-content: flex-end;">
         <form action="{{ url_for('goal.delete_goal', goal_id=g.id) }}" method="POST">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <button type="submit" class="btn btn-sm btn-ghost" style="color: #f87171;" onclick="return confirm('Remove this goal?');">
             <i class="fa-solid fa-trash"></i> Remove Goal
           </button>

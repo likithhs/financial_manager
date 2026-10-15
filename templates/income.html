@@ -46,6 +46,7 @@
     </div>
     <div class="card-body">
       <form action="{{ url_for('financial.add_income') }}" method="POST" style="display: flex; flex-direction: column; gap: 16px;">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="form-group" style="margin-bottom: 0;">
           <label class="form-label" for="source">Income Source / Employer *</label>
           <input type="text" id="source" name="source" class="form-control" placeholder="e.g. Monthly Salary, Freelance Stipend" required>
@@ -112,6 +113,7 @@
               <td style="color: var(--success); font-weight: 700;">+₹{{ "{:,.2f}".format(inc.amount) }}</td>
               <td>
                 <form action="{{ url_for('financial.delete_income', income_id=inc.id) }}" method="POST" style="display:inline;">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                   <button type="submit" class="btn btn-sm btn-ghost" style="color: #f87171; padding: 4px 8px;" onclick="return confirm('Delete this income record?');" title="Delete">
                     <i class="fa-solid fa-trash"></i>
                   </button>

@@ -2,8 +2,30 @@ from functools import wraps
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from database import query_db, execute_db
+from extensions import limiter
 
 auth_bp = Blueprint('auth', __name__)
+
+
+def validate_password_strength(password: str) -> tuple[bool, str]:
+    """
+    Validates password strength according to modern security policies (NIST SP 800-63B):
+    - Minimum 12 characters
+    - Maximum 128 characters (prevents computational resource exhaustion)
+    - Supports long passphrases and password managers
+    - Disallows purely whitespace or empty passwords
+    """
+    if not password:
+        return False, "Password cannot be blank."
+    if len(password) < 12:
+        return False, "Password must be at least 12 characters long. We encourage using a memorable passphrase or password manager."
+    if len(password) > 128:
+        return False, "Password cannot exceed 128 characters."
+    if password != password.strip():
+        return False, "Password cannot begin or end with whitespace."
+    if not password.strip():
+        return False, "Password cannot consist exclusively of whitespace characters."
+    return True, ""
 
 
 def login_required(f):
@@ -34,6 +56,7 @@ def admin_required(f):
 
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
+@limiter.limit("5 per minute; 15 per hour", methods=["POST"])
 def register():
     if 'user_id' in session:
         if session.get('user_role') == 'admin':
@@ -54,8 +77,9 @@ def register():
             flash('Passwords do not match.', 'danger')
             return render_template('register.html')
 
-        if len(password) < 6:
-            flash('Password must be at least 6 characters long.', 'danger')
+        is_valid_pwd, pwd_error = validate_password_strength(password)
+        if not is_valid_pwd:
+            flash(pwd_error, 'danger')
             return render_template('register.html')
 
         existing_user = query_db(
@@ -66,7 +90,7 @@ def register():
 
         if existing_user:
             flash(
-                'An account with this email address already exists. Please log in.',
+                'If an account with this email address already exists, please sign in. Otherwise check your credentials.',
                 'warning'
             )
             return redirect(url_for('auth.login'))
@@ -101,6 +125,7 @@ def register():
 
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
+@limiter.limit("5 per minute; 20 per hour", methods=["POST"])
 def login():
     if 'user_id' in session:
         if session.get('user_role') == 'admin':
@@ -123,10 +148,13 @@ def login():
 
         stored_hash = (user.get('password_hash') or user.get('password') or '') if user else ''
         if user and stored_hash and check_password_hash(stored_hash, password):
+            # Session fixation protection: clear old session identifier
+            session.clear()
             session['user_id'] = user['id']
             session['user_name'] = user['name']
             session['user_email'] = user['email']
             session['user_role'] = user.get('role', 'user')
+            session.permanent = True
 
             flash(f"Welcome back, {user['name']}!", 'success')
 
@@ -153,6 +181,7 @@ def logout():
 @auth_bp.route('/settings', methods=['GET', 'POST'])
 @auth_bp.route('/profile', endpoint='profile', methods=['GET', 'POST'])
 @login_required
+@limiter.limit("10 per hour", methods=["POST"])
 def settings():
     user_id = session['user_id']
 
@@ -202,8 +231,9 @@ def settings():
                 flash('Current password is incorrect.', 'danger')
                 return redirect(url_for('auth.settings', tab='security'))
 
-            if not new_password or len(new_password) < 6:
-                flash('New password must be at least 6 characters long.', 'danger')
+            is_valid_pwd, pwd_error = validate_password_strength(new_password)
+            if not is_valid_pwd:
+                flash(pwd_error, 'danger')
                 return redirect(url_for('auth.settings', tab='security'))
 
             if new_password != confirm_password:
@@ -216,7 +246,15 @@ def settings():
                 (new_password_hash, new_password_hash, user_id)
             )
 
-            flash('Password updated successfully.', 'success')
+            # Invalidate stale session state and re-issue authenticated credentials
+            session.clear()
+            session['user_id'] = user_id
+            session['user_name'] = user['name']
+            session['user_email'] = user['email']
+            session['user_role'] = user.get('role', 'user')
+            session.permanent = True
+
+            flash('Password updated successfully. Your session has been refreshed.', 'success')
             return redirect(url_for('auth.settings', tab='security'))
 
         else:
@@ -291,8 +329,9 @@ def settings():
             # Optional password update if submitted alongside profile
             new_pwd = request.form.get('new_password', '').strip()
             if new_pwd:
-                if len(new_pwd) < 6:
-                    flash('New password must be at least 6 characters long.', 'danger')
+                is_valid_pwd, pwd_error = validate_password_strength(new_pwd)
+                if not is_valid_pwd:
+                    flash(pwd_error, 'danger')
                     return redirect(url_for('auth.settings', tab='edit'))
                 new_hash = generate_password_hash(new_pwd)
                 execute_db(

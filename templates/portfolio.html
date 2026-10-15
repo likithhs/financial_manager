@@ -43,6 +43,7 @@
     </div>
     <div class="card-body">
       <form action="{{ url_for('portfolio.add_holding') }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="form-row">
           <div class="form-group">
             <label class="form-label" for="symbol">Symbol / Ticker *</label>
@@ -162,6 +163,7 @@
             </td>
             <td>
               <form action="{{ url_for('portfolio.delete_holding', holding_id=h.id) }}" method="POST" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Remove this holding?');">Delete</button>
               </form>
             </td>
