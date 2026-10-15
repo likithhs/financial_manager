@@ -1,5 +1,6 @@
 import os
 import sys
+from datetime import timedelta
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -54,12 +55,48 @@ def _get_flask_debug():
         return False
     return debug_requested
 
+def _get_session_cookie_secure():
+    """
+    Determines if session cookies should have the 'Secure' flag.
+    - True if explicitly set via SESSION_COOKIE_SECURE ('true'/'1').
+    - False if explicitly set via SESSION_COOKIE_SECURE ('false'/'0').
+    - True if FLASK_ENV == 'production' AND ENABLE_HTTPS is enabled.
+    - Defaults to False for local HTTP development.
+    """
+    raw_secure = os.environ.get('SESSION_COOKIE_SECURE', '').strip().lower()
+    if raw_secure in ('true', '1', 't'):
+        return True
+    if raw_secure in ('false', '0', 'f'):
+        return False
+    
+    is_prod = os.environ.get('FLASK_ENV', 'development').strip().lower() == 'production'
+    is_https = os.environ.get('ENABLE_HTTPS', 'False').strip().lower() in ('true', '1', 't')
+    return is_prod and is_https
+
 class Config:
     """Base application configuration."""
     SECRET_KEY = _get_secret_key()
     FLASK_DEBUG = _get_flask_debug()
     FLASK_HOST = os.environ.get('FLASK_HOST', '127.0.0.1').strip()
     PORT = int(os.environ.get('PORT', 5000))
+
+    # Browser Session Cookie Security
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = 'Lax'
+    SESSION_COOKIE_SECURE = _get_session_cookie_secure()
+    PERMANENT_SESSION_LIFETIME = timedelta(hours=int(os.environ.get('SESSION_LIFETIME_HOURS', 12)))
+    SESSION_REFRESH_EACH_REQUEST = True
+
+    # Flask-WTF CSRF Protection
+    WTF_CSRF_ENABLED = os.environ.get('WTF_CSRF_ENABLED', 'True').strip().lower() in ('true', '1', 't')
+    WTF_CSRF_TIME_LIMIT = int(os.environ.get('WTF_CSRF_TIME_LIMIT', 14400))  # 4 hours
+    WTF_CSRF_CHECK_DEFAULT = True
+
+    # Rate Limiting Configuration
+    RATELIMIT_STORAGE_URI = os.environ.get('RATELIMIT_STORAGE_URI', 'memory://').strip()
+    RATELIMIT_STRATEGY = 'fixed-window'
+    RATELIMIT_DEFAULT = os.environ.get('RATELIMIT_DEFAULT', '200 per day; 60 per hour')
+
     
     # MySQL Database Config
     DB_HOST = os.environ.get('DB_HOST', 'localhost')

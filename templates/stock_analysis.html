@@ -97,6 +97,7 @@
 
       <div style="margin-top: 20px; display: flex; gap: 10px;">
         <form action="{{ url_for('portfolio.add_watchlist') }}" method="POST" style="display:inline;">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <input type="hidden" name="symbol" value="{{ analysis.symbol }}">
           <input type="hidden" name="company_name" value="{{ analysis.company_name }}">
           <button type="submit" class="btn btn-outline btn-sm">⭐ Add to Watchlist</button>

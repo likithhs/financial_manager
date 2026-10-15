@@ -121,6 +121,7 @@
       {% endwith %}
 
       <form action="{{ url_for('auth.register') }}" method="POST" style="display: flex; flex-direction: column; gap: 16px;">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <!-- Full Name & Email -->
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
           <div>
@@ -146,7 +147,7 @@
               Password *
             </label>
             <div style="position: relative;">
-              <input type="password" id="regPassword" name="password" required placeholder="Min 6 characters"
+              <input type="password" id="regPassword" name="password" required minlength="12" placeholder="Min 12 characters"
                      style="width: 100%; background: #FAF8F4; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 10px 38px 10px 14px; color: var(--text-light); font-size: 0.9rem; outline: none;">
               <button type="button" id="toggleRegPwd" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 4px;" title="Show/Hide Password">
                 <i class="fa-solid fa-eye" id="eyeIconReg"></i>

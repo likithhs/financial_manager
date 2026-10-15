@@ -428,8 +428,8 @@ def create_admin_user(email, password, name="System Administrator"):
     email = (email or '').strip().lower()
     if not email or '@' not in email:
         raise ValueError("A valid administrator email address is required.")
-    if not password or len(password) < 8:
-        raise ValueError("Administrator password must be at least 8 characters long.")
+    if not password or len(password) < 12:
+        raise ValueError("Administrator password must be at least 12 characters long.")
 
     password_hash = generate_password_hash(password)
 

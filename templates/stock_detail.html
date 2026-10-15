@@ -43,6 +43,7 @@
           <i class="fa-solid fa-robot"></i> Run AI Suitability Analysis ➔
         </a>
         <form action="{{ url_for('portfolio.add_watchlist') }}" method="POST" style="display:inline;">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <input type="hidden" name="symbol" value="{{ stock.symbol }}">
           <input type="hidden" name="company_name" value="{{ stock.name }}">
           <button type="submit" class="btn btn-secondary" style="border-color: var(--cyan-accent); color: var(--cyan-bright); padding: 10px 18px;">

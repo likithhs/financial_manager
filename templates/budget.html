@@ -49,6 +49,7 @@
     </div>
     <div class="card-body">
       <form action="{{ url_for('budget.set_budget') }}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="form-group">
           <label class="form-label" for="month_year">Target Month *</label>
           <input type="month" id="month_year" name="month_year" class="form-control" value="{{ current_month }}" required>

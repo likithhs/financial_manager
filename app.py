@@ -10,6 +10,7 @@ import click
 from flask import Flask, redirect, url_for, session
 from config import Config
 from database import init_db, query_db, create_admin_user
+from extensions import csrf, limiter
 from routes.error_handlers import register_error_handlers
 
 # Import Core Feature Blueprints
@@ -42,6 +43,10 @@ def create_app(config_class=Config):
     """
     app = Flask(__name__)
     app.config.from_object(config_class)
+
+    # Initialize Security Extensions (CSRF Protection & Rate Limiting)
+    csrf.init_app(app)
+    limiter.init_app(app)
 
     logger.info("Initializing FinAI Flask Application...")
 

@@ -100,11 +100,12 @@ class AIService:
 
     @staticmethod
     def _call_gemini(api_key, model, system_prompt, user_message, chat_history=None):
-        """Calls Google Gemini API generateContent endpoint."""
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
+        """Calls Google Gemini API generateContent endpoint with header-based authentication."""
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
         
         headers = {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "x-goog-api-key": api_key
         }
 
         # Build contents structure
@@ -135,8 +136,8 @@ class AIService:
         
         # If 404/model not found with gemini-2.5-flash, fallback to gemini-1.5-flash
         if response.status_code == 404 and model != 'gemini-1.5-flash':
-            logger.info(f"Gemini model {model} not found, falling back to gemini-1.5-flash")
-            fallback_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
+            logger.info("Gemini primary model not found, falling back to gemini-1.5-flash")
+            fallback_url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
             response = requests.post(fallback_url, headers=headers, json=payload, timeout=14)
 
         if response.status_code == 200:
@@ -148,7 +149,7 @@ class AIService:
                     return parts[0].get("text", "").strip()
             return None
         else:
-            logger.error(f"Gemini API returned status {response.status_code}: {response.text}")
+            logger.error(f"Gemini API returned HTTP error {response.status_code}")
             return None
 
     @staticmethod
@@ -186,7 +187,7 @@ class AIService:
                 return choices[0].get("message", {}).get("content", "").strip()
             return None
         else:
-            logger.error(f"OpenAI API returned status {response.status_code}: {response.text}")
+            logger.error(f"OpenAI API returned HTTP error {response.status_code}")
             return None
 
     @staticmethod
@@ -224,5 +225,6 @@ class AIService:
                 return choices[0].get("message", {}).get("content", "").strip()
             return None
         else:
-            logger.error(f"Groq API returned status {response.status_code}: {response.text}")
+            logger.error(f"Groq API returned HTTP error {response.status_code}")
             return None
+

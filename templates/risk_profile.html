@@ -107,6 +107,7 @@
   </div>
 
   <form action="{{ request.path }}" method="POST" style="display: flex; flex-direction: column; gap: 32px;">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     {% for pillar in pillars %}
     <!-- Pillar Container Block -->
     <div style="background: var(--bg-card); border: 1px solid var(--border-medium); border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow-sm);">
