@@ -1,11 +1,12 @@
 from datetime import date
 from database import query_db
 from ai.financial_calculator import FinancialCalculator
+from services.goal_service import is_goal_active, EXCLUDED_GOAL_STATUSES, ACTIVE_GOAL_STATUSES
 
 
 class GoalAnalyzer:
     """
-    Analyzes a user's financial goals using live database data.
+    Analyzes a user's financial goals using live database data and consistent status classification.
     """
 
     @staticmethod
@@ -20,29 +21,23 @@ class GoalAnalyzer:
     @staticmethod
     def analyze_goal(goal):
         """
-        Analyze one financial goal.
+        Analyze one financial goal preserving legitimate statuses.
         """
+        target = float(goal.get('target_amount') or 0.0)
+        current = float(goal.get('current_amount') if goal.get('current_amount') is not None else (goal.get('current_savings') or 0.0))
+        raw_status = str(goal.get('status') or 'In Progress').strip()
+        norm_status = raw_status.lower()
 
-        target = float(goal.get('target_amount') or 0)
-        current = float(goal.get('current_amount') or 0)
-
-        progress = FinancialCalculator.goal_progress(
-            target,
-            current
-        )
-
-        remaining = max(0, target - current)
+        progress = FinancialCalculator.goal_progress(target, current)
+        remaining = max(0.0, target - current)
 
         target_date = goal.get('target_date')
-
         months_remaining = 0
 
         if target_date:
             if hasattr(target_date, "date"):
                 target_date = target_date.date()
-
             today = date.today()
-
             months_remaining = max(
                 0,
                 (target_date.year - today.year) * 12
@@ -55,10 +50,14 @@ class GoalAnalyzer:
             months_remaining
         )
 
-        completed = current >= target
+        completed = (current >= target and target > 0) or norm_status == 'completed'
+        active = is_goal_active(raw_status, current, target)
 
         if completed:
             status = "Completed"
+        elif norm_status in EXCLUDED_GOAL_STATUSES:
+            # Preserve user's legitimate cancelled, paused, archived state
+            status = raw_status.title()
         elif months_remaining == 0:
             status = "Due Now"
         elif progress >= 75:
@@ -70,7 +69,7 @@ class GoalAnalyzer:
 
         return {
             "id": goal.get("id"),
-            "name": goal.get("goal_name"),
+            "name": goal.get("goal_name") or goal.get("name"),
             "target_amount": target,
             "current_amount": current,
             "remaining": round(remaining, 2),
@@ -79,8 +78,10 @@ class GoalAnalyzer:
             "months_remaining": months_remaining,
             "monthly_required": monthly_required,
             "priority": goal.get("priority", "Medium"),
+            "raw_status": raw_status,
             "status": status,
-            "completed": completed
+            "completed": completed,
+            "is_active": active
         }
 
     @staticmethod
@@ -88,9 +89,7 @@ class GoalAnalyzer:
         """
         Analyze all goals belonging to the user.
         """
-
         goals = GoalAnalyzer.get_user_goals(user_id)
-
         return [
             GoalAnalyzer.analyze_goal(goal)
             for goal in goals
@@ -99,9 +98,8 @@ class GoalAnalyzer:
     @staticmethod
     def get_goal_summary(user_id):
         """
-        Returns an overall summary of the user's goals.
+        Returns an overall summary of the user's goals with accurate active count.
         """
-
         goals = GoalAnalyzer.analyze_user_goals(user_id)
 
         if not goals:
@@ -109,17 +107,18 @@ class GoalAnalyzer:
                 "total_goals": 0,
                 "completed": 0,
                 "active": 0,
+                "inactive": 0,
                 "goals": []
             }
 
-        completed = sum(
-            1 for goal in goals
-            if goal["completed"]
-        )
+        completed = sum(1 for goal in goals if goal["completed"])
+        active = sum(1 for goal in goals if goal["is_active"])
+        inactive = len(goals) - completed - active
 
         return {
             "total_goals": len(goals),
             "completed": completed,
-            "active": len(goals) - completed,
+            "active": active,
+            "inactive": inactive,
             "goals": goals
         }

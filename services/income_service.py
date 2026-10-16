@@ -6,6 +6,7 @@ Handles transaction-based income logging and user-isolated retrieval.
 from decimal import Decimal
 from database import query_db, execute_db
 from services.validators import validate_monetary_amount, validate_date, validate_required_fields
+from ai.date_utils import get_calendar_month_range
 
 
 class IncomeService:
@@ -23,10 +24,21 @@ class IncomeService:
 
     @staticmethod
     def get_total_income(user_id):
-        """Calculates total accumulated income for the authenticated user."""
+        """Calculates total accumulated lifetime income for the authenticated user."""
         row = query_db(
             "SELECT COALESCE(SUM(amount), 0) as total FROM incomes WHERE user_id = %s",
             (user_id,),
+            one=True
+        )
+        return Decimal(str(row['total'])) if row else Decimal("0.00")
+
+    @staticmethod
+    def get_monthly_income(user_id, target_date=None):
+        """Calculates current-calendar-month income for the authenticated user."""
+        first_day, last_day = get_calendar_month_range(target_date)
+        row = query_db(
+            "SELECT COALESCE(SUM(amount), 0) as total FROM incomes WHERE user_id = %s AND date >= %s AND date <= %s",
+            (user_id, first_day.strftime('%Y-%m-%d'), last_day.strftime('%Y-%m-%d')),
             one=True
         )
         return Decimal(str(row['total'])) if row else Decimal("0.00")

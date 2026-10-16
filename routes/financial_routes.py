@@ -86,7 +86,14 @@ def add_expense():
         flash('Invalid amount entered.', 'danger')
         return redirect(url_for('financial.expenses'))
 
-    FinancialService.add_expense(user_id, category, amount, exp_date, description, title)
+    FinancialService.add_expense(
+        user_id=user_id,
+        title=title,
+        amount=amount,
+        category=category,
+        date=exp_date,
+        description=description
+    )
     evaluate_user_financial_health(user_id) # Re-evaluate health score
     flash('Expense entry recorded successfully.', 'success')
     return redirect(url_for('financial.expenses'))

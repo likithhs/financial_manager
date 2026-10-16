@@ -1,16 +1,47 @@
-def calculate_financial_health(total_income, total_expenses, emergency_fund=0, total_budget=0, active_goals_count=0):
+def calculate_financial_health(
+    total_income,
+    total_expenses,
+    emergency_fund=0.0,
+    total_budget=0.0,
+    active_goals_count=0,
+    emergency_fund_configured=None,
+    monthly_expense_basis=None,
+    has_sufficient_expense_history=True
+):
     """
-    Evaluates personal financial health based on income, expenses, savings, budget, and runway.
-    Returns a dictionary containing score (0-100), status, breakdown, and clear explanations.
+    Evaluates personal financial health based on monthly income, monthly expenses,
+    savings rate, budget discipline, emergency runway, and goal planning.
+
+    Parameters:
+    - total_income (float): Current calendar month's total recorded income.
+    - total_expenses (float): Current calendar month's total recorded expenses.
+    - emergency_fund (float): Funds explicitly allocated to emergency/safety reserves.
+    - total_budget (float): Active monthly budget target.
+    - active_goals_count (int): Count of unfinished qualifying active goals.
+    - emergency_fund_configured (bool or None): Explicit flag indicating whether the user
+      has designated an emergency fund. If None, infers from emergency_fund > 0.
+    - monthly_expense_basis (float or None): Monthly burn rate basis (e.g. 3-month rolling average).
+      If None, defaults to current month's expenses.
+    - has_sufficient_expense_history (bool): Whether historical expense basis is reliable.
+
+    Returns:
+    A telemetry dictionary containing score (0-100), health_status, metrics,
+    emergency fund configuration state, runway status, and clear diagnostic explanations.
     """
     total_income = float(total_income or 0.0)
     total_expenses = float(total_expenses or 0.0)
     emergency_fund = float(emergency_fund or 0.0)
     total_budget = float(total_budget or 0.0)
-    
-    # 1. Base Savings and Ratios
-    savings = total_income - total_expenses
-    
+    active_goals_count = int(active_goals_count or 0)
+
+    # Resolve explicit emergency fund configuration state
+    # Never treat general savings as an emergency fund
+    if emergency_fund_configured is None:
+        emergency_fund_configured = (emergency_fund > 0.0)
+
+    # 1. Monthly Savings & Ratios
+    savings = round(total_income - total_expenses, 2)
+
     if total_income > 0:
         savings_rate = round((savings / total_income) * 100, 2)
         expense_ratio = round((total_expenses / total_income) * 100, 2)
@@ -18,13 +49,37 @@ def calculate_financial_health(total_income, total_expenses, emergency_fund=0, t
         savings_rate = 0.0
         expense_ratio = 100.0 if total_expenses > 0 else 0.0
 
-    # 2. Emergency Fund Ratio (Months of Expenses Covered)
-    if total_expenses > 0:
-        # If user has explicit emergency savings or general positive savings
-        available_savings_buffer = max(0.0, emergency_fund if emergency_fund > 0 else savings)
-        emergency_fund_ratio = round(available_savings_buffer / total_expenses, 2)
+    # 2. Emergency Fund Ratio & Runway (Months of Expenses Covered)
+    # Determine monthly expense basis (burn rate)
+    if monthly_expense_basis is not None:
+        burn_basis = float(monthly_expense_basis)
     else:
-        emergency_fund_ratio = 6.0 if total_income > 0 else 0.0
+        burn_basis = total_expenses
+
+    if not emergency_fund_configured:
+        emergency_fund_ratio = 0.0
+        emergency_fund_status = "Not Configured"
+        runway_label = "Emergency fund not configured"
+    elif burn_basis <= 0:
+        emergency_fund_ratio = 0.0
+        emergency_fund_status = "Insufficient Expense Data"
+        runway_label = "Insufficient historical expense data to compute runway"
+    else:
+        # Avoid division by zero, negative, or misleading runway
+        emergency_fund_ratio = round(max(0.0, emergency_fund) / burn_basis, 2)
+        if emergency_fund_ratio >= 6.0:
+            emergency_fund_status = "Strong"
+        elif emergency_fund_ratio >= 3.0:
+            emergency_fund_status = "Adequate"
+        elif emergency_fund_ratio >= 1.0:
+            emergency_fund_status = "Minimal"
+        else:
+            emergency_fund_status = "Underdeveloped"
+
+        if not has_sufficient_expense_history:
+            runway_label = f"Estimated: {emergency_fund_ratio} months (limited expense history)"
+        else:
+            runway_label = f"{emergency_fund_ratio} months"
 
     # 3. Scoring Breakdown (Total: 100 pts)
     score = 0
@@ -33,7 +88,7 @@ def calculate_financial_health(total_income, total_expenses, emergency_fund=0, t
     # Factor A: Savings Rate (Max 35 pts)
     if total_income <= 0:
         score += 0
-        factors.append("No active recorded income.")
+        factors.append("No active recorded income for the current calendar month.")
     elif savings_rate >= 35:
         score += 35
         factors.append(f"Outstanding savings rate of {savings_rate}% (target: >30%).")
@@ -66,20 +121,35 @@ def calculate_financial_health(total_income, total_expenses, emergency_fund=0, t
             factors.append(f"High expense strain: {expense_ratio}% of earnings goes toward expenditures.")
     else:
         score += 0
+        if total_expenses > 0:
+            factors.append(f"Living expenses recorded (₹{total_expenses:,.2f}) without active income.")
+        else:
+            factors.append("No recorded living expenses or income for the current month.")
 
     # Factor C: Emergency Runway (Max 25 pts)
-    if emergency_fund_ratio >= 6.0:
+    # Strictly evaluates explicit emergency reserve; never credits unallocated general cash
+    if not emergency_fund_configured:
+        score += 0
+        factors.append("Emergency fund has not been configured. Dedicated safety net is unestablished.")
+    elif burn_basis <= 0:
+        # Emergency reserve exists, but no expense basis is available to establish runway
+        score += 5
+        factors.append(f"Emergency reserve is configured (₹{emergency_fund:,.2f}), but expense history is empty so runway cannot be calculated.")
+    elif emergency_fund_ratio >= 6.0:
         score += 25
-        factors.append("Strong financial safety net (6+ months emergency runway).")
+        factors.append(f"Strong financial safety net ({emergency_fund_ratio} months emergency runway).")
     elif emergency_fund_ratio >= 3.0:
         score += 18
-        factors.append("Adequate emergency buffer (3-5 months expense coverage).")
+        factors.append(f"Adequate emergency buffer ({emergency_fund_ratio} months expense coverage).")
     elif emergency_fund_ratio >= 1.0:
         score += 10
-        factors.append("Minimal emergency fund (1-2 months). Vulnerable to unexpected shocks.")
+        factors.append(f"Minimal emergency fund ({emergency_fund_ratio} months). Vulnerable to unexpected shocks.")
     else:
         score += 2
-        factors.append("Underdeveloped emergency reserve (<1 month). Priority should be building cash buffer.")
+        factors.append(f"Underdeveloped emergency reserve ({emergency_fund_ratio} months). Priority should be building cash buffer.")
+
+    if emergency_fund_configured and burn_basis > 0 and not has_sufficient_expense_history:
+        factors.append("Note: Runway estimate is based on limited historical expense data.")
 
     # Factor D: Budget Discipline & Goal Planning (Max 15 pts)
     discipline_score = 0
@@ -91,7 +161,7 @@ def calculate_financial_health(total_income, total_expenses, emergency_fund=0, t
             discipline_score += 3
             factors.append("Spending has exceeded the designated monthly budget.")
     else:
-        discipline_score += 5 # Neutral if no budget set yet
+        discipline_score += 5  # Neutral if no budget set yet
         factors.append("No active monthly budget configured.")
 
     if active_goals_count > 0:
@@ -129,7 +199,13 @@ def calculate_financial_health(total_income, total_expenses, emergency_fund=0, t
         "savings": savings,
         "savings_rate": savings_rate,
         "expense_ratio": expense_ratio,
+        "emergency_fund": emergency_fund,
+        "emergency_fund_configured": emergency_fund_configured,
         "emergency_fund_ratio": emergency_fund_ratio,
+        "emergency_fund_status": emergency_fund_status,
+        "monthly_expense_basis": burn_basis if burn_basis > 0 else 0.0,
+        "runway_label": runway_label,
+        "has_sufficient_expense_history": has_sufficient_expense_history,
         "explanation": explanation,
         "factors": factors
     }

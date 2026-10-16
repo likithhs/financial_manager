@@ -35,7 +35,11 @@ def evaluate_investment_readiness(user_id):
         reasons.append(f"Positive monthly savings buffer of ₹{health['savings']:,.2f} ({health['savings_rate']}% savings rate).")
 
     # Check B: Emergency Runway
-    if health['emergency_fund_ratio'] < 1.0:
+    if not health.get('emergency_fund_configured', False):
+        is_ready = False
+        reasons.append("Unconfigured Emergency Fund: You do not have a dedicated emergency safety fund configured.")
+        suggestions.append("Set a target in Goals to accumulate at least 3 to 6 months of basic living expenses before taking market risks.")
+    elif health['emergency_fund_ratio'] < 1.0:
         is_ready = False
         reasons.append("Underdeveloped Emergency Fund: You currently have less than 1 month of living expenses saved in liquid cash.")
         suggestions.append("Set a target in Goals to accumulate at least 3 to 6 months of basic living expenses before taking market risks.")

@@ -46,9 +46,24 @@ def add_goal():
         flash('Invalid target or starting amount entered.', 'danger')
         return redirect(url_for('goal.goals'))
 
-    FinancialService.add_goal(user_id, name, target_amount, current_amount, target_date, priority, description)
+    status = request.form.get('status', 'In Progress')
+
+    FinancialService.add_goal(user_id, name, target_amount, current_amount, target_date, priority, description, status)
     evaluate_user_financial_health(user_id)
     flash(f"Goal '{name}' created successfully!", 'success')
+    return redirect(url_for('goal.goals'))
+
+@goal_bp.route('/goals/status/<int:goal_id>', methods=['POST'])
+@login_required
+def update_status(goal_id):
+    user_id = session['user_id']
+    new_status = request.form.get('status', 'In Progress')
+    success = FinancialService.update_goal_status(goal_id, user_id, new_status)
+    if success:
+        evaluate_user_financial_health(user_id)
+        flash(f"Goal status updated to '{new_status}'.", 'success')
+    else:
+        flash('Invalid status or unable to update goal.', 'danger')
     return redirect(url_for('goal.goals'))
 
 @goal_bp.route('/goals/add-funds/<int:goal_id>', methods=['POST'])

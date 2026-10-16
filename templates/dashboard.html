@@ -52,8 +52,20 @@
         <i class="fa-solid fa-shield-heart"></i>
       </div>
     </div>
-    <div class="stat-value" style="color: var(--text-white);">{{ health.emergency_fund_ratio }} <span style="font-size: 0.95rem; font-weight: 500; color: var(--text-muted);">months</span></div>
-    <div class="stat-desc">Target: 3 to 6 months reserve</div>
+    <div class="stat-value" style="color: var(--text-white);">
+      {% if health.emergency_fund_configured %}
+        {{ health.emergency_fund_ratio }} <span style="font-size: 0.95rem; font-weight: 500; color: var(--text-muted);">months</span>
+      {% else %}
+        <span style="font-size: 1.1rem; font-weight: 700; color: #f59e0b;">Not Configured</span>
+      {% endif %}
+    </div>
+    <div class="stat-desc">
+      {% if health.emergency_fund_configured %}
+        Target: 3 to 6 months reserve
+      {% else %}
+        Create an Emergency Fund goal to track
+      {% endif %}
+    </div>
   </div>
 </div>
 

@@ -21,7 +21,14 @@ def generate_smart_suggestions(health_data, readiness_data, risk_level):
         })
 
     # 2. Emergency Fund tips
-    if health_data['emergency_fund_ratio'] < 3.0:
+    if not health_data.get('emergency_fund_configured', False):
+        suggestions.append({
+            "category": "Emergency Safety Net",
+            "priority": "Critical",
+            "title": "Establish Dedicated Emergency Fund",
+            "description": "You do not have a dedicated emergency safety fund configured. Create an Emergency Fund goal to build a 3-6 months liquid buffer before taking investment risks."
+        })
+    elif health_data.get('emergency_fund_ratio', 0.0) < 3.0:
         suggestions.append({
             "category": "Emergency Safety Net",
             "priority": "Critical",

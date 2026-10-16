@@ -36,18 +36,29 @@ def api_health():
 def api_dashboard():
     """JSON API returning authenticated user's high-level dashboard metrics."""
     user_id = get_current_user_id()
-    total_income = float(IncomeService.get_total_income(user_id))
-    total_expenses = float(ExpenseService.get_total_expenses(user_id))
-    net_savings = max(total_income - total_expenses, 0.0)
+    monthly_income = float(IncomeService.get_monthly_income(user_id))
+    monthly_expenses = float(ExpenseService.get_monthly_expenses(user_id))
+    monthly_savings = round(monthly_income - monthly_expenses, 2)
+    savings_rate_pct = round((monthly_savings / monthly_income * 100), 1) if monthly_income > 0 else 0.0
+
+    lifetime_income = float(IncomeService.get_total_income(user_id))
+    lifetime_expenses = float(ExpenseService.get_total_expenses(user_id))
+    lifetime_savings = round(lifetime_income - lifetime_expenses, 2)
 
     return jsonify({
         "status": "success",
         "user_id": user_id,
         "metrics": {
-            "total_income": total_income,
-            "total_expenses": total_expenses,
-            "net_savings": net_savings,
-            "savings_rate_pct": round((net_savings / total_income * 100), 1) if total_income > 0 else 0.0
+            "monthly_income": monthly_income,
+            "monthly_expenses": monthly_expenses,
+            "monthly_savings": monthly_savings,
+            "savings_rate_pct": savings_rate_pct,
+            "total_income": monthly_income,
+            "total_expenses": monthly_expenses,
+            "net_savings": monthly_savings,
+            "lifetime_income": lifetime_income,
+            "lifetime_expenses": lifetime_expenses,
+            "lifetime_savings": lifetime_savings
         }
     }), 200
 

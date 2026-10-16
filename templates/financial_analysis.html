@@ -103,12 +103,22 @@
       <i class="fa-solid fa-shield-heart" style="color: var(--blue-light); font-size: 1.1rem;"></i>
     </div>
     <div class="stat-value" style="color: #fff;">
-      {{ health.emergency_fund_ratio }} <span style="font-size: 0.95rem; font-weight: 500; color: var(--text-muted);">months</span>
+      {% if health.emergency_fund_configured %}
+        {{ health.emergency_fund_ratio }} <span style="font-size: 0.95rem; font-weight: 500; color: var(--text-muted);">months</span>
+      {% else %}
+        <span style="font-size: 1.1rem; font-weight: 700; color: #f59e0b;">Not Configured</span>
+      {% endif %}
     </div>
     <div class="progress-bar-container" style="height: 6px; margin: 8px 0;">
-      <div class="progress-bar-fill" style="width: {{ [(health.emergency_fund_ratio / 6.0 * 100), 100] | min }}%;"></div>
+      <div class="progress-bar-fill" style="width: {{ [(((health.emergency_fund_ratio or 0.0) / 6.0) * 100), 100] | min }}%;"></div>
     </div>
-    <div class="stat-desc">Target: 3 to 6 months expenses</div>
+    <div class="stat-desc">
+      {% if health.emergency_fund_configured %}
+        Target: 3 to 6 months expenses
+      {% else %}
+        No dedicated safety reserve tracked
+      {% endif %}
+    </div>
   </div>
 
   <!-- Risk Tolerance -->
