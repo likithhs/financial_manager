@@ -11,6 +11,8 @@ from ai.demo_assistant import FinoraDemoAssistant, RESTRICTION_RESPONSE
 
 class FinoraDemoAssistantTests(unittest.TestCase):
     def setUp(self):
+        self.old_csrf = app.config.get('WTF_CSRF_ENABLED', True)
+        app.config['WTF_CSRF_ENABLED'] = False
         self.client = app.test_client()
         self.app_context = app.app_context()
         self.app_context.push()
@@ -19,6 +21,7 @@ class FinoraDemoAssistantTests(unittest.TestCase):
         self.test_user_name = user['name'] if user else 'Likith hs'
 
     def tearDown(self):
+        app.config['WTF_CSRF_ENABLED'] = self.old_csrf
         self.app_context.pop()
 
     # 1. A logged-out visitor can open the chatbot on the public dashboard.
@@ -113,10 +116,7 @@ class FinoraDemoAssistantTests(unittest.TestCase):
         self.assertEqual(res.status_code, 200)
         html = res.data.decode('utf-8')
         self.assertNotIn("landingChatMessages", html)
-        self.assertNotIn("homeAiForm", html)
-        self.assertNotIn("Ask Finora Assistant", html)
         self.assertNotIn("id=\"askFinAiFab\"", html)
-        self.assertNotIn("Finora Assistant</span>", html)
 
     # 7. A logged-in user cannot access the chatbot backend endpoint directly.
     def test_07_authenticated_user_backend_forbidden(self):

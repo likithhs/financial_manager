@@ -1,7 +1,11 @@
 import os
 import sqlite3
+import logging
+from contextlib import contextmanager
 from config import Config
 from werkzeug.security import generate_password_hash
+
+logger = logging.getLogger(__name__)
 
 # Try importing mysql.connector
 try:
@@ -14,16 +18,57 @@ except ImportError:
 
 SQLITE_DB_PATH = os.path.join(os.path.dirname(__file__), 'database', 'financial_manager.db')
 
-MYSQL_OFFLINE = False
 
-def get_db_connection():
+# =========================================================================
+# APPLICATION DATABASE EXCEPTIONS
+# =========================================================================
+
+class DatabaseError(Exception):
+    """Base exception for all database-related failures."""
+    pass
+
+
+class DatabaseConnectionError(DatabaseError):
+    """Raised when a connection to the configured database cannot be established."""
+    pass
+
+
+class DatabaseQueryError(DatabaseError):
+    """Raised when a database query or command fails to execute."""
+    pass
+
+
+class DatabaseTransactionError(DatabaseError):
+    """Raised when an atomic transaction fails and is rolled back."""
+    pass
+
+
+# =========================================================================
+# CONNECTION MANAGEMENT
+# =========================================================================
+
+def get_db_connection(engine=None):
     """
-    Establish database connection.
-    Attempts MySQL first. If MySQL fails (e.g. server not running),
-    seamlessly falls back to a local SQLite database for zero-config demo.
+    Establish database connection based on explicit configuration.
+    If engine is not specified, uses Config.DB_ENGINE ('mysql' by default).
+    Does NOT silently switch writes between databases upon connection failure.
     """
-    global MYSQL_OFFLINE
-    if MYSQL_AVAILABLE and not MYSQL_OFFLINE:
+    target_engine = (engine or getattr(Config, 'DB_ENGINE', 'mysql') or 'mysql').strip().lower()
+
+    if target_engine == 'sqlite':
+        sqlite_path = getattr(Config, 'SQLITE_PATH', SQLITE_DB_PATH)
+        dir_name = os.path.dirname(sqlite_path)
+        if dir_name:
+            os.makedirs(dir_name, exist_ok=True)
+        conn = sqlite3.connect(sqlite_path)
+        conn.row_factory = sqlite3.Row
+        # Enforce foreign key constraints in SQLite
+        conn.execute("PRAGMA foreign_keys = ON")
+        return conn, 'sqlite'
+
+    elif target_engine == 'mysql':
+        if not MYSQL_AVAILABLE:
+            raise DatabaseConnectionError("MySQL driver (mysql-connector-python) is not installed in the Python environment.")
         try:
             conn = mysql.connector.connect(
                 host=Config.DB_HOST,
@@ -33,89 +78,214 @@ def get_db_connection():
                 port=Config.DB_PORT,
                 autocommit=True,
                 use_pure=True,
-                connection_timeout=2
+                connection_timeout=3
             )
             return conn, 'mysql'
         except Exception as err:
-            MYSQL_OFFLINE = True
-            # Fall through to SQLite fallback
-            pass
+            logger.error(f"MySQL connection failed to {Config.DB_HOST}:{Config.DB_PORT}/{Config.DB_NAME}: {err}")
+            raise DatabaseConnectionError(f"Failed to connect to MySQL database: {err}") from err
+    else:
+        raise DatabaseConnectionError(f"Unsupported database engine '{target_engine}'. Expected 'mysql' or 'sqlite'.")
 
-    # SQLite fallback
-    os.makedirs(os.path.dirname(SQLITE_DB_PATH), exist_ok=True)
-    conn = sqlite3.connect(SQLITE_DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn, 'sqlite'
 
-def query_db(query, args=(), one=False):
+# =========================================================================
+# QUERY AND EXECUTE HELPERS
+# =========================================================================
+
+def query_db(query, args=(), one=False, conn=None):
     """
     Execute a SELECT query and return list of dictionaries or single dictionary.
     Handles parameter syntax translation (%s for MySQL, ? for SQLite).
+    Guarantees cursor and connection cleanup via try/finally.
+    Raises DatabaseQueryError on query execution failure to distinguish failures from empty results.
     """
-    conn, db_type = get_db_connection()
+    external_conn = conn is not None
+    active_conn = conn
+    cursor = None
+
     try:
+        if active_conn is None:
+            active_conn, db_type = get_db_connection()
+        else:
+            db_type = 'sqlite' if isinstance(active_conn, sqlite3.Connection) else 'mysql'
+
         if db_type == 'mysql':
-            cursor = conn.cursor(dictionary=True)
+            cursor = active_conn.cursor(dictionary=True)
             cursor.execute(query, args)
             rv = cursor.fetchall()
-            cursor.close()
-            conn.close()
             return (rv[0] if rv else None) if one else rv
         else:
-            # SQLite uses '?' instead of '%s'
             sqlite_query = query.replace('%s', '?')
-            cursor = conn.cursor()
+            cursor = active_conn.cursor()
             cursor.execute(sqlite_query, args)
             rv = cursor.fetchall()
-            # Convert sqlite3.Row to dict
             dict_rv = [dict(row) for row in rv]
-            cursor.close()
-            conn.close()
             return (dict_rv[0] if dict_rv else None) if one else dict_rv
-    except Exception as e:
-        if 'conn' in locals() and conn:
-            conn.close()
-        print(f"Database Query Error: {e} | Query: {query}")
-        return None if one else []
 
-def execute_db(query, args=()):
+    except DatabaseError:
+        raise
+    except Exception as e:
+        logger.error(f"Database Query Error: {e} | Query: {query}")
+        raise DatabaseQueryError(f"Database query failed: {e}") from e
+    finally:
+        if cursor:
+            try:
+                cursor.close()
+            except Exception:
+                pass
+        if not external_conn and active_conn:
+            try:
+                active_conn.close()
+            except Exception:
+                pass
+
+
+def execute_db(query, args=(), conn=None):
     """
     Execute an INSERT, UPDATE, or DELETE query.
     Returns the lastrowid or affected rows count.
+    Guarantees cursor and connection cleanup via try/finally.
+    Raises DatabaseQueryError on execution failure to distinguish failures from zero affected rows.
     """
-    conn, db_type = get_db_connection()
+    external_conn = conn is not None
+    active_conn = conn
+    cursor = None
+
     try:
+        if active_conn is None:
+            active_conn, db_type = get_db_connection()
+        else:
+            db_type = 'sqlite' if isinstance(active_conn, sqlite3.Connection) else 'mysql'
+
         if db_type == 'mysql':
-            cursor = conn.cursor()
+            cursor = active_conn.cursor()
             cursor.execute(query, args)
             last_id = cursor.lastrowid
             affected = cursor.rowcount
-            conn.commit()
-            cursor.close()
-            conn.close()
+            if hasattr(active_conn, 'commit') and not getattr(active_conn, 'in_transaction', False):
+                active_conn.commit()
             return last_id if last_id else affected
         else:
             sqlite_query = query.replace('%s', '?')
-            cursor = conn.cursor()
+            cursor = active_conn.cursor()
             cursor.execute(sqlite_query, args)
-            conn.commit()
             last_id = cursor.lastrowid
             affected = cursor.rowcount
-            cursor.close()
-            conn.close()
+            if not getattr(active_conn, 'in_transaction', False):
+                active_conn.commit()
             return last_id if last_id else affected
-    except Exception as e:
-        if 'conn' in locals() and conn:
-            conn.close()
-        print(f"Database Execute Error: {e} | Query: {query}")
-        return 0
 
-def init_db():
+    except DatabaseError:
+        raise
+    except Exception as e:
+        logger.error(f"Database Execute Error: {e} | Query: {query}")
+        raise DatabaseQueryError(f"Database execution failed: {e}") from e
+    finally:
+        if cursor:
+            try:
+                cursor.close()
+            except Exception:
+                pass
+        if not external_conn and active_conn:
+            try:
+                active_conn.close()
+            except Exception:
+                pass
+
+
+# =========================================================================
+# ATOMIC TRANSACTION CONTEXT MANAGER
+# =========================================================================
+
+class TransactionContext:
+    """Wrapper around an active database transaction connection and cursor."""
+    def __init__(self, conn, db_type):
+        self.conn = conn
+        self.db_type = db_type
+        if db_type == 'mysql':
+            self.cursor = conn.cursor(dictionary=True)
+        else:
+            self.cursor = conn.cursor()
+
+    def execute(self, query, args=()):
+        if self.db_type == 'sqlite':
+            query = query.replace('%s', '?')
+        self.cursor.execute(query, args)
+        last_id = self.cursor.lastrowid
+        affected = self.cursor.rowcount
+        return last_id if last_id else affected
+
+    def query(self, query, args=(), one=False):
+        if self.db_type == 'sqlite':
+            query = query.replace('%s', '?')
+        self.cursor.execute(query, args)
+        rv = self.cursor.fetchall()
+        if self.db_type == 'sqlite':
+            dict_rv = [dict(row) for row in rv]
+        else:
+            dict_rv = rv
+        return (dict_rv[0] if dict_rv else None) if one else dict_rv
+
+    def close(self):
+        if hasattr(self, 'cursor') and self.cursor:
+            try:
+                self.cursor.close()
+            except Exception:
+                pass
+
+
+@contextmanager
+def transaction_scope(engine=None):
+    """
+    Atomic transaction context manager.
+    Commits if the entire block exits cleanly; rolls back on ANY exception.
+    Guarantees connection and cursor cleanup.
+    """
+    conn, db_type = get_db_connection(engine=engine)
+    tx_ctx = None
+    try:
+        if db_type == 'mysql':
+            conn.autocommit = False
+        else:
+            conn.isolation_level = None
+            conn.execute("BEGIN TRANSACTION")
+
+        tx_ctx = TransactionContext(conn, db_type)
+        yield tx_ctx
+
+        if db_type == 'mysql':
+            conn.commit()
+        else:
+            conn.execute("COMMIT")
+    except Exception as err:
+        try:
+            if db_type == 'mysql':
+                conn.rollback()
+            else:
+                conn.execute("ROLLBACK")
+        except Exception as rb_err:
+            logger.warning(f"Rollback error: {rb_err}")
+        raise DatabaseTransactionError(f"Transaction failed and was rolled back: {err}") from err
+    finally:
+        if tx_ctx:
+            tx_ctx.close()
+        try:
+            conn.close()
+        except Exception:
+            pass
+
+
+# =========================================================================
+# INITIALIZATION AND SCHEMA VALIDATION
+# =========================================================================
+
+def init_db(engine=None):
     """
     Initializes the database schema and default seed data.
     Automatically runs on application startup.
+    Supports MySQL (via schema.sql) and full SQLite compatibility.
     """
-    conn, db_type = get_db_connection()
+    conn, db_type = get_db_connection(engine=engine)
     try:
         if db_type == 'mysql':
             cursor = conn.cursor()
@@ -129,8 +299,8 @@ def init_db():
                     if clean_stmt:
                         try:
                             cursor.execute(clean_stmt)
-                        except Exception as err:
-                            # Table or column already exists / benign warning
+                        except Exception:
+                            # Table, index, or column already exists / benign warning
                             pass
                 for col_def in [
                     "phone VARCHAR(20) DEFAULT NULL",
@@ -149,7 +319,7 @@ def init_db():
             cursor.close()
             conn.close()
         else:
-            # Setup SQLite tables if they do not exist
+            # Complete SQLite schema covering every application table and foreign key
             cursor = conn.cursor()
             cursor.executescript('''
             CREATE TABLE IF NOT EXISTS users (
@@ -163,8 +333,48 @@ def init_db():
                 financial_exp TEXT DEFAULT 'Beginner',
                 investment_exp TEXT DEFAULT 'None',
                 role TEXT DEFAULT 'user',
+                phone TEXT DEFAULT NULL,
+                address TEXT DEFAULT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+
+            CREATE TABLE IF NOT EXISTS financial_profiles (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL UNIQUE,
+                monthly_income REAL DEFAULT 0.00,
+                fixed_expenses REAL DEFAULT 0.00,
+                variable_expenses REAL DEFAULT 0.00,
+                existing_savings REAL DEFAULT 0.00,
+                loan_emi REAL DEFAULT 0.00,
+                investment_experience TEXT DEFAULT 'Beginner',
+                employment_status TEXT DEFAULT 'Student / Professional',
+                monthly_expenses REAL DEFAULT 0.00,
+                monthly_savings REAL DEFAULT 0.00,
+                risk_tolerance TEXT DEFAULT 'medium',
+                investment_horizon TEXT DEFAULT 'Medium Term',
+                financial_goal TEXT DEFAULT 'Wealth Accumulation & Emergency Safety',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+            );
+
+            CREATE TABLE IF NOT EXISTS expense_categories (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL UNIQUE,
+                description TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+
+            CREATE TABLE IF NOT EXISTS income (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                amount REAL NOT NULL,
+                source TEXT NOT NULL,
+                date TEXT NOT NULL,
+                description TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
             );
 
             CREATE TABLE IF NOT EXISTS incomes (
@@ -189,7 +399,8 @@ def init_db():
                 date TEXT NOT NULL,
                 description TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                FOREIGN KEY (category_id) REFERENCES expense_categories(id) ON DELETE SET NULL
             );
 
             CREATE TABLE IF NOT EXISTS budgets (
@@ -219,6 +430,28 @@ def init_db():
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
             );
 
+            CREATE TABLE IF NOT EXISTS goal_contributions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                goal_id INTEGER NOT NULL,
+                user_id INTEGER NOT NULL,
+                amount REAL NOT NULL,
+                contribution_date TEXT NOT NULL,
+                description TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (goal_id) REFERENCES financial_goals(id) ON DELETE CASCADE,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+            );
+
+            CREATE TABLE IF NOT EXISTS risk_assessments (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                score INTEGER NOT NULL,
+                risk_profile TEXT NOT NULL,
+                assessment_data TEXT,
+                assessed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+            );
+
             CREATE TABLE IF NOT EXISTS risk_profiles (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER NOT NULL,
@@ -228,6 +461,28 @@ def init_db():
                 explanation TEXT,
                 evaluated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+            );
+
+            CREATE TABLE IF NOT EXISTS investment_categories (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL UNIQUE,
+                description TEXT,
+                risk_level TEXT NOT NULL,
+                minimum_information TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+
+            CREATE TABLE IF NOT EXISTS recommendations (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                category_id INTEGER NOT NULL,
+                risk_profile TEXT NOT NULL,
+                minimum_financial_health INTEGER DEFAULT 50,
+                recommendation_text TEXT NOT NULL,
+                suitability_notes TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (category_id) REFERENCES investment_categories(id) ON DELETE CASCADE
             );
 
             CREATE TABLE IF NOT EXISTS financial_analysis (
@@ -271,6 +526,91 @@ def init_db():
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
             );
 
+            CREATE TABLE IF NOT EXISTS chat_history (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                session_id TEXT DEFAULT 'default',
+                message TEXT NOT NULL,
+                sender TEXT NOT NULL,
+                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+            );
+
+            CREATE TABLE IF NOT EXISTS ai_conversations (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                user_message TEXT NOT NULL,
+                ai_response TEXT NOT NULL,
+                context_used_json TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+            );
+
+            CREATE TABLE IF NOT EXISTS watchlist (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                symbol TEXT NOT NULL,
+                company_name TEXT NOT NULL,
+                added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                UNIQUE(user_id, symbol)
+            );
+
+            CREATE TABLE IF NOT EXISTS stock_watchlist (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                symbol TEXT NOT NULL,
+                company_name TEXT NOT NULL,
+                added_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                UNIQUE(user_id, symbol)
+            );
+
+            CREATE TABLE IF NOT EXISTS portfolio (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                symbol TEXT NOT NULL,
+                company_name TEXT NOT NULL,
+                quantity INTEGER NOT NULL,
+                average_buy_price REAL NOT NULL,
+                purchase_date TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+            );
+
+            CREATE TABLE IF NOT EXISTS portfolios (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                name TEXT DEFAULT 'My Investment Portfolio',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+            );
+
+            CREATE TABLE IF NOT EXISTS portfolio_holdings (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                portfolio_id INTEGER NOT NULL,
+                user_id INTEGER NOT NULL,
+                symbol TEXT NOT NULL,
+                company_name TEXT NOT NULL,
+                asset_type TEXT DEFAULT 'Equity Stock',
+                quantity INTEGER NOT NULL,
+                buy_price REAL NOT NULL,
+                buy_date TEXT NOT NULL,
+                notes TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (portfolio_id) REFERENCES portfolios(id) ON DELETE CASCADE,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+            );
+
+            CREATE TABLE IF NOT EXISTS market_cache (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                symbol TEXT NOT NULL UNIQUE,
+                data_json TEXT NOT NULL,
+                fetched_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                expires_at TEXT NOT NULL
+            );
+
             CREATE TABLE IF NOT EXISTS stocks (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 symbol TEXT NOT NULL UNIQUE,
@@ -301,73 +641,42 @@ def init_db():
                 evaluated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
             );
-
-            CREATE TABLE IF NOT EXISTS stock_watchlist (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER NOT NULL,
-                symbol TEXT NOT NULL,
-                company_name TEXT NOT NULL,
-                added_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-                UNIQUE(user_id, symbol)
-            );
-
-            CREATE TABLE IF NOT EXISTS portfolios (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER NOT NULL,
-                name TEXT DEFAULT 'My Investment Portfolio',
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-            );
-
-            CREATE TABLE IF NOT EXISTS portfolio_holdings (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                portfolio_id INTEGER NOT NULL,
-                user_id INTEGER NOT NULL,
-                symbol TEXT NOT NULL,
-                company_name TEXT NOT NULL,
-                asset_type TEXT DEFAULT 'Equity Stock',
-                quantity INTEGER NOT NULL,
-                buy_price REAL NOT NULL,
-                buy_date TEXT NOT NULL,
-                notes TEXT,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (portfolio_id) REFERENCES portfolios(id) ON DELETE CASCADE,
-                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-            );
-
-            CREATE TABLE IF NOT EXISTS ai_conversations (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER NOT NULL,
-                user_message TEXT NOT NULL,
-                ai_response TEXT NOT NULL,
-                context_used_json TEXT,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-            );
             ''')
-            
+
+            # Pre-seed expense categories in SQLite if empty
+            cursor.execute("SELECT COUNT(*) as count FROM expense_categories")
+            if cursor.fetchone()['count'] == 0:
+                categories = [
+                    ('Food', 'Groceries, dining, food delivery, and cafeteria expenses'),
+                    ('Transport', 'Fuel, public transit, cab fares, and vehicle maintenance'),
+                    ('Education', 'Tuition, textbooks, course certifications, and academic materials'),
+                    ('Rent', 'Apartment rent, hostel fees, and accommodation charges'),
+                    ('Shopping', 'Clothing, electronics, personal purchases, and lifestyle items'),
+                    ('Entertainment', 'Movies, streaming subscriptions, outings, and hobbies'),
+                    ('Bills', 'Electricity, water, mobile recharge, internet, and utilities'),
+                    ('Other', 'Miscellaneous and unclassified daily expenditures')
+                ]
+                cursor.executemany("INSERT OR IGNORE INTO expense_categories (name, description) VALUES (?, ?)", categories)
+
             # Ensure compatibility columns exist on existing SQLite databases
             cursor.execute("PRAGMA table_info(users)")
             user_cols = [c[1] for c in cursor.fetchall()]
-            if 'password' not in user_cols:
-                cursor.execute("ALTER TABLE users ADD COLUMN password TEXT")
-            if 'password_hash' not in user_cols:
-                cursor.execute("ALTER TABLE users ADD COLUMN password_hash TEXT")
-            if 'phone' not in user_cols:
-                cursor.execute("ALTER TABLE users ADD COLUMN phone TEXT")
-            if 'address' not in user_cols:
-                cursor.execute("ALTER TABLE users ADD COLUMN address TEXT")
-            if 'age' not in user_cols:
-                cursor.execute("ALTER TABLE users ADD COLUMN age INTEGER DEFAULT 25")
-            if 'occupation' not in user_cols:
-                cursor.execute("ALTER TABLE users ADD COLUMN occupation TEXT DEFAULT 'Student / Professional'")
-            if 'financial_exp' not in user_cols:
-                cursor.execute("ALTER TABLE users ADD COLUMN financial_exp TEXT DEFAULT 'Beginner'")
-            if 'investment_exp' not in user_cols:
-                cursor.execute("ALTER TABLE users ADD COLUMN investment_exp TEXT DEFAULT 'None'")
-            if 'updated_at' not in user_cols:
-                cursor.execute("ALTER TABLE users ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+            for col, col_t in [
+                ('password', 'TEXT'),
+                ('password_hash', 'TEXT NOT NULL DEFAULT ""'),
+                ('phone', 'TEXT'),
+                ('address', 'TEXT'),
+                ('age', 'INTEGER DEFAULT 25'),
+                ('occupation', "TEXT DEFAULT 'Student / Professional'"),
+                ('financial_exp', "TEXT DEFAULT 'Beginner'"),
+                ('investment_exp', "TEXT DEFAULT 'None'"),
+                ('updated_at', 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP')
+            ]:
+                if col not in user_cols:
+                    try:
+                        cursor.execute(f"ALTER TABLE users ADD COLUMN {col} {col_t}")
+                    except Exception:
+                        pass
 
             cursor.execute("PRAGMA table_info(expenses)")
             expense_cols = [c[1] for c in cursor.fetchall()]
@@ -380,18 +689,6 @@ def init_db():
                 cursor.execute("ALTER TABLE financial_goals ADD COLUMN goal_name TEXT")
             if 'current_savings' not in goal_cols:
                 cursor.execute("ALTER TABLE financial_goals ADD COLUMN current_savings REAL DEFAULT 0.00")
-
-            # Optional: Seed initial admin only if explicitly configured in environment variables
-            admin_env_email = os.environ.get('ADMIN_INITIAL_EMAIL', '').strip().lower()
-            admin_env_pass = os.environ.get('ADMIN_INITIAL_PASSWORD', '').strip()
-            if admin_env_email and admin_env_pass:
-                cursor.execute("SELECT id FROM users WHERE email = ?", (admin_env_email,))
-                if not cursor.fetchone():
-                    admin_hash = generate_password_hash(admin_env_pass)
-                    cursor.execute("""
-                        INSERT INTO users (name, email, password, password_hash, age, occupation, financial_exp, investment_exp, role)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-                    """, ('System Administrator', admin_env_email, admin_hash, admin_hash, 35, 'Financial Admin', 'Expert', 'Advanced', 'admin'))
 
             # Check if default stocks exist
             cursor.execute("SELECT COUNT(*) as count FROM stocks")
@@ -412,17 +709,35 @@ def init_db():
                     INSERT INTO stocks (symbol, company_name, sector, market, current_price, previous_close, pe_ratio, market_cap, high_52w, low_52w, volatility, risk_rating, description)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """, stocks_data)
-            
+
             conn.commit()
             cursor.close()
             conn.close()
+
+        # Synchronize password and password_hash columns safely to guarantee user access
+        try:
+            execute_db("""
+                UPDATE users 
+                SET password_hash = password 
+                WHERE (password_hash IS NULL OR password_hash = '') AND password IS NOT NULL AND password != ''
+            """)
+            execute_db("""
+                UPDATE users 
+                SET password = password_hash 
+                WHERE (password IS NULL OR password = '') AND password_hash IS NOT NULL AND password_hash != ''
+            """)
+        except Exception as sync_err:
+            logger.warning(f"Password column synchronization notice: {sync_err}")
+
     except Exception as e:
-        print(f"init_db error: {e}")
+        logger.error(f"init_db error: {e}")
+        raise
+
 
 def create_admin_user(email, password, name="System Administrator"):
     """
     Securely creates or promotes an administrator user account with hashed credentials.
-    Enforces password complexity requirements.
+    Enforces modern password policy requirements (minimum 12 characters).
     Returns (user_id, is_new).
     """
     email = (email or '').strip().lower()
@@ -448,4 +763,3 @@ def create_admin_user(email, password, name="System Administrator"):
             VALUES (%s, %s, %s, %s, 35, 'Financial Admin', 'Expert', 'Advanced', 'admin')
         """, (name, email, password_hash, password_hash))
         return user_id, True
-

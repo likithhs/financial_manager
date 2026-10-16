@@ -28,31 +28,14 @@ def validate_password_strength(password: str) -> tuple[bool, str]:
     return True, ""
 
 
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'user_id' not in session:
-            flash('Please log in to access this page.', 'warning')
-            return redirect(url_for('auth.login'))
-        return f(*args, **kwargs)
-
-    return decorated_function
-
-
-def admin_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'user_id' not in session:
-            flash('Please log in to access the administrator panel.', 'warning')
-            return redirect(url_for('auth.login'))
-
-        if session.get('user_role') != 'admin':
-            flash('Access denied: Administrator privileges required.', 'danger')
-            return redirect(url_for('dashboard'))
-
-        return f(*args, **kwargs)
-
-    return decorated_function
+from services.auth_helper import (
+    login_required,
+    admin_required,
+    is_authenticated,
+    is_admin,
+    get_current_user_id,
+    get_current_user_role,
+)
 
 
 @auth_bp.route('/register', methods=['GET', 'POST'])

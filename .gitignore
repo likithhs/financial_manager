@@ -41,6 +41,14 @@ database/*.db
 database/*.sqlite
 database/*.sqlite3
 database/*.bak
+*.sql.bak
+*.db.bak
+
+# Test and Coverage Artifacts
+.coverage
+htmlcov/
+.pytest_cache/
+test_*.db
 
 # Local Developer Scripts & Logs
 view_db.py

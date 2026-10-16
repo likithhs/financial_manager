@@ -103,6 +103,12 @@ class Config:
     RATELIMIT_DEFAULT = os.environ.get('RATELIMIT_DEFAULT', '200 per day; 60 per hour')
 
     
+    # Database Engine Selection ('mysql' by default, or 'sqlite' for intentional local/test environments)
+    DB_ENGINE = os.environ.get('DB_ENGINE', 'mysql').strip().lower()
+
+    # SQLite Database Config (used when DB_ENGINE=sqlite or in tests)
+    SQLITE_PATH = os.environ.get('SQLITE_PATH', os.path.join(basedir, 'database', 'financial_manager.db'))
+
     # MySQL Database Config
     DB_HOST = os.environ.get('DB_HOST', 'localhost')
     DB_USER = os.environ.get('DB_USER', 'root')

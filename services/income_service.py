@@ -4,7 +4,7 @@ Handles transaction-based income logging and user-isolated retrieval.
 """
 
 from decimal import Decimal
-from database import query_db, execute_db
+from database import query_db, execute_db, transaction_scope
 from services.validators import validate_monetary_amount, validate_date, validate_required_fields
 from ai.date_utils import get_calendar_month_range
 
@@ -53,21 +53,22 @@ class IncomeService:
         clean_amount = validate_monetary_amount(amount, field_name="income amount")
         clean_date = validate_date(str(date_str)) if date_str else None
 
-        # Insert into incomes (and sync with income table)
-        inc_id = execute_db("""
-            INSERT INTO incomes (user_id, source, amount, category, date, description)
-            VALUES (%s, %s, %s, %s, %s, %s)
-        """, (user_id, source.strip(), clean_amount, category, clean_date, description))
+        with transaction_scope() as tx:
+            # Insert into incomes (and sync with income table atomically)
+            inc_id = tx.execute("""
+                INSERT INTO incomes (user_id, source, amount, category, date, description)
+                VALUES (%s, %s, %s, %s, %s, %s)
+            """, (user_id, source.strip(), clean_amount, category, clean_date, description))
 
-        try:
-            execute_db("""
-                INSERT INTO income (user_id, amount, source, date, description)
-                VALUES (%s, %s, %s, %s, %s)
-            """, (user_id, clean_amount, source.strip(), clean_date, description))
-        except Exception:
-            pass
+            try:
+                tx.execute("""
+                    INSERT INTO income (user_id, amount, source, date, description)
+                    VALUES (%s, %s, %s, %s, %s)
+                """, (user_id, clean_amount, source.strip(), clean_date, description))
+            except Exception:
+                pass
 
-        return inc_id
+            return inc_id
 
     @staticmethod
     def delete_income(income_id, user_id):

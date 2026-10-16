@@ -1,6 +1,6 @@
 import json
 from decimal import Decimal
-from database import query_db, execute_db
+from database import query_db, execute_db, transaction_scope
 from ai.date_utils import get_calendar_month_range, get_app_current_date
 from services.goal_service import is_goal_active, ALL_SUPPORTED_STATUSES, EXCLUDED_GOAL_STATUSES, ACTIVE_GOAL_STATUSES
 
@@ -215,10 +215,19 @@ class FinancialService:
         if target_val > 0 and init_val >= target_val:
             clean_status = "Completed"
 
-        return execute_db("""
-            INSERT INTO financial_goals (user_id, name, goal_name, target_amount, current_amount, current_savings, target_date, priority, description, status)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-        """, (user_id, name.strip(), name.strip(), target_val, init_val, init_val, str(target_date), priority, description.strip(), clean_status))
+        with transaction_scope() as tx:
+            goal_id = tx.execute("""
+                INSERT INTO financial_goals (user_id, name, goal_name, target_amount, current_amount, current_savings, target_date, priority, description, status)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """, (user_id, name.strip(), name.strip(), target_val, init_val, init_val, str(target_date), priority, description.strip(), clean_status))
+
+            if init_val > 0.0:
+                tx.execute("""
+                    INSERT INTO goal_contributions (goal_id, user_id, amount, contribution_date, description)
+                    VALUES (%s, %s, %s, %s, %s)
+                """, (goal_id, user_id, init_val, str(target_date), "Initial deposit"))
+
+            return goal_id
 
     @staticmethod
     def update_goal_status(goal_id, user_id, new_status):
@@ -236,35 +245,48 @@ class FinancialService:
         """, (matched_status, goal_id, user_id))
 
     @staticmethod
-    def add_funds_to_goal(goal_id, user_id, added_amount):
+    def add_funds_to_goal(goal_id, user_id, added_amount, description="Accumulated contribution"):
         """
         CUMULATIVE GOAL UPDATE:
+        Atomically updates goal balance and records contribution history.
         If current = 5000 and added = 2000, new current = 7000.
         Never replaces old amount.
         Transitions to Completed if target reached; otherwise preserves existing active/paused status.
         """
-        goal = query_db("SELECT * FROM financial_goals WHERE id = %s AND user_id = %s", (goal_id, user_id), one=True)
-        if not goal:
+        added_val = float(added_amount)
+        if added_val <= 0:
             return False
-        
-        current = float(goal.get('current_amount') if goal.get('current_amount') is not None else (goal.get('current_savings') or 0.0))
-        target = float(goal['target_amount'])
-        new_total = current + float(added_amount)
-        
-        current_status = str(goal.get('status') or 'In Progress').strip()
-        if new_total >= target and target > 0:
-            status = "Completed"
-        else:
-            if current_status.lower() in EXCLUDED_GOAL_STATUSES and current_status.lower() != 'completed':
-                status = current_status
-            else:
-                status = current_status if current_status.lower() in ACTIVE_GOAL_STATUSES else "In Progress"
 
-        return execute_db("""
-            UPDATE financial_goals 
-            SET current_amount = %s, current_savings = %s, status = %s
-            WHERE id = %s AND user_id = %s
-        """, (new_total, new_total, status, goal_id, user_id))
+        with transaction_scope() as tx:
+            goal = tx.query("SELECT * FROM financial_goals WHERE id = %s AND user_id = %s", (goal_id, user_id), one=True)
+            if not goal:
+                return False
+            
+            current = float(goal.get('current_amount') if goal.get('current_amount') is not None else (goal.get('current_savings') or 0.0))
+            target = float(goal['target_amount'])
+            new_total = current + added_val
+            
+            current_status = str(goal.get('status') or 'In Progress').strip()
+            if new_total >= target and target > 0:
+                status = "Completed"
+            else:
+                if current_status.lower() in EXCLUDED_GOAL_STATUSES and current_status.lower() != 'completed':
+                    status = current_status
+                else:
+                    status = current_status if current_status.lower() in ACTIVE_GOAL_STATUSES else "In Progress"
+
+            tx.execute("""
+                INSERT INTO goal_contributions (goal_id, user_id, amount, contribution_date, description)
+                VALUES (%s, %s, %s, %s, %s)
+            """, (goal_id, user_id, added_val, get_app_current_date().strftime('%Y-%m-%d'), description))
+
+            tx.execute("""
+                UPDATE financial_goals 
+                SET current_amount = %s, current_savings = %s, status = %s
+                WHERE id = %s AND user_id = %s
+            """, (new_total, new_total, status, goal_id, user_id))
+
+            return True
 
     @staticmethod
     def delete_goal(goal_id, user_id):
