@@ -54,7 +54,7 @@ def create_app(config_class=Config):
     with app.app_context():
         try:
             init_db()
-            logger.info("MySQL Database initialized and verified successfully.")
+            logger.info(f"{Config.DB_ENGINE.upper()} Database initialized and verified successfully.")
         except Exception as e:
             logger.error(f"Database initialization encountered an error: {e}")
 

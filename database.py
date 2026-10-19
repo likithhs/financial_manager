@@ -162,7 +162,7 @@ def execute_db(query, args=(), conn=None):
             cursor.execute(query, args)
             last_id = cursor.lastrowid
             affected = cursor.rowcount
-            if hasattr(active_conn, 'commit') and not getattr(active_conn, 'in_transaction', False):
+            if not external_conn and hasattr(active_conn, 'commit'):
                 active_conn.commit()
             return last_id if last_id else affected
         else:
@@ -171,7 +171,7 @@ def execute_db(query, args=(), conn=None):
             cursor.execute(sqlite_query, args)
             last_id = cursor.lastrowid
             affected = cursor.rowcount
-            if not getattr(active_conn, 'in_transaction', False):
+            if not external_conn:
                 active_conn.commit()
             return last_id if last_id else affected
 
