@@ -1,9 +1,11 @@
+import logging
 from functools import wraps
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from database import query_db, execute_db
 from extensions import limiter
 
+logger = logging.getLogger("finora")
 auth_bp = Blueprint('auth', __name__)
 
 
@@ -129,8 +131,23 @@ def login():
             one=True
         )
 
-        stored_hash = (user.get('password_hash') or user.get('password') or '') if user else ''
-        if user and stored_hash and check_password_hash(stored_hash, password):
+        password_matches = False
+        if user:
+            hashes_to_check = []
+            if user.get('password_hash'):
+                hashes_to_check.append(user['password_hash'])
+            if user.get('password') and user['password'] not in hashes_to_check:
+                hashes_to_check.append(user['password'])
+
+            for stored_hash in hashes_to_check:
+                try:
+                    if check_password_hash(stored_hash, password):
+                        password_matches = True
+                        break
+                except Exception as auth_err:
+                    logger.warning(f"Password verification encountered an issue for user '{email}': {auth_err}")
+
+        if user and password_matches:
             # Session fixation protection: clear old session identifier
             session.clear()
             session['user_id'] = user['id']
@@ -209,8 +226,22 @@ def settings():
                 flash('Please enter your current password.', 'danger')
                 return redirect(url_for('auth.settings', tab='security'))
 
-            stored_hash = user.get('password_hash') or user.get('password') or ''
-            if not (stored_hash and check_password_hash(stored_hash, current_password)):
+            hashes_to_check = []
+            if user.get('password_hash'):
+                hashes_to_check.append(user['password_hash'])
+            if user.get('password') and user['password'] not in hashes_to_check:
+                hashes_to_check.append(user['password'])
+
+            current_pwd_ok = False
+            for stored_hash in hashes_to_check:
+                try:
+                    if check_password_hash(stored_hash, current_password):
+                        current_pwd_ok = True
+                        break
+                except Exception:
+                    pass
+
+            if not current_pwd_ok:
                 flash('Current password is incorrect.', 'danger')
                 return redirect(url_for('auth.settings', tab='security'))
 
