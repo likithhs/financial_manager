@@ -9,28 +9,33 @@
   <div class="card-body" style="padding: 32px;">
     <div style="display: grid; grid-template-columns: 200px 1fr; gap: 36px; align-items: center;">
       
-      <!-- Circular Progress Ring -->
-      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
-        <svg viewBox="0 0 160 160" style="width: 160px; height: 160px; transform: rotate(-90deg);">
-          <circle cx="80" cy="80" r="68" fill="none" stroke="rgba(255, 255, 255, 0.08)" stroke-width="12" />
-          <circle cx="80" cy="80" r="68" fill="none" 
-                  stroke="url(#healthRingGrad)" 
-                  stroke-width="12" 
-                  stroke-dasharray="427.26" 
-                  stroke-dashoffset="{{ 427.26 - (427.26 * health.score / 100) }}" 
-                  stroke-linecap="round" 
-                  style="transition: stroke-dashoffset 1s ease-in-out;" />
-          <defs>
-            <linearGradient id="healthRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#2563eb" />
-              <stop offset="100%" stop-color="#06b6d4" />
-            </linearGradient>
-          </defs>
-        </svg>
+            <!-- Circular Progress Ring with Distinct Light Outline -->
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        <div style="position: relative; width: 170px; height: 170px; display: flex; align-items: center; justify-content: center;">
+          <svg viewBox="0 0 170 170" style="width: 170px; height: 170px; transform: rotate(-90deg); filter: drop-shadow(0 2px 6px rgba(0,0,0,0.04));">
+            <!-- Distinct Light Outline Track -->
+            <circle cx="85" cy="85" r="70" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="14" />
+            <!-- Active Health Score Gradient Ring -->
+            <circle cx="85" cy="85" r="70" fill="none" 
+                    stroke="url(#healthRingGrad)" 
+                    stroke-width="14" 
+                    stroke-dasharray="439.82" 
+                    stroke-dashoffset="{{ 439.82 - (439.82 * health.score / 100) }}" 
+                    stroke-linecap="round" 
+                    style="transition: stroke-dashoffset 1s ease-in-out;" />
+            <defs>
+              <linearGradient id="healthRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#f97316" />
+                <stop offset="100%" stop-color="#ea580c" />
+              </linearGradient>
+            </defs>
+          </svg>
 
-        <div style="position: absolute; text-align: center;">
-          <div style="font-size: 2.5rem; font-weight: 800; color: #fff; line-height: 1;">{{ health.score }}</div>
-          <div style="font-size: 0.75rem; font-weight: 700; color: var(--cyan-bright); text-transform: uppercase; letter-spacing: 0.05em;">out of 100</div>
+          <!-- Score Centered Directly Inside the Circle -->
+          <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none;">
+            <div style="font-size: 2.85rem; font-weight: 800; color: #0f172a !important; line-height: 1; letter-spacing: -0.02em;">{{ health.score }}</div>
+            <div style="font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px;">out of 100</div>
+          </div>
         </div>
 
         <span class="badge badge-{{ health.health_status | lower | replace(' ', '-') }}" style="margin-top: 14px; font-size: 0.8rem; padding: 6px 16px;">
@@ -41,7 +46,7 @@
       <!-- Health Context & Explainability -->
       <div>
         <div style="margin-bottom: 12px;">
-          <h2 style="font-size: 1.6rem; font-weight: 800; color: #fff;">
+          <h2 style="font-size: 1.6rem; font-weight: 800; color: #111827;">
             Financial Health Status: <span class="gradient-text-cyan">{{ health.health_status }}</span>
           </h2>
         </div>
@@ -102,7 +107,7 @@
       <div class="stat-label">Emergency Safety Net</div>
       <i class="fa-solid fa-shield-heart" style="color: var(--blue-light); font-size: 1.1rem;"></i>
     </div>
-    <div class="stat-value" style="color: #fff;">
+    <div class="stat-value" style="color: #111827;">
       {% if health.emergency_fund_configured %}
         {{ health.emergency_fund_ratio }} <span style="font-size: 0.95rem; font-weight: 500; color: var(--text-muted);">months</span>
       {% else %}

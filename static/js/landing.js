@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
       <div class="message-bubble" style="color: #6B7280; display: flex; align-items: center; gap: 8px;">
         <i class="fa-solid fa-spinner fa-spin" style="color: #D97706;"></i>
-        <span>Finora Demo Assistant is preparing guidance...</span>
+        <span>Finora Assistant is preparing guidance...</span>
       </div>
     `;
     chatMessages.appendChild(typingRow);
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <i class="fa-solid fa-circle-info"></i> Public Demo Only
             </div>
             <p style="margin: 0; color: #78350F; font-size: 0.86rem; line-height: 1.5;">
-              The Finora Demo Assistant is strictly available on the public landing page for visitors exploring the application.
+              The Finora Assistant is strictly available on the public landing page for visitors exploring the application.
             </p>
           </div>
         `;
@@ -157,11 +157,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (data && data.reply) {
         replyHtml = formatMarkdown(data.reply);
       } else {
-        replyHtml = "I'm Finora's Demo Assistant. I can help you understand how to use Finora's features, such as expense tracking, budgeting, financial goals, investment tools, and financial reports. Please ask me how to use a feature within Finora.";
+        replyHtml = "I'm Finora's Assistant. I can help you understand how to use Finora's features, such as expense tracking, budgeting, financial goals, investment tools, and financial reports. Please ask me how to use a feature within Finora.";
       }
 
       const providerBadge = `<div style="margin-bottom: 5px; font-size: 0.68rem; font-weight: 700; color: #D97706; text-transform: uppercase; display: flex; align-items: center; gap: 5px;">
-        <i class="fa-solid fa-compass"></i> Finora Demo Assistant
+        <i class="fa-solid fa-compass"></i> Finora Assistant
       </div>`;
 
       aiRow.innerHTML = `

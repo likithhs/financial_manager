@@ -20,15 +20,7 @@
     <!-- Status & Actions -->
     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
       
-      {% if provider_status and provider_status.is_active %}
-        <span class="badge" id="activeProviderBadge" style="background: rgba(16, 185, 129, 0.1); color: #059669; border: 1px solid rgba(16, 185, 129, 0.3); font-size: 0.76rem; font-weight: 700;">
-          <i class="fa-solid fa-bolt"></i> {{ provider_status.display_name }}
-        </span>
-      {% else %}
-        <span class="badge" id="activeProviderBadge" style="background: rgba(16, 185, 129, 0.1); color: #059669; border: 1px solid rgba(16, 185, 129, 0.3); font-size: 0.76rem; font-weight: 700;">
-          <i class="fa-solid fa-circle" style="font-size: 0.5rem;"></i> Online
-        </span>
-      {% endif %}
+      
 
       <form action="{{ url_for('ai.clear_chat') }}" method="POST" style="margin: 0;">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

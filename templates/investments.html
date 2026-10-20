@@ -14,14 +14,14 @@
         </div>
         <div>
           <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-            <h3 style="font-size: 1.3rem; font-weight: 800; color: #fff;">Investment Readiness & Risk Horizon</h3>
-            <span class="badge badge-{% if readiness.is_ready %}success{% else %}warning{% endif %}">
-              {% if readiness.is_ready %}Gatekeeper Cleared{% else %}Buffer Protected{% endif %}
-            </span>
+            <h3 style="font-size: 1.3rem; font-weight: 800; color: #111827;">Investment Readiness & Risk Horizon</h3>
+
+
+
           </div>
           <p style="font-size: 0.85rem; color: var(--text-muted);">
             Risk Tier: <strong style="color: var(--cyan-bright);">{{ user_risk }}</strong> • 
-            Status: <strong style="color: #fff;">{{ readiness.status_label }}</strong>
+            Status: <strong style="color: #111827;">{{ readiness.status_label }}</strong>
           </p>
         </div>
       </div>
@@ -43,7 +43,7 @@
 
 <!-- Asset Classes Header -->
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
-  <h3 style="font-size: 1.25rem; font-weight: 700; color: #fff;">
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #111827;">
     <i class="fa-solid fa-layer-group" style="color: var(--cyan-accent); margin-right: 6px;"></i> Core Asset Classes & Horizon Profiling
   </h3>
 </div>
@@ -155,7 +155,7 @@
 
 <!-- Bottom Navigation Card -->
 <div class="card" style="background: linear-gradient(135deg, rgba(37, 99, 235, 0.2) 0%, rgba(6, 182, 212, 0.1) 100%); border: 1px solid var(--border-bright); border-radius: var(--radius-xl); padding: 28px; text-align: center;">
-  <h4 style="font-size: 1.25rem; font-weight: 800; color: #fff; margin-bottom: 8px;">Ready to Explore Market Equities & Stock Telemetry?</h4>
+  <h4 style="font-size: 1.25rem; font-weight: 800; color: #111827; margin-bottom: 8px;">Ready to Explore Market Equities & Stock Telemetry?</h4>
   <p style="font-size: 0.9rem; color: var(--text-subtle); max-width: 600px; margin: 0 auto 20px;">
     Use our live Market Telemetry module to search NSE/BSE securities, inspect PE ratios, evaluate AI suitability ratings, and track a virtual portfolio.
   </p>

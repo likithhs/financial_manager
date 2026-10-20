@@ -1138,3 +1138,35 @@ tr:hover td {
     white-space: nowrap;
   }
 }
+
+
+/* ====================================================================
+   BRAND LOGO & UNIVERSAL CONTRAST PROTECTIONS
+   ==================================================================== */
+.sidebar-header .brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  text-decoration: none;
+}
+
+.sidebar-header .brand-title {
+  font-size: 1.34rem;
+  font-weight: 800;
+  color: #0f172a !important;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.sidebar-header .brand-title span {
+  color: #f97316 !important;
+}
+
+h1[style*="color: #fff"], h1[style*="color: #ffffff"],
+h2[style*="color: #fff"], h2[style*="color: #ffffff"],
+h3[style*="color: #fff"], h3[style*="color: #ffffff"],
+h4[style*="color: #fff"], h4[style*="color: #ffffff"],
+h5[style*="color: #fff"], h5[style*="color: #ffffff"],
+h6[style*="color: #fff"], h6[style*="color: #ffffff"] {
+  color: var(--text-white) !important;
+}

@@ -84,6 +84,7 @@ class Config:
     FLASK_DEBUG = _get_flask_debug()
     FLASK_HOST = os.environ.get('FLASK_HOST', '127.0.0.1').strip()
     PORT = int(os.environ.get('PORT', 5000))
+    TEMPLATES_AUTO_RELOAD = True
 
     # Browser Session Cookie Security
     SESSION_COOKIE_HTTPONLY = True

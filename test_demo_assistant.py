@@ -29,7 +29,7 @@ class FinoraDemoAssistantTests(unittest.TestCase):
         res = self.client.get('/')
         self.assertEqual(res.status_code, 200)
         html = res.data.decode('utf-8')
-        self.assertIn("Finora Demo Assistant", html)
+        self.assertIn("Finora Assistant", html)
         self.assertIn("landingChatMessages", html)
         self.assertIn("landingChatInput", html)
         self.assertIn("How do I track my expenses?", html)

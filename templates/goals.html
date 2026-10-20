@@ -100,7 +100,7 @@
 
 <!-- Active Tracked Goals Grid -->
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
-  <h3 style="font-size: 1.25rem; font-weight: 700; color: #fff;">
+  <h3 style="font-size: 1.25rem; font-weight: 700; color: #111827;">
     <i class="fa-solid fa-list-check" style="color: var(--cyan-accent); margin-right: 6px;"></i> Active Milestones ({{ goals | length }})
   </h3>
   <span style="font-size: 0.82rem; color: var(--text-muted);">Real-time progress telemetry</span>
@@ -124,7 +124,7 @@
     <div class="card-body">
       <!-- Target vs Current Amounts -->
       <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
-        <span style="font-size: 1.4rem; font-weight: 800; color: #fff;">
+        <span style="font-size: 1.4rem; font-weight: 800; color: #111827;">
           ₹{{ "{:,.2f}".format(g.current_amount) }}
         </span>
         <span style="font-size: 0.88rem; color: var(--text-muted);">
@@ -139,7 +139,7 @@
 
       <!-- Progress Stats -->
       <div style="display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px;">
-        <span>Progress: <strong style="color: #fff;">{{ g.progress_pct }}%</strong></span>
+        <span>Progress: <strong style="color: #111827;">{{ g.progress_pct }}%</strong></span>
         <span>Remaining: <strong style="color: var(--cyan-bright);">₹{{ "{:,.2f}".format(g.remaining) }}</strong></span>
       </div>
 
@@ -173,7 +173,7 @@
   {% else %}
   <div style="grid-column: span 2; text-align: center; background: var(--bg-card); border: 1px dashed var(--border-medium); padding: 40px; border-radius: var(--radius-lg);">
     <i class="fa-solid fa-bullseye" style="font-size: 2rem; color: var(--cyan-accent); opacity: 0.4; margin-bottom: 12px; display: block;"></i>
-    <h4 style="font-size: 1.1rem; color: #fff; margin-bottom: 4px;">No Financial Goals Created Yet</h4>
+    <h4 style="font-size: 1.1rem; color: #111827; margin-bottom: 4px;">No Financial Goals Created Yet</h4>
     <p style="color: var(--text-muted); font-size: 0.9rem;">Initialize your first milestone (e.g. 3-month Emergency Fund) using the form above.</p>
   </div>
   {% endfor %}
