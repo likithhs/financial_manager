@@ -1,5 +1,5 @@
 """
-FinAI - Production WSGI Application Entry Point
+Finora - Production WSGI Application Entry Point
 Supports deployment on production WSGI servers:
   - Windows / Cross-platform: Waitress (waitress-serve --host=127.0.0.1 --port=5000 wsgi:app)
   - Linux / UNIX: Gunicorn (gunicorn -w 4 -b 127.0.0.1:5000 wsgi:app)
@@ -23,7 +23,7 @@ if __name__ == '__main__':
     port = Config.PORT
     try:
         import waitress
-        print(f"[WSGI] Serving FinAI with Waitress production server on http://{host}:{port}")
+        print(f"[WSGI] Serving Finora with Waitress production server on http://{host}:{port}")
         waitress.serve(app, host=host, port=port)
     except ImportError:
         print("[WSGI] 'waitress' not found. For production deployments, install waitress (pip install waitress).")

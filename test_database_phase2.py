@@ -1,5 +1,5 @@
 """
-FinAI Phase 2 - Database Architecture & Verification Test
+Finora Phase 2 - Database Architecture & Verification Test
 Verifies all 10 Phase 2 requirements against MySQL.
 """
 
@@ -11,7 +11,7 @@ from database import get_db_connection, query_db, execute_db
 
 def run_tests():
     print("=" * 60)
-    print("FinAI Phase 2 - MySQL Database Verification Test")
+    print("Finora Phase 2 - MySQL Database Verification Test")
     print("=" * 60)
 
     test_results = {}
@@ -84,7 +84,7 @@ def run_tests():
         test_results["4. Tables have expected relationships"] = ("FAIL", str(e))
 
     # Create temporary test user to verify transactions (cleanly deleted afterwards)
-    test_email = "test_phase2_auto@finai.internal"
+    test_email = "test_phase2_auto@finora.internal"
     test_user_id = None
     try:
         # Cleanup any previous dangling test user

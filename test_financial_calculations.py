@@ -1,5 +1,5 @@
 """
-FinAI / Finora Financial Calculations & Goal Analysis Verification Test Suite
+Finora Financial Calculations & Goal Analysis Verification Test Suite
 Tests all 8 required criteria from Steps 1-4:
 1. Active and In Progress goals.
 2. Completed goals.

@@ -1,5 +1,5 @@
 """
-FinAI Conversational Intelligence Engine
+Finora Conversational Intelligence Engine
 Generates rich, empathetic, human-grade conversational responses (ChatGPT caliber)
 for personal finance questions, understanding nuanced language and emotional sentiment.
 """

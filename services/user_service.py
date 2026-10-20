@@ -1,5 +1,5 @@
 """
-FinAI Backend Foundation - User Service
+Finora Backend Foundation - User Service
 Handles user account lookups, profile data, and credential verification foundation.
 """
 

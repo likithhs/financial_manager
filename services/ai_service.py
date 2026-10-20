@@ -4,12 +4,12 @@ import logging
 import requests
 from config import Config
 
-logger = logging.getLogger("finai")
+logger = logging.getLogger("finora")
 
 
 class AIService:
     """
-    Multi-Provider AI Service for FinAI Assistant.
+    Multi-Provider AI Service for Finora Assistant.
     Supports Google Gemini, OpenAI, and Groq Cloud with graceful
     fallback to the local rule-based financial engine.
     """

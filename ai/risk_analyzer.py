@@ -1,5 +1,5 @@
 """
-FinAI Intelligent Risk Profiling & Psychometric Assessment Engine
+Finora Intelligent Risk Profiling & Psychometric Assessment Engine
 Evaluates user risk tolerance across 3 Structured Assessment Pillars (10 comprehensive questions).
 """
 

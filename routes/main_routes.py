@@ -1,5 +1,5 @@
 """
-FinAI Backend Foundation - Main Routes Blueprint
+Finora Backend Foundation - Main Routes Blueprint
 Handles public entrypoint (/) and system health check (/health).
 """
 

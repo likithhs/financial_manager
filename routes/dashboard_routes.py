@@ -1,5 +1,5 @@
 """
-FinAI Backend Foundation - Dashboard Routes Blueprint
+Finora Backend Foundation - Dashboard Routes Blueprint
 Handles executive overview telemetry and aggregated user metrics (/dashboard).
 """
 

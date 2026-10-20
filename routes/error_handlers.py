@@ -1,5 +1,5 @@
 """
-FinAI Backend Foundation - Centralized Error Handlers
+Finora Backend Foundation - Centralized Error Handlers
 Handles 400, 401, 403, 404, 429, 500, and 503 cleanly for both HTML views and JSON APIs.
 Does not expose raw Python stack traces in production responses.
 """

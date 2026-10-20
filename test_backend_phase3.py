@@ -1,5 +1,5 @@
 """
-FinAI Phase 3 - Flask Backend Foundation Verification Test Suite
+Finora Phase 3 - Flask Backend Foundation Verification Test Suite
 Tests all 7 required criteria from Section 19 of the Phase 3 Specification.
 """
 
@@ -10,7 +10,7 @@ from database import get_db_connection
 
 def run_phase3_tests():
     print("=" * 65)
-    print("FinAI Phase 3 - Flask Backend Foundation Test Suite")
+    print("Finora Phase 3 - Flask Backend Foundation Test Suite")
     print("=" * 65)
 
     results = {}

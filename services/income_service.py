@@ -1,5 +1,5 @@
 """
-FinAI Backend Foundation - Income Service
+Finora Backend Foundation - Income Service
 Handles transaction-based income logging and user-isolated retrieval.
 """
 

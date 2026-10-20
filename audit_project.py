@@ -5,7 +5,7 @@ from app import app
 
 def run_audit():
     print("="*60)
-    print("STARTING COMPREHENSIVE FINAI CODEBASE AUDIT")
+    print("STARTING COMPREHENSIVE FINORA CODEBASE AUDIT")
     print("="*60)
 
     # 1. Check Flask Registered Endpoints

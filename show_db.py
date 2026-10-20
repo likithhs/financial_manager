@@ -1,5 +1,5 @@
 """
-FinAI Database Viewer CLI Helper
+Finora Database Viewer CLI Helper
 Usage:
     python show_db.py               -> Shows summary of all 26 tables and row counts
     python show_db.py users         -> Shows rows from the 'users' table

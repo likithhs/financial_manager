@@ -296,11 +296,11 @@
 
       // 1. If visiting Home, always ensure scroller is at top (the starting button)
       if (isHome) {
-        sessionStorage.setItem('finai_sidebar_scroll', '0');
+        sessionStorage.setItem('finora_sidebar_scroll', '0');
         sidebarNav.scrollTop = 0;
       } else {
         // Restore scroll position from previous navigation
-        const savedPos = sessionStorage.getItem('finai_sidebar_scroll');
+        const savedPos = sessionStorage.getItem('finora_sidebar_scroll');
         if (savedPos !== null) {
           sidebarNav.scrollTop = parseInt(savedPos, 10);
         } else {
@@ -316,7 +316,7 @@
       const brandLogo = document.getElementById('sidebarBrandLogo') || document.querySelector('.brand-logo');
       if (brandLogo) {
         brandLogo.addEventListener('click', function() {
-          sessionStorage.setItem('finai_sidebar_scroll', '0');
+          sessionStorage.setItem('finora_sidebar_scroll', '0');
           if (sidebarNav) {
             sidebarNav.scrollTop = 0;
             if (isHome) {
@@ -331,7 +331,7 @@
       const homeLink = sidebarNav.querySelector('a[href="{{ url_for('main.home') }}"]');
       if (homeLink) {
         homeLink.addEventListener('click', function() {
-          sessionStorage.setItem('finai_sidebar_scroll', '0');
+          sessionStorage.setItem('finora_sidebar_scroll', '0');
           sidebarNav.scrollTop = 0;
         });
       }
@@ -339,7 +339,7 @@
       // 4. Save scroll position on user scrolling (only when not on top of Home)
       sidebarNav.addEventListener('scroll', function() {
         if (!isHome || sidebarNav.scrollTop > 0) {
-          sessionStorage.setItem('finai_sidebar_scroll', sidebarNav.scrollTop);
+          sessionStorage.setItem('finora_sidebar_scroll', sidebarNav.scrollTop);
         }
       }, { passive: true });
 
@@ -348,7 +348,7 @@
       navLinks.forEach(function(link) {
         if (link !== homeLink) {
           link.addEventListener('click', function() {
-            sessionStorage.setItem('finai_sidebar_scroll', sidebarNav.scrollTop);
+            sessionStorage.setItem('finora_sidebar_scroll', sidebarNav.scrollTop);
           });
         }
       });
@@ -356,7 +356,7 @@
       // 6. Save on window unload
       window.addEventListener('beforeunload', function() {
         if (!isHome) {
-          sessionStorage.setItem('finai_sidebar_scroll', sidebarNav.scrollTop);
+          sessionStorage.setItem('finora_sidebar_scroll', sidebarNav.scrollTop);
         }
       });
     })();

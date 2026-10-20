@@ -35,7 +35,7 @@ Finora enforces this principle through an automated **Investment Readiness Gatek
               │                                         │
               └────────────────────┬────────────────────┘
                                    ▼
-                       CONTEXT-AWARE FinAI ASSISTANT
+                       CONTEXT-AWARE Finora ASSISTANT
             (Deterministic Prescriptions Using User's Actual Database Data)
 ```
 
@@ -57,7 +57,7 @@ Finora enforces this principle through an automated **Investment Readiness Gatek
 | **Market Telemetry** | Curated Indian equity catalog with P/E ratios, volatility ratings, and sector metrics. |
 | **Stock Suitability Engine** | Matrix matching stock volatility with user risk profile to prevent excessive capital risk. |
 | **Virtual Portfolio** | Position tracking, book value, market value, and unrealized profit/loss calculation. |
-| **FinAI Assistant** | Conversational assistant providing answers derived directly from live database ledger. |
+| **Finora Assistant** | Conversational assistant providing answers derived directly from live database ledger. |
 | **Admin Command Console** | Dedicated operator dashboard for user administration, audit logs, and securities telemetry. |
 
 ---
@@ -171,7 +171,7 @@ SQLITE_PATH=database/financial_manager.db
 ---
 
 ### 6. Initialize Administrator Account Securely
-FinAI does not ship with hardcoded administrator credentials. Create or update your administrator account securely using the interactive CLI command:
+Finora does not ship with hardcoded administrator credentials. Create or update your administrator account securely using the interactive CLI command:
 ```bash
 flask init-admin
 ```
@@ -234,7 +234,7 @@ financial_manager/
 │   └── seed_data.py                 # Multi-persona realistic test data
 ├── routes/                          # Modular Flask Blueprint Controllers
 │   ├── admin_routes.py              # Admin Command Console & audit logs
-│   ├── ai_routes.py                 # FinAI conversational endpoint & Gemini integration
+│   ├── ai_routes.py                 # Finora conversational endpoint & Gemini integration
 │   ├── analysis_routes.py           # Health, risk & readiness endpoints
 │   ├── api_routes.py                # RESTful JSON API endpoints
 │   ├── auth_routes.py               # User login, registration, settings & sessions

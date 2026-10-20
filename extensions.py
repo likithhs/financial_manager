@@ -1,5 +1,5 @@
 """
-FinAI - Core Flask Extensions
+Finora - Core Flask Extensions
 Centralizes extension singletons for application factory pattern.
 """
 

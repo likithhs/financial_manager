@@ -1,5 +1,5 @@
 """
-FinAI Backend Foundation - Authentication & Authorization Helpers
+Finora Backend Foundation - Authentication & Authorization Helpers
 Provides session validation, role enforcement, and current user retrieval.
 """
 

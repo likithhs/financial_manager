@@ -1,5 +1,5 @@
 -- ====================================================================
--- FinAI: AI-Powered Personal Financial Manager & Investment System
+-- Finora: AI-Powered Personal Financial Manager & Investment System
 -- MASTER DATABASE SCHEMA (MySQL) - PHASE 2 SPECIFICATION
 -- Database: financial_manager
 -- ====================================================================
@@ -252,7 +252,7 @@ CREATE TABLE IF NOT EXISTS investment_recommendations (
 
 -- --------------------------------------------------------------------
 -- 11. CHAT HISTORY TABLE
--- Standardized FinAI conversational persistence
+-- Standardized Finora conversational persistence
 -- --------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS chat_history (
     id INT AUTO_INCREMENT PRIMARY KEY,

@@ -1,5 +1,5 @@
 """
-FinAI Backend Foundation - Expense Service
+Finora Backend Foundation - Expense Service
 Handles categorized expense tracking, budget burn calculations, and user isolation.
 """
 

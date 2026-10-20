@@ -1,5 +1,5 @@
 """
-FinAI - AI-Powered Personal Financial Manager & Investment Recommendation System
+Finora - AI-Powered Personal Financial Manager & Investment Recommendation System
 Core Flask Application Factory & Module Orchestrator
 """
 
@@ -33,12 +33,12 @@ logging.basicConfig(
     level=logging.INFO,
     format='[%(asctime)s] [%(levelname)s] in %(module)s: %(message)s'
 )
-logger = logging.getLogger("finai")
+logger = logging.getLogger("finora")
 
 
 def create_app(config_class=Config):
     """
-    Application factory pattern for FinAI Flask backend.
+    Application factory pattern for Finora Flask backend.
     Loads configuration, initializes MySQL connection, registers blueprints and error handlers.
     """
     app = Flask(__name__)
@@ -48,7 +48,7 @@ def create_app(config_class=Config):
     csrf.init_app(app)
     limiter.init_app(app)
 
-    logger.info("Initializing FinAI Flask Application...")
+    logger.info("Initializing Finora Flask Application...")
 
     # Initialize database tables and seed data
     with app.app_context():
@@ -170,5 +170,5 @@ if __name__ == '__main__':
     host = Config.FLASK_HOST
     port = Config.PORT
     debug = Config.FLASK_DEBUG
-    logger.info(f"Starting FinAI on http://{host}:{port} (Debug: {debug})")
+    logger.info(f"Starting Finora on http://{host}:{port} (Debug: {debug})")
     app.run(host=host, port=port, debug=debug)

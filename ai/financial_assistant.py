@@ -14,7 +14,7 @@ from ai.sentiment_engine import SentimentEngine
 from ai.conversational_engine import ConversationalEngine
 
 
-class FinAIAssistant:
+class FinoraAssistant:
     """
     Intelligent Conversational Assistant for Personal Financial Guidance.
 
@@ -367,11 +367,11 @@ Current Portfolio Holdings:
         Enforces domain guardrails, attempts external multi-provider LLM,
         and falls back to local Conversational Intelligence Engine.
         """
-        ctx = FinAIAssistant.get_user_full_context(user_id)
+        ctx = FinoraAssistant.get_user_full_context(user_id)
         user_name = ctx["user"]["name"] if ctx.get("user") else "Investor"
 
         # 1. Strict Financial Domain Guardrail
-        if not FinAIAssistant.is_financial_domain_query(user_message):
+        if not FinoraAssistant.is_financial_domain_query(user_message):
             refusal = (
                 f"Hello {user_name}! I would love to chat, but as your specialized **Finora Financial Assistant**, "
                 "my capabilities and expertise are strictly dedicated to the **Financial Advisory & Wealth Management domain**.\n\n"
@@ -379,13 +379,13 @@ Current Portfolio Holdings:
                 "6-pillar health diagnostics, investment readiness, mutual funds, stocks, debt freedom, and retirement goals.\n\n"
                 "What personal finance question or goal can we work on together today?"
             )
-            FinAIAssistant._save_conversation(user_id, user_message, refusal, {"guardrail_triggered": True})
+            FinoraAssistant._save_conversation(user_id, user_message, refusal, {"guardrail_triggered": True})
             return (refusal, "Finora Domain Guardrail") if return_meta else refusal
 
         # 2. Attempt External Multi-Provider LLM (Gemini, OpenAI, Groq)
         if AIService.is_api_configured():
             try:
-                system_prompt = FinAIAssistant.build_system_prompt(ctx)
+                system_prompt = FinoraAssistant.build_system_prompt(ctx)
                 history_rows = query_db(
                     """
                     SELECT user_message, ai_response 
@@ -401,7 +401,7 @@ Current Portfolio Holdings:
                 if llm_reply:
                     provider_info = AIService.get_provider_status()
                     provider_name = provider_info.get("display_name", "AI Engine")
-                    FinAIAssistant._save_conversation(user_id, user_message, llm_reply, {"provider": provider_name})
+                    FinoraAssistant._save_conversation(user_id, user_message, llm_reply, {"provider": provider_name})
                     return (llm_reply, provider_name) if return_meta else llm_reply
             except Exception as e:
                 print(f"External LLM invocation failed, falling back to local: {e}")
@@ -410,7 +410,7 @@ Current Portfolio Holdings:
         local_reply = ConversationalEngine.generate_chat_response(user_id, user_message, ctx)
         sentiment_info = SentimentEngine.analyze_sentiment(user_message)
         provider_label = "Finora Conversational Engine"
-        FinAIAssistant._save_conversation(
+        FinoraAssistant._save_conversation(
             user_id,
             user_message,
             local_reply,
@@ -428,10 +428,14 @@ Current Portfolio Holdings:
         Built-in conversational assistant powered by ConversationalEngine.
         """
         if not ctx:
-            ctx = FinAIAssistant.get_user_full_context(user_id)
+            ctx = FinoraAssistant.get_user_full_context(user_id)
         reply = ConversationalEngine.generate_chat_response(user_id, user_message, ctx)
         sentiment_info = SentimentEngine.analyze_sentiment(user_message)
         return reply, {
             'sentiment': sentiment_info.get('sentiment'),
             'provider': 'Finora Conversational Engine'
         }
+
+
+# Backwards compatibility alias
+FinAIAssistant = FinoraAssistant

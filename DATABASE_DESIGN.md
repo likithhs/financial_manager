@@ -1,4 +1,4 @@
-# FinAI - Database Architecture & Design Specification (Phase 2)
+# Finora - Database Architecture & Design Specification (Phase 2)
 
 ## 1. Database Overview
 * **Database Engine:** MySQL 8.0+ (with fallback capability to SQLite for lightweight testing)
@@ -187,7 +187,7 @@ Educational asset class definitions and rule-based recommendation mapping.
 | `suitability_notes` | `TEXT` | `NULL` | Educational context |
 
 ### 3.9. `chat_history` Table
-Stores FinAI conversational messages between the user and the assistant.
+Stores Finora conversational messages between the user and the assistant.
 | Field | Type | Attributes | Description |
 | :--- | :--- | :--- | :--- |
 | `id` | `INT` | `AUTO_INCREMENT`, `PRIMARY KEY` | Unique message ID |

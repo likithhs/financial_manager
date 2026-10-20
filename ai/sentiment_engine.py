@@ -1,5 +1,5 @@
 """
-FinAI Sentiment & Emotional Intelligence Engine
+Finora Sentiment & Emotional Intelligence Engine
 Analyzes user sentiment, emotional tone, and psychological mindset in personal finance conversations.
 Provides empathetic validation and emotional framing for financial advisory dialogues.
 """

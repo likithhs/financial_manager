@@ -1,5 +1,5 @@
 """
-FinAI Backend Foundation - JSON API Blueprint
+Finora Backend Foundation - JSON API Blueprint
 Provides clean RESTful API foundation for future AJAX and client integrations.
 Endpoints:
 - /api/health

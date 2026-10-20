@@ -1,5 +1,5 @@
 """
-FinAI Backend Foundation - Input Validation Utility
+Finora Backend Foundation - Input Validation Utility
 Provides reusable validators for monetary amounts, emails, passwords, dates, and IDs.
 """
 

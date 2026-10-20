@@ -1,5 +1,5 @@
 """
-FinAI Backend Foundation - Financial Goal Service
+Finora Backend Foundation - Financial Goal Service
 Handles goal milestones, accumulated contributions, status management, and progress tracking.
 """
 
