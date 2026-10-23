@@ -1,3 +1,4 @@
+import json
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from routes.auth_routes import login_required
 from ai.financial_analyzer import evaluate_user_financial_health
@@ -53,12 +54,21 @@ def risk_profile():
 
     # GET: Fetch latest risk evaluation
     latest_profile = query_db("SELECT * FROM risk_profiles WHERE user_id = %s ORDER BY id DESC LIMIT 1", (user_id,), one=True)
+    user_answers = {}
+    if latest_profile:
+        assessment_row = query_db("SELECT assessment_data FROM risk_assessments WHERE user_id = %s ORDER BY id DESC LIMIT 1", (user_id,), one=True)
+        if assessment_row and assessment_row.get('assessment_data'):
+            try:
+                user_answers = json.loads(assessment_row['assessment_data'])
+            except Exception:
+                pass
     
     return render_template(
         'risk_profile.html',
         pillars=RISK_PILLARS,
         questions=ALL_QUESTIONS,
-        profile=latest_profile
+        profile=latest_profile,
+        user_answers=user_answers
     )
 
 @analysis_bp.route('/investment-readiness', methods=['GET'])
