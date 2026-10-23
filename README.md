@@ -185,7 +185,7 @@ You will be prompted to enter the administrator's email and password (**minimum 
 Verify that database schemas, transaction safety, and financial calculations pass all tests:
 ```bash
 python test_database_phase2.py
-python test_backend_phase3.py
+python test_security_phase4.py
 python test_financial_calculations.py
 python test_database_reliability.py
 ```

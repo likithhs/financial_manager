@@ -164,52 +164,75 @@ class FinoraAssistant:
         Enforces strict domain boundaries:
         Only personal finance, budgeting, investments, goals, cashflow, debt,
         and financial education are allowed. General non-financial questions
-        (coding, trivia, sports, cooking, politics, pop culture) are refused.
+        (coding, trivia, sports, cooking, politics, pop culture, homework) are refused.
         """
         if not user_message:
             return False
 
         msg = user_message.strip().lower()
 
-        # Allow basic greetings and conversational starters
-        greetings = [
-            "hello", "hi", "hey", "good morning", "good afternoon", "good evening",
-            "who are you", "what can you do", "help", "how does this work",
-            "what is finora", "what is finai", "tell me about yourself", "start"
+        # 1. Prompt Injection & Jailbreak Defense
+        injection_patterns = [
+            r"ignore\s+(all\s+)?(previous|prior|above)\s+(instructions|prompts|rules)",
+            r"(forget|disregard)\s+(all\s+)?(previous|prior|everything)",
+            r"you\s+are\s+now\s+(a|an)?\s*(new|different|uncensored|chatgpt|dan|assistant)",
+            r"act\s+as\s+(a|an)?\s*(chatgpt|general|unrestricted|jailbreak|python|coder|counselor)",
+            r"system\s+prompt",
+            r"developer\s+mode",
+            r"jailbreak",
+            r"pretend\s+(you\s+are|to\s+be)"
         ]
-        if any(msg == g or msg.startswith(g + " ") or msg.endswith(" " + g) for g in greetings):
-            return True
+        for ipat in injection_patterns:
+            if re.search(ipat, msg):
+                return False
 
-        # Clear Non-Financial Keywords / Patterns (Instant Refusal)
+        # 2. Strict Non-Financial Keywords / Patterns (Instant Refusal)
         non_financial_patterns = [
-            r"\b(python|javascript|typescript|c\+\+|java|golang|rust|ruby|php|swift|kotlin|html|css|sql|coding|code|script|algorithm|leetcode|bug|debug|function|compiler|github|git|software)\b",
-            r"\b(recipe|recipes|cook|cooking|bake|baking|ingredients|dish|dishes|curry|pasta|pizza|cake|soup|dessert|sandwich)\b",
-            r"\b(cricket|football|soccer|basketball|tennis|ipl|fifa|messi|ronaldo|world cup|match score|tournament|stadium|wicket|scorecard|gaming|minecraft|playstation)\b",
-            r"\b(movie|movies|actor|actress|hollywood|bollywood|song|songs|lyrics|sing a song|sing|poem|poems|poetry|write a story|novel|fiction|joke|jokes|riddle)\b",
-            r"\b(capital of|president of|prime minister of|history of|solar system|planet|astronomy|weather in|temperature today|rain tomorrow|geography)\b",
-            r"\b(write an essay|solve physics|solve chemistry|biology|homework)\b",
-            r"\b(diagnose my|medical advice|symptoms of|prescription|headache|fever|cough)\b",
-            r"\b(fix my car|car engine|engine repair|mechanic|plumbing|leaking pipe|appliance repair)\b",
-            r"\b(legal lawsuit|divorce lawyer|traffic ticket)\b"
+            r"\b(python|javascript|typescript|c\+\+|java|golang|rust|ruby|php|swift|kotlin|html|css|sql|coding|code|script|algorithm|leetcode|bug|debug|function|compiler|github|git|software|developer|programming|backend|frontend)\b",
+            r"\b(recipe|recipes|cook|cooking|bake|baking|ingredients|dish|dishes|curry|pasta|pizza|cake|soup|dessert|sandwich|chicken|paneer|biryani|burger)\b",
+            r"\b(cricket|football|soccer|basketball|tennis|ipl|fifa|messi|ronaldo|world cup|match score|tournament|stadium|wicket|scorecard|gaming|minecraft|playstation|xbox|pubg|freefire|kohli|dhoni)\b",
+            r"\b(movie|movies|actor|actress|hollywood|bollywood|song|songs|lyrics|sing a song|sing|poem|poems|poetry|write a story|novel|fiction|joke|jokes|riddle|cinema|netflix|anime)\b",
+            r"\b(capital of|president of|prime minister of|history of|solar system|planet|astronomy|weather in|temperature today|rain tomorrow|geography|map of)\b",
+            r"\b(write an essay|essay on|solve physics|solve chemistry|biology|homework|assignment|math problem|solve equation|quantum|gravity|formula for)\b",
+            r"\b(diagnose my|medical advice|symptoms of|prescription|headache|fever|cough|medicine|doctor|disease)\b",
+            r"\b(fix my car|car engine|engine repair|mechanic|plumbing|leaking pipe|appliance repair|electrician)\b",
+            r"\b(legal lawsuit|divorce lawyer|traffic ticket|court case)\b",
+            r"\b(who is the (richest|tallest|fastest|best)|who won|who invented|who discovered)\b"
         ]
 
         for pattern in non_financial_patterns:
             if re.search(pattern, msg):
                 return False
 
-        # Permitted Financial Domain Keywords & Phrases
+        # 3. Exact Greetings & Introduction Starters (Checked AFTER non-financial patterns)
+        exact_greetings = {
+            "hello", "hi", "hey", "good morning", "good afternoon", "good evening",
+            "greetings", "namaste", "who are you", "what can you do", "help",
+            "help me", "how can you help", "how does this work",
+            "what is finora", "what is finai", "tell me about yourself", "start",
+            "get started", "menu", "options"
+        }
+        clean_msg = re.sub(r"[^\w\s]", "", msg).strip()
+        if clean_msg in exact_greetings:
+            return True
+
+        for g in ["hello", "hi", "hey", "good morning", "good afternoon", "good evening"]:
+            if clean_msg.startswith(g + " finora") or clean_msg.startswith(g + " assistant") or clean_msg.startswith(g + " there"):
+                return True
+
+        # 4. Permitted Financial Domain Keywords & Phrases
         financial_keywords = [
             "income", "salary", "earn", "earning", "compensation", "revenue", "paycheck",
             "expense", "expenses", "spending", "spend", "spent", "cost", "bill", "bills",
             "budget", "budgeting", "save", "savings", "surplus", "deficit", "cashflow", "cash flow",
-            "emergency", "reserve", "reserves", "liquidity", "buffer", "safety net",
+            "emergency", "reserve", "reserves", "liquidity", "buffer", "safety net", "runway",
             "invest", "investing", "investment", "investments", "investor",
             "readiness", "ready to invest", "afford to invest",
             "stock", "stocks", "share", "shares", "equity", "equities",
-            "mutual fund", "mutual funds", "mf", "sip", "sips", "etf", "etfs",
-            "bond", "bonds", "debenture", "fixed deposit", "fixed deposits", "fd", "fds",
-            "gold", "silver", "commodity", "crypto", "cryptocurrency", "bitcoin",
-            "portfolio", "diversify", "diversification", "allocation", "asset allocation",
+            "mutual fund", "mutual funds", "mf", "sip", "sips", "etf", "etfs", "index fund", "index funds",
+            "bond", "bonds", "debenture", "fixed deposit", "fixed deposits", "fd", "fds", "recurring deposit", "rd",
+            "gold", "silver", "commodity", "crypto", "cryptocurrency", "bitcoin", "sgb",
+            "portfolio", "diversify", "diversification", "allocation", "asset allocation", "rebalance",
             "dividend", "dividends", "yield", "capital gain", "capital gains",
             "nifty", "sensex", "market", "bull", "bear", "rally", "correction", "crash",
             "goal", "goals", "target", "milestone", "retire", "retirement", "pension", "fire",
@@ -218,7 +241,7 @@ class FinoraAssistant:
             "debt", "debts", "loan", "loans", "borrow", "borrowing", "emi", "emis", "credit", "credit score", "cibil",
             "tax", "taxes", "taxation", "80c", "deduction", "itr", "inflation",
             "risk", "risk profile", "risk tolerance", "conservative", "moderate", "aggressive",
-            "health score", "financial health", "score", "pillar", "diagnostics",
+            "health score", "financial health", "score", "pillar", "diagnostics", "6-pillar",
             "rupee", "rupees", "rs", "inr", "lakh", "crore", "money", "cash", "finance", "financial",
             "tcs", "infosys", "infy", "reliance", "hdfc", "icici", "wipro", "itc", "sbi", "tatamotors", "tata",
             "what if i save", "what if i invest", "how much can i", "should i buy", "should i invest", "where to invest",
@@ -287,7 +310,7 @@ class FinoraAssistant:
             holdings_summary.append(f"- {sym}: {qty} shares @ ₹{avg:,.2f}")
 
         prompt = f"""You are Finora, an empathetic, world-class Certified Financial Planner (CFP), wealth strategist, and behavioral finance coach.
-You communicate with the natural warmth, emotional intelligence, conversational brilliance, and nuance of ChatGPT.
+You communicate with the natural warmth, emotional intelligence, conversational brilliance, and professional nuance of a seasoned Certified Financial Planner.
 
 === CORE PERSONA & BEHAVIORAL INTELLIGENCE ===
 1. Emotional Resonance & Empathy First:
@@ -373,10 +396,15 @@ Current Portfolio Holdings:
         # 1. Strict Financial Domain Guardrail
         if not FinoraAssistant.is_financial_domain_query(user_message):
             refusal = (
-                f"Hello {user_name}! I would love to chat, but as your specialized **Finora Financial Assistant**, "
-                "my capabilities and expertise are strictly dedicated to the **Financial Advisory & Wealth Management domain**.\n\n"
-                "I am here to help you master your money—including cashflow optimization, budgeting, emergency reserves, "
-                "6-pillar health diagnostics, investment readiness, mutual funds, stocks, debt freedom, and retirement goals.\n\n"
+                f"Hello {user_name}! I am your dedicated **Finora Financial Strategist**.\n\n"
+                "My capabilities and guidance are strictly focused on **Personal Finance, Budgeting, and Wealth Management**.\n\n"
+                "I cannot answer questions about general knowledge, coding, recipes, trivia, or non-financial topics. "
+                "However, I would love to assist you with:\n"
+                "• **Cashflow & Budgeting:** Analyzing your monthly income, living expenses, and savings rate\n"
+                "• **Emergency Reserves:** Calculating and growing your liquidity runway\n"
+                "• **6-Pillar Health Diagnostics:** Tracking your holistic financial stability\n"
+                "• **Investment Readiness & Risk Profile:** Safe market allocation based on your risk tolerance\n"
+                "• **Financial Goals:** Milestone tracking, mutual fund SIPs, debt elimination, and wealth building\n\n"
                 "What personal finance question or goal can we work on together today?"
             )
             FinoraAssistant._save_conversation(user_id, user_message, refusal, {"guardrail_triggered": True})
@@ -406,7 +434,7 @@ Current Portfolio Holdings:
             except Exception as e:
                 print(f"External LLM invocation failed, falling back to local: {e}")
 
-        # 3. Conversational Engine (ChatGPT Caliber with Sentiment Awareness)
+        # 3. Conversational Engine (Institutional Advisory Grade with Sentiment Awareness)
         local_reply = ConversationalEngine.generate_chat_response(user_id, user_message, ctx)
         sentiment_info = SentimentEngine.analyze_sentiment(user_message)
         provider_label = "Finora Conversational Engine"

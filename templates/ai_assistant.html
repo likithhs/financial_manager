@@ -96,7 +96,7 @@
     <div style="padding: 16px 24px; background: #FFFFFF; border-top: 1px solid #E5E7EB;">
       <form id="chatForm" action="{{ url_for('ai.ai_assistant') }}" method="POST" style="display: flex; gap: 12px; align-items: center;">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <input type="text" id="chatInput" name="message" class="form-control" placeholder="Talk to Finora like ChatGPT... share your money goals, debts, feelings, or ask for guidance..." required autofocus autocomplete="off" style="flex-grow: 1; padding: 13px 18px; font-size: 0.95rem; background: #FAF8F4; border: 1px solid #D1D5DB; color: #18181B; border-radius: var(--radius-md);">
+        <input type="text" id="chatInput" name="message" class="form-control" placeholder="Ask Finora about your cashflow, savings, budget, debts, or financial goals..." required autofocus autocomplete="off" style="flex-grow: 1; padding: 13px 18px; font-size: 0.95rem; background: #FAF8F4; border: 1px solid #D1D5DB; color: #18181B; border-radius: var(--radius-md);">
         <button type="submit" id="sendBtn" class="btn btn-primary btn-lg" style="padding: 13px 26px;">
           <span id="btnText">Send</span> <i class="fa-solid fa-paper-plane" id="btnIcon"></i>
         </button>

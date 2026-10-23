@@ -92,6 +92,9 @@
         </a>
 
         <div class="nav-section-title">AI & Intelligence</div>
+        <a href="{{ url_for('ai.ai_assistant') }}" class="nav-link {% if request.endpoint in ['ai.ai_assistant'] %}active{% endif %}">
+          <i class="fa-solid fa-robot"></i> <span>AI Assistant</span>
+        </a>
         <a href="{{ url_for('analysis.financial_analysis') }}" class="nav-link {% if request.endpoint in ['analysis.financial_analysis', 'profile.health'] %}active{% endif %}">
           <i class="fa-solid fa-heart-pulse"></i> <span>Financial Health</span>
         </a>

@@ -1,6 +1,6 @@
 """
 Finora Conversational Intelligence Engine
-Generates rich, empathetic, human-grade conversational responses (ChatGPT caliber)
+Generates rich, empathetic, human-grade conversational responses (institutional advisory caliber)
 for personal finance questions, understanding nuanced language and emotional sentiment.
 """
 
@@ -43,6 +43,31 @@ class ConversationalEngine:
         opening = sentiment_data["empathetic_opening"]
 
         msg = user_message.lower().strip()
+
+        # 0. Friendly Greeting & Platform Orientation
+        clean_msg = re.sub(r"[^\w\s]", "", msg).strip()
+        greetings = {
+            "hello", "hi", "hey", "good morning", "good afternoon", "good evening",
+            "greetings", "namaste", "who are you", "what can you do", "help",
+            "help me", "how can you help", "how does this work",
+            "what is finora", "what is finai", "tell me about yourself", "start",
+            "get started", "menu", "options", "hello finora", "hi finora", "hey finora"
+        }
+        if clean_msg in greetings or any(clean_msg.startswith(g) for g in ["hello finora", "hi finora", "hey finora", "good morning finora"]):
+            body = (
+                f"Hello {user_name}! I am your dedicated **Finora Financial Strategist**.\n\n"
+                f"I am directly connected to your active financial dashboard. Here is where you stand today:\n"
+                f"• **Monthly Income:** ₹{income:,.0f}\n"
+                f"• **Monthly Expenses:** ₹{expenses:,.0f}\n"
+                f"• **Monthly Surplus:** ₹{savings:,.0f} ({savings_rate:.1f}% savings rate)\n"
+                f"• **Emergency Buffer:** {emergency_months:.1f} months of expenses\n"
+                f"• **6-Pillar Health Rating:** {health_score}/100 ({health_status})\n"
+                f"• **Risk Classification:** {risk_level}\n\n"
+                f"I am here to help you optimize your cashflow, build your emergency reserve, plan financial goals, "
+                f"and design disciplined investment strategies.\n\n"
+                f"What financial topic or goal would you like to work on right now?"
+            )
+            return body
 
         # 2. Match Conversational Financial Intent
         response_body = ConversationalEngine._synthesize_advisory(
@@ -308,6 +333,16 @@ class ConversationalEngine:
         # -------------------------------------------------------------
         # J. GENERAL FINANCIAL STRATEGY & ADVISORY CONVERSATION
         # -------------------------------------------------------------
+        from ai.financial_assistant import FinoraAssistant
+        if not FinoraAssistant.is_financial_domain_query(msg):
+            return (
+                f"Hello {user_name}! As your dedicated **Finora Financial Strategist**, "
+                f"my specialty is strictly focused on personal finance, budgeting, emergency reserves, "
+                f"debt management, and disciplined wealth creation.\n\n"
+                f"I cannot answer non-financial questions. Let's focus on your money goals! "
+                f"What financial question can I help you with today?"
+            )
+
         body = (
             f"I'm here as your dedicated personal wealth strategist and advisor, {user_name}.\n\n"
             f"Whether you want to optimize your monthly cashflow (currently **₹{income:,.0f}** income vs **₹{expenses:,.0f}** expenses), "

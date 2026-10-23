@@ -118,17 +118,25 @@ class FinoraDemoAssistantTests(unittest.TestCase):
         self.assertNotIn("landingChatMessages", html)
         self.assertNotIn("id=\"askFinAiFab\"", html)
 
-    # 7. A logged-in user cannot access the chatbot backend endpoint directly.
-    def test_07_authenticated_user_backend_forbidden(self):
+    # 7. A logged-in user can chat and receive personalized financial advice with domain guardrails.
+    def test_07_authenticated_user_can_chat(self):
         with self.client.session_transaction() as sess:
             sess['user_id'] = self.test_user_id
             sess['user_name'] = self.test_user_name
 
-        res = self.client.post('/ai-assistant/chat', json={"message": "How do I track my expenses?"})
-        self.assertEqual(res.status_code, 403)
+        # Permitted financial query receives personalized advisory response
+        res = self.client.post('/ai-assistant/chat', json={"message": "How do I track my expenses and budget?"})
+        self.assertEqual(res.status_code, 200)
         data = res.get_json()
-        self.assertEqual(data.get("status"), "forbidden")
-        self.assertIn("Access Denied", data.get("error"))
+        self.assertEqual(data.get("status"), "success")
+        self.assertTrue(len(data.get("reply", "")) > 20)
+
+        # Off-topic query triggers the Finora Domain Guardrail refusal
+        res_off = self.client.post('/ai-assistant/chat', json={"message": "Write a python script"})
+        self.assertEqual(res_off.status_code, 200)
+        data_off = res_off.get_json()
+        self.assertEqual(data_off.get("provider"), "Finora Domain Guardrail")
+        self.assertIn("Personal Finance", data_off.get("reply"))
 
     # 8. Logging out restores access to the chatbot on the public dashboard.
     def test_08_logout_restores_chatbot_access(self):
@@ -147,20 +155,20 @@ class FinoraDemoAssistantTests(unittest.TestCase):
         data = res.get_json()
         self.assertEqual(data.get("status"), "success")
 
-    # 9. Refreshing or manually navigating to routes does not bypass the access rules.
+    # 9. Refreshing or manually navigating to routes respects access rules.
     def test_09_manual_route_navigation_rules(self):
         # Logged out navigating directly to /ai-assistant redirects to public landing page anchor
         res = self.client.get('/ai-assistant', follow_redirects=False)
         self.assertEqual(res.status_code, 302)
         self.assertTrue(res.headers.get('Location').endswith('/#ai') or '/#ai' in res.headers.get('Location'))
 
-        # Logged in navigating directly to /ai-assistant redirects to /home
+        # Logged in navigating directly to /ai-assistant loads the assistant page
         with self.client.session_transaction() as sess:
             sess['user_id'] = self.test_user_id
             sess['user_name'] = self.test_user_name
         res = self.client.get('/ai-assistant', follow_redirects=False)
-        self.assertEqual(res.status_code, 302)
-        self.assertTrue(res.headers.get('Location').endswith('/home'))
+        self.assertEqual(res.status_code, 200)
+        self.assertIn(b"Finora Assistant", res.data)
 
     # 10. All other Finora modules continue to work properly.
     def test_10_other_modules_continue_working(self):

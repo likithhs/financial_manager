@@ -46,7 +46,7 @@
 
   <form id="homeAiForm" style="display: flex; gap: 10px; align-items: center;">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-    <input type="text" id="homeAiInput" class="form-control" placeholder="Talk to Finora like ChatGPT... ask about cashflow, debts, how you feel about money, or investment goals..." required autocomplete="off" style="flex-grow: 1; padding: 12px 18px; font-size: 0.92rem; background: #FAF8F4; border: 1px solid #D1D5DB; border-radius: var(--radius-md);">
+    <input type="text" id="homeAiInput" class="form-control" placeholder="Ask Finora about your cashflow, savings, budget, investments, or financial goals..." required autocomplete="off" style="flex-grow: 1; padding: 12px 18px; font-size: 0.92rem; background: #FAF8F4; border: 1px solid #D1D5DB; border-radius: var(--radius-md);">
     <button type="submit" id="homeAiSendBtn" class="btn btn-primary" style="padding: 12px 22px; font-weight: 600;">
       <span id="homeAiBtnText">Ask Finora</span> <i class="fa-solid fa-paper-plane" id="homeAiBtnIcon"></i>
     </button>
