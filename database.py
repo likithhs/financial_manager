@@ -1,11 +1,19 @@
 import os
 import sqlite3
 import logging
+from decimal import Decimal
+from datetime import date, datetime
 from contextlib import contextmanager
 from config import Config
 from werkzeug.security import generate_password_hash
 
 logger = logging.getLogger(__name__)
+
+# Register SQLite adapters for Python standard types (Decimal, date, datetime)
+# Resolves Python 3.12+ date deprecation warnings and enables native Decimal binding in SQLite queries
+sqlite3.register_adapter(Decimal, str)
+sqlite3.register_adapter(date, lambda d: d.isoformat())
+sqlite3.register_adapter(datetime, lambda dt: dt.isoformat())
 
 # Try importing mysql.connector
 try:
@@ -734,10 +742,11 @@ def init_db(engine=None):
         raise
 
 
-def create_admin_user(email, password, name="System Administrator"):
+def create_admin_user(email, password, name="System Administrator", engine=None):
     """
     Securely creates or promotes an administrator user account with hashed credentials.
     Enforces modern password policy requirements (minimum 12 characters).
+    Guarantees database schema initialization on fresh databases.
     Returns (user_id, is_new).
     """
     email = (email or '').strip().lower()
@@ -746,20 +755,32 @@ def create_admin_user(email, password, name="System Administrator"):
     if not password or len(password) < 12:
         raise ValueError("Administrator password must be at least 12 characters long.")
 
+    # Ensure schema is initialized on a fresh database
+    init_db(engine=engine)
+
     password_hash = generate_password_hash(password)
 
-    # Check if user already exists
-    existing = query_db("SELECT id, role FROM users WHERE email = %s", (email,), one=True)
-    if existing:
-        execute_db("""
-            UPDATE users 
-            SET password = %s, password_hash = %s, role = 'admin', name = %s
-            WHERE id = %s
-        """, (password_hash, password_hash, name, existing['id']))
-        return existing['id'], False
-    else:
-        user_id = execute_db("""
-            INSERT INTO users (name, email, password, password_hash, age, occupation, financial_exp, investment_exp, role)
-            VALUES (%s, %s, %s, %s, 35, 'Financial Admin', 'Expert', 'Advanced', 'admin')
-        """, (name, email, password_hash, password_hash))
-        return user_id, True
+    conn, db_type = get_db_connection(engine=engine)
+    try:
+        # Check if user already exists
+        existing = query_db("SELECT id, role FROM users WHERE email = %s", (email,), one=True, conn=conn)
+        if existing:
+            execute_db("""
+                UPDATE users 
+                SET password = %s, password_hash = %s, role = 'admin', name = %s
+                WHERE id = %s
+            """, (password_hash, password_hash, name, existing['id']), conn=conn)
+            conn.commit()
+            return existing['id'], False
+        else:
+            user_id = execute_db("""
+                INSERT INTO users (name, email, password, password_hash, age, occupation, financial_exp, investment_exp, role)
+                VALUES (%s, %s, %s, %s, 35, 'Financial Admin', 'Expert', 'Advanced', 'admin')
+            """, (name, email, password_hash, password_hash), conn=conn)
+            conn.commit()
+            return user_id, True
+    finally:
+        try:
+            conn.close()
+        except Exception:
+            pass

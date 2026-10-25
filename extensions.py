@@ -11,9 +11,8 @@ from flask_limiter.util import get_remote_address
 csrf = CSRFProtect()
 
 # Application-wide Rate Limiter
+# Dynamic limits, storage backend, and strategy are loaded directly from app.config
+# (RATELIMIT_DEFAULT, RATELIMIT_STORAGE_URI, RATELIMIT_STRATEGY) upon init_app(app).
 limiter = Limiter(
-    key_func=get_remote_address,
-    storage_uri="memory://",
-    strategy="fixed-window",
-    default_limits=["200 per day", "60 per hour"]
+    key_func=get_remote_address
 )

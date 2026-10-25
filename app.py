@@ -126,39 +126,52 @@ def create_app(config_class=Config):
             return redirect(url_for('admin.dashboard'))
         return dashboard_bp.view_functions['dashboard']()
 
+    @app.cli.command("init-admin")
+    @click.option("--email", prompt="Admin Email", help="Administrator email address")
+    @click.option("--password", prompt="Admin Password", hide_input=True, confirmation_prompt=True, help="Secure administrator password")
+    @click.option("--name", default="System Administrator", help="Administrator display name")
+    def init_admin_command(email, password, name):
+        """Securely initialize or reset an administrator account."""
+        try:
+            user_id, is_new = create_admin_user(email, password, name)
+            status = "Created new" if is_new else "Updated existing"
+            click.echo(f"SUCCESS: {status} administrator account for '{email}' (User ID #{user_id}).")
+        except ValueError as val_err:
+            click.echo(f"VALIDATION ERROR: {val_err}", err=True)
+            sys.exit(1)
+        except Exception as err:
+            click.echo(f"ADMIN PROVISIONING ERROR: {err}", err=True)
+            sys.exit(1)
+
     return app
 
 
 app = create_app()
 
-@app.cli.command("init-admin")
-@click.option("--email", prompt="Admin Email", help="Administrator email address")
-@click.option("--password", prompt="Admin Password", hide_input=True, confirmation_prompt=True, help="Secure administrator password")
-@click.option("--name", default="System Administrator", help="Administrator display name")
-def init_admin_command(email, password, name):
-    """Securely initialize or reset an administrator account."""
-    try:
-        user_id, is_new = create_admin_user(email, password, name)
-        status = "Created new" if is_new else "Updated existing"
-        click.echo(f"SUCCESS: {status} administrator account for '{email}' (User ID #{user_id}).")
-    except ValueError as val_err:
-        click.echo(f"VALIDATION ERROR: {val_err}", err=True)
-        sys.exit(1)
-    except Exception as err:
-        click.echo(f"ADMIN PROVISIONING ERROR: {err}", err=True)
-        sys.exit(1)
-
 if __name__ == '__main__':
     # Check if invoked directly with init-admin argument: python app.py init-admin
     if len(sys.argv) > 1 and sys.argv[1] == 'init-admin':
         import getpass
-        admin_email = input("Administrator Email: ").strip()
-        admin_pass = getpass.getpass("Administrator Password (min 8 chars): ")
-        admin_confirm = getpass.getpass("Confirm Password: ")
-        if admin_pass != admin_confirm:
-            print("ERROR: Passwords do not match.")
-            sys.exit(1)
-        admin_name = input("Administrator Name [System Administrator]: ").strip() or "System Administrator"
+        import argparse
+
+        parser = argparse.ArgumentParser(description="Securely initialize or reset an administrator account.")
+        parser.add_argument('command', help='init-admin command name')
+        parser.add_argument('--email', help='Administrator email address')
+        parser.add_argument('--password', help='Administrator password (minimum 12 characters)')
+        parser.add_argument('--name', default='System Administrator', help='Administrator display name')
+
+        args, _ = parser.parse_known_args()
+
+        admin_email = args.email or input("Administrator Email: ").strip()
+        admin_pass = args.password
+        if not admin_pass:
+            admin_pass = getpass.getpass("Administrator Password (min 12 chars): ")
+            admin_confirm = getpass.getpass("Confirm Password: ")
+            if admin_pass != admin_confirm:
+                print("ERROR: Passwords do not match.")
+                sys.exit(1)
+        admin_name = args.name or "System Administrator"
+
         try:
             uid, created = create_admin_user(admin_email, admin_pass, admin_name)
             print(f"SUCCESS: {'Created new' if created else 'Updated existing'} administrator account for '{admin_email}' (User ID #{uid}).")
