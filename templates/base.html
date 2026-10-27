@@ -274,10 +274,81 @@
             {% endfor %}
           {% endif %}
         {% endwith %}
-
         {% block content %}{% endblock %}
       </main>
     </div>
+
+    <!-- Floating "Ask Finora" Quick Action Button (All modules after login except Settings) -->
+    {% if request.endpoint not in ['auth.settings', 'auth.profile', 'ai.ai_assistant'] and not request.path.startswith('/settings') and not request.path.startswith('/profile') and not request.path.startswith('/ai-assistant') %}
+    <a href="{{ url_for('ai.ai_assistant') }}" id="askFinoraFab" class="ask-finora-fab" title="Chat with Finora Financial Assistant">
+      <div class="fab-icon-pulse">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+      </div>
+      <span class="fab-label">Ask Finora</span>
+    </a>
+    <style>
+      .ask-finora-fab {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        z-index: 9999;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 20px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+        color: #ffffff !important;
+        text-decoration: none !important;
+        box-shadow: 0 6px 20px rgba(249, 115, 22, 0.35);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(8px);
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+      }
+      .ask-finora-fab:hover {
+        transform: translateY(-3px) scale(1.03);
+        box-shadow: 0 10px 25px rgba(249, 115, 22, 0.5), 0 4px 14px rgba(0, 0, 0, 0.15);
+        border-color: rgba(255, 255, 255, 0.6);
+        color: #ffffff !important;
+      }
+      .ask-finora-fab:active {
+        transform: translateY(0) scale(0.97);
+      }
+      .fab-icon-pulse {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.25);
+        font-size: 0.95rem;
+        color: #ffffff;
+        animation: fabPulse 2.5s infinite ease-in-out;
+      }
+      .fab-label {
+        font-weight: 700;
+        font-size: 0.9rem;
+        letter-spacing: 0.02em;
+        color: #ffffff;
+      }
+      @keyframes fabPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.12); }
+      }
+      @media (max-width: 768px) {
+        .ask-finora-fab {
+          bottom: 20px;
+          right: 20px;
+          padding: 10px 16px;
+        }
+        .fab-label {
+          font-size: 0.82rem;
+        }
+      }
+    </style>
+    {% endif %}
   </div>
   {% else %}
   <!-- Public / Landing Page Full View -->
