@@ -1,0 +1,67 @@
+# ====================================================================
+# Finora: AI-Powered Personal Financial Manager & Investment Platform
+# Docker Compose Multi-Container Orchestration (Web + MySQL 8.0)
+# ====================================================================
+
+version: '3.8'
+
+services:
+  # 1. MySQL 8.0 Database Service
+  db:
+    image: mysql:8.0
+    container_name: finora_mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root_finora_secret_2026}
+      MYSQL_DATABASE: ${DB_NAME:-financial_manager}
+      MYSQL_USER: ${DB_USER:-finora_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-finora_user_secret_2026}
+    ports:
+      - "3306:3306"
+    volumes:
+      - finora_mysql_data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-root_finora_secret_2026}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - finora_network
+
+  # 2. Finora Flask Web Application Service
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: finora_web_app
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - FLASK_DEBUG=False
+      - SECRET_KEY=${SECRET_KEY:-finora_production_super_secret_key_2026_change_in_prod}
+      - DB_ENGINE=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=${DB_USER:-finora_user}
+      - DB_PASSWORD=${DB_PASSWORD:-finora_user_secret_2026}
+      - DB_NAME=${DB_NAME:-financial_manager}
+      - RATELIMIT_DEFAULT=200 per day; 60 per hour
+      - RATELIMIT_STORAGE_URI=memory://
+      - PORT=5000
+    networks:
+      - finora_network
+
+volumes:
+  finora_mysql_data:
+    driver: local
+
+networks:
+  finora_network:
+    driver: bridge

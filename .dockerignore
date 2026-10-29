@@ -1,0 +1,26 @@
+# Git and IDE
+.git/
+.gitignore
+.vscode/
+.idea/
+
+# Local Python Environments and Caches
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Local Secrets
+.env
+.env.local
+
+# Database and logs
+*.db
+*.sqlite
+*.sqlite3
+database/*.db
+database/*.sqlite
+*.log

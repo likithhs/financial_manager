@@ -4,5 +4,6 @@ python-dotenv>=1.0.0
 Werkzeug>=2.2.0
 requests>=2.28.0
 waitress>=2.1.2
+gunicorn>=22.0.0; sys_platform != 'win32'
 Flask-WTF>=1.2.0
 Flask-Limiter>=3.5.0
