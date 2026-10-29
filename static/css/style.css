@@ -1493,3 +1493,281 @@ body.sidebar-open-lock {
     margin: 0 !important;
   }
 }
+
+
+/* ====================================================================
+   FINORA ALL-MODULES MOBILE RESPONSIVE ENGINE (PHONE & TABLET)
+   ==================================================================== */
+
+/* 1. Mobile Bottom Quick Navigation Bar (Sticky Dock) */
+.mobile-bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 62px;
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid var(--border-subtle);
+  z-index: 1030;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 4px;
+  box-shadow: 0 -3px 16px rgba(0, 0, 0, 0.05);
+}
+
+.bottom-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  color: #64748B;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  flex: 1;
+  max-width: 76px;
+}
+
+.bottom-nav-item i {
+  font-size: 1.15rem;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.bottom-nav-item:hover,
+.bottom-nav-item:active,
+.bottom-nav-item.active {
+  color: #EA580C !important;
+  text-decoration: none !important;
+}
+
+.bottom-nav-item.active i {
+  transform: translateY(-1px) scale(1.1);
+  color: #EA580C;
+}
+
+.bottom-nav-item.active span {
+  font-weight: 700;
+  color: #EA580C;
+}
+
+/* 2. Responsive Breakpoint: Mobile Viewport Suite (<= 768px) */
+@media (max-width: 768px) {
+  /* Show Mobile Bottom Navigation Bar */
+  .mobile-bottom-nav {
+    display: flex !important;
+  }
+
+  /* Leave comfortable room at bottom of content for Bottom Bar + FAB */
+  .content-body {
+    padding: 14px 12px 105px 12px !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Reposition FAB button above the bottom navigation dock */
+  .ask-finora-fab {
+    bottom: 74px !important;
+    right: 14px !important;
+    z-index: 1025 !important;
+    box-shadow: 0 4px 16px rgba(234, 88, 12, 0.38) !important;
+  }
+
+  /* Ensure Sidebar Drawer is completely scrollable from top to bottom */
+  .sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    width: min(300px, 86vw) !important;
+    height: 100dvh !important;
+    height: 100% !important;
+    max-height: 100dvh !important;
+    display: flex !important;
+    flex-direction: column !important;
+    z-index: 1060 !important;
+    overflow: hidden !important;
+  }
+
+  .sidebar-nav {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: contain !important;
+    padding-bottom: 40px !important;
+  }
+
+  .sidebar-footer {
+    flex-shrink: 0 !important;
+    margin-top: auto !important;
+    background: #FAF8F4 !important;
+    border-top: 1px solid var(--border-subtle) !important;
+  }
+
+  /* Card Headers & Action Bars: Auto-wrap to avoid horizontal overflow */
+  .card-header {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+  }
+
+  .card-header .card-title {
+    font-size: 1.02rem !important;
+    word-break: break-word !important;
+    line-height: 1.3 !important;
+  }
+
+  /* Large buttons convert to full-width touch targets */
+  .btn-lg {
+    width: 100% !important;
+    padding: 12px 18px !important;
+    font-size: 0.95rem !important;
+    text-align: center !important;
+    justify-content: center !important;
+    white-space: normal !important;
+  }
+
+  /* ==========================================================
+     MODULE-SPECIFIC RESPONSIVE OVERRIDES
+     ========================================================== */
+
+  /* Module: Financial Health (financial_analysis.html) */
+  [style*="grid-template-columns: 200px 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+    text-align: center !important;
+  }
+
+  /* Module: Risk Profile (risk_profile.html) */
+  .options-grid,
+  [style*="minmax(300px, 1fr)"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  .risk-option-card {
+    padding: 12px 14px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  #resultCard .card-body {
+    padding: 18px 14px !important;
+  }
+
+  /* Module: Investment Readiness (investment_readiness.html) */
+  [style*="minmax(240px, 1fr)"],
+  [style*="minmax(280px, 1fr)"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Module: Stock Market (stocks.html) & Watchlist (watchlist.html) */
+  [style*="min-width: 280px"] {
+    min-width: 100% !important;
+    width: 100% !important;
+  }
+
+  form[action*="stocks"],
+  form[action*="watchlist"] {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  form[action*="stocks"] .btn,
+  form[action*="watchlist"] .btn {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  /* Module: AI Assistant (ai_assistant.html) */
+  [style*="height: 530px"] {
+    height: 60vh !important;
+    min-height: 380px !important;
+  }
+
+  #chatBox {
+    padding: 14px 12px !important;
+    gap: 14px !important;
+  }
+
+  .chat-row-ai,
+  [style*="max-width: 82%"],
+  [style*="max-width: 75%"] {
+    max-width: 94% !important;
+  }
+
+  #chatForm {
+    gap: 8px !important;
+  }
+
+  #chatInput {
+    padding: 10px 14px !important;
+    font-size: 0.9rem !important;
+  }
+
+  #sendBtn {
+    padding: 10px 16px !important;
+    font-size: 0.88rem !important;
+  }
+
+  /* Module: Settings & User Profile (settings.html) */
+  .settings-header-card {
+    padding: 14px !important;
+  }
+
+  .settings-page-heading {
+    font-size: 1.25rem !important;
+  }
+
+  .settings-tabs-nav {
+    gap: 4px !important;
+    padding-bottom: 2px !important;
+  }
+
+  .settings-tab-btn {
+    padding: 10px 12px !important;
+    font-size: 0.82rem !important;
+  }
+
+  .settings-hero-card {
+    padding: 14px !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 14px !important;
+  }
+
+  .settings-avatar-circle {
+    width: 52px !important;
+    height: 52px !important;
+    font-size: 1.35rem !important;
+  }
+
+  .profile-info-item {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 4px !important;
+  }
+
+  .profile-info-value {
+    text-align: left !important;
+    padding-left: 24px !important;
+  }
+
+  /* Module: Budget Formulas Card (budget.html) */
+  [style*="font-family: monospace"] {
+    font-size: 0.78rem !important;
+    word-break: break-word !important;
+    white-space: normal !important;
+  }
+}
