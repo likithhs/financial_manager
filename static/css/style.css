@@ -1170,3 +1170,326 @@ h5[style*="color: #fff"], h5[style*="color: #ffffff"],
 h6[style*="color: #fff"], h6[style*="color: #ffffff"] {
   color: var(--text-white) !important;
 }
+
+
+/* ====================================================================
+   FINORA MOBILE & TOUCH RESPONSIVE SUITE (SMARTPHONE & TABLET)
+   ==================================================================== */
+
+/* 1. Mobile Sidebar Toggle & Close Buttons */
+.btn-sidebar-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+  background: #FFFFFF;
+  color: var(--text-light);
+  font-size: 1.1rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+}
+
+.btn-sidebar-toggle:hover,
+.btn-sidebar-toggle:active {
+  background: #FAF8F4;
+  border-color: #D1D5DB;
+  color: #D97706;
+}
+
+.btn-sidebar-close {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+  background: #FFFFFF;
+  color: var(--text-subtle);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-sidebar-close:hover,
+.btn-sidebar-close:active {
+  background: #FEE2E2;
+  border-color: #FCA5A5;
+  color: #DC2626;
+}
+
+/* 2. Mobile Backdrop Overlay */
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 1040;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.sidebar-backdrop.active {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+body.sidebar-open-lock {
+  overflow: hidden !important;
+}
+
+/* 3. Responsive Breakpoint: Tablet & Below (<= 992px) */
+@media (max-width: 992px) {
+  .btn-sidebar-toggle {
+    display: inline-flex;
+  }
+
+  .btn-sidebar-close {
+    display: inline-flex;
+  }
+
+  .sidebar-backdrop {
+    display: block;
+  }
+
+  .app-container {
+    height: 100dvh;
+    max-height: 100dvh;
+  }
+
+  .main-wrapper {
+    height: 100dvh;
+    max-height: 100dvh;
+    width: 100%;
+  }
+
+  .sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    width: 285px !important;
+    max-width: 82vw !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    z-index: 1060 !important;
+    transform: translateX(-100%) !important;
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: none;
+  }
+
+  .sidebar.open {
+    transform: translateX(0) !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35) !important;
+  }
+
+  .topbar {
+    padding: 12px 18px;
+  }
+
+  .topbar-title {
+    font-size: 1.1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 260px;
+  }
+
+  .content-body {
+    padding: 22px 18px;
+  }
+}
+
+/* 4. Responsive Breakpoint: Mobile Phones (<= 768px) */
+@media (max-width: 768px) {
+  .topbar {
+    padding: 10px 14px;
+    gap: 8px;
+  }
+
+  .topbar-title {
+    font-size: 1.02rem;
+    max-width: 170px;
+  }
+
+  .topbar-actions {
+    gap: 8px !important;
+  }
+
+  .content-body {
+    padding: 14px 12px;
+  }
+
+  /* Full-width responsive card layout */
+  .card {
+    margin-bottom: 14px !important;
+    border-radius: 14px !important;
+  }
+
+  .card-header {
+    padding: 12px 14px !important;
+  }
+
+  .card-body {
+    padding: 14px 14px !important;
+  }
+
+  /* Single column grids on mobile */
+  .grid-4, .grid-3, .grid-2, .features-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  /* Form rows stack into vertical full-width inputs */
+  .form-row {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .form-control, .form-select {
+    font-size: 0.95rem !important;
+    min-height: 44px !important;
+  }
+
+  /* Stat cards */
+  .stat-card {
+    padding: 14px 16px !important;
+    border-radius: 14px !important;
+  }
+
+  .stat-value {
+    font-size: 1.55rem !important;
+  }
+
+  /* Tables: Touch-friendly horizontal swipe */
+  .table-responsive {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    width: 100% !important;
+    margin-bottom: 8px;
+    border-radius: 10px !important;
+  }
+
+  table th, table td {
+    padding: 10px 12px !important;
+    font-size: 0.82rem !important;
+    white-space: nowrap !important;
+  }
+
+  /* Floating "Ask Finora" Button */
+  .ask-finora-fab {
+    bottom: 18px !important;
+    right: 16px !important;
+    padding: 9px 15px !important;
+    font-size: 0.84rem !important;
+  }
+
+  .ask-finora-fab .fab-icon-pulse {
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 0.85rem !important;
+  }
+
+  /* User profile dropdown on mobile */
+  .user-profile-card-dropdown {
+    width: min(310px, calc(100vw - 20px)) !important;
+    right: -4px !important;
+    padding: 14px !important;
+  }
+
+  /* Auth page on mobile */
+  .auth-page-wrapper {
+    padding: 16px 12px !important;
+  }
+
+  .auth-container {
+    grid-template-columns: 1fr !important;
+    border-radius: 16px !important;
+  }
+
+  .auth-side-brand {
+    padding: 24px 20px !important;
+  }
+
+  .auth-form-side {
+    padding: 28px 20px !important;
+  }
+}
+
+/* 5. Responsive Breakpoint: Small Mobile Screens (<= 480px) */
+@media (max-width: 480px) {
+  .topbar {
+    padding: 8px 10px;
+  }
+
+  .topbar-title {
+    font-size: 0.95rem;
+    max-width: 130px;
+  }
+
+  /* On small screens, hide user profile text name and show avatar icon */
+  .profile-trigger-name,
+  .profile-trigger-chevron {
+    display: none !important;
+  }
+
+  .user-profile-trigger-btn {
+    padding: 6px !important;
+    border-radius: 50% !important;
+    min-width: 34px !important;
+    height: 34px !important;
+    justify-content: center !important;
+  }
+
+  .user-profile-trigger-btn .profile-trigger-icon {
+    font-size: 1.15rem !important;
+    margin: 0 !important;
+  }
+
+  .content-body {
+    padding: 12px 8px;
+  }
+
+  .card-header {
+    padding: 10px 12px !important;
+  }
+
+  .card-body {
+    padding: 12px 12px !important;
+  }
+
+  .stat-card {
+    padding: 12px 14px !important;
+  }
+
+  .stat-value {
+    font-size: 1.35rem !important;
+  }
+
+  /* Circular compact FAB button on small phones */
+  .ask-finora-fab {
+    bottom: 14px !important;
+    right: 14px !important;
+    padding: 10px !important;
+    border-radius: 50% !important;
+    width: 46px !important;
+    height: 46px !important;
+    justify-content: center !important;
+  }
+
+  .ask-finora-fab .fab-label {
+    display: none !important;
+  }
+
+  .ask-finora-fab .fab-icon-pulse {
+    margin: 0 !important;
+  }
+}
