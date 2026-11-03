@@ -102,17 +102,36 @@ def verify_table_integrity():
 def ensure_admin_account():
     log_step("Ensuring administrator account exists...", "INFO")
     try:
-        admin_email = os.environ.get('DEFAULT_ADMIN_EMAIL', 'admin@finora.com')
+        admin_email = os.environ.get('DEFAULT_ADMIN_EMAIL', 'admin@finora.com').strip().lower()
         existing = query_db("SELECT id, email FROM users WHERE role = 'admin' OR email = %s", (admin_email,), one=True)
         if existing:
             log_step(f"Administrator account active: {existing.get('email')}", "OK")
+            return
+
+        is_prod = (os.environ.get('FLASK_ENV', '').strip().lower() == 'production') or (os.environ.get('RENDER') is not None)
+        admin_pwd = os.environ.get('DEFAULT_ADMIN_PASSWORD', '').strip()
+
+        if is_prod:
+            insecure_defaults = {'admin@123456', 'admin123', '123456', 'password', 'changeme', 'secret'}
+            if not admin_pwd or admin_pwd.lower() in insecure_defaults or len(admin_pwd) < 12:
+                log_step(
+                    "PRODUCTION SECURITY NOTICE: DEFAULT_ADMIN_PASSWORD is not configured or is an insecure default (<12 chars). "
+                    "Skipping automatic admin creation in production to prevent unauthorized access. "
+                    "To provision an admin, configure a strong DEFAULT_ADMIN_PASSWORD in Render environment variables or run 'flask init-admin'.",
+                    "WARN"
+                )
+                return
         else:
-            admin_pwd = os.environ.get('DEFAULT_ADMIN_PASSWORD', 'Admin@123456')
-            admin_id = create_admin_user(admin_email, admin_pwd, name='Platform Administrator')
-            if admin_id:
-                log_step(f"Created default administrator account: {admin_email}", "OK")
-            else:
-                log_step("Could not automatically provision admin. Use 'flask init-admin' to create one.", "WARN")
+            if not admin_pwd:
+                admin_pwd = 'Admin@123456'
+                log_step("Development mode: Using local development administrator credentials.", "WARN")
+
+        admin_id, is_new = create_admin_user(admin_email, admin_pwd, name='Finora Administrator')
+        if admin_id:
+            action = "Created" if is_new else "Verified"
+            log_step(f"{action} administrator account for: {admin_email}", "OK")
+        else:
+            log_step("Could not automatically provision admin. Use 'flask init-admin' to create one.", "WARN")
     except Exception as e:
         log_step(f"Admin verification notice: {e}", "WARN")
 

@@ -8,6 +8,7 @@ import sys
 import logging
 import click
 from flask import Flask, redirect, url_for, session
+from werkzeug.middleware.proxy_fix import ProxyFix
 from config import Config
 from database import init_db, query_db, create_admin_user
 from extensions import csrf, limiter
@@ -48,13 +49,27 @@ def create_app(config_class=Config):
     csrf.init_app(app)
     limiter.init_app(app)
 
+    # Configure ProxyFix for deployment behind trusted reverse proxies (e.g., Render, Nginx)
+    # Correctly resolves client IP for rate limiting, security auditing, and HTTPS headers
+    num_proxies = getattr(config_class, 'PROXY_FIX_NUM_PROXIES', 0)
+    if num_proxies > 0:
+        app.wsgi_app = ProxyFix(
+            app.wsgi_app,
+            x_for=num_proxies,
+            x_proto=num_proxies,
+            x_host=num_proxies,
+            x_prefix=num_proxies
+        )
+        logger.info(f"Werkzeug ProxyFix enabled for {num_proxies} reverse proxy level(s).")
+
     logger.info("Initializing Finora Flask Application...")
 
     # Initialize database tables and seed data
     with app.app_context():
         try:
-            init_db()
-            logger.info(f"{Config.DB_ENGINE.upper()} Database initialized and verified successfully.")
+            engine_choice = app.config.get('DB_ENGINE', 'sqlite')
+            init_db(engine=engine_choice)
+            logger.info(f"{engine_choice.upper()} Database initialized and verified successfully.")
         except Exception as e:
             logger.error(f"Database initialization encountered an error: {e}")
 

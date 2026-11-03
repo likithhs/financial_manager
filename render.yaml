@@ -2,6 +2,11 @@ services:
   - type: web
     name: finora-financial-manager
     runtime: python
+    plan: starter  # Note: Persistent disks require a Starter or Standard paid plan on Render
+    disk:
+      name: finora-data
+      mountPath: /var/data
+      sizeGB: 1
     buildCommand: pip install -r requirements.txt
     startCommand: python bootstrap.py && gunicorn --bind 0.0.0.0:$PORT --workers 4 --threads 2 --timeout 120 wsgi:app
     envVars:
@@ -13,6 +18,18 @@ services:
         generateValue: true
       - key: DB_ENGINE
         value: sqlite
+      - key: SQLITE_PATH
+        value: /var/data/financial_manager.db
+      - key: PROXY_FIX_NUM_PROXIES
+        value: "1"
       - key: RATELIMIT_DEFAULT
         value: "200 per day; 60 per hour"
+      - key: RATELIMIT_LOGIN
+        value: "10 per minute; 30 per hour"
+      - key: RATELIMIT_REGISTER
+        value: "5 per minute; 15 per hour"
+      - key: DEFAULT_ADMIN_EMAIL
+        value: admin@finora.com
+      - key: DEFAULT_ADMIN_PASSWORD
+        generateValue: true
     healthCheckPath: /health

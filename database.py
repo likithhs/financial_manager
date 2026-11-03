@@ -58,13 +58,27 @@ class DatabaseTransactionError(DatabaseError):
 def get_db_connection(engine=None):
     """
     Establish database connection based on explicit configuration.
-    If engine is not specified, uses Config.DB_ENGINE ('mysql' by default).
+    Checks active Flask application context config first, falling back to Config.
     Does NOT silently switch writes between databases upon connection failure.
     """
+    active_config = Config
+    try:
+        from flask import current_app, has_app_context
+        if has_app_context() and current_app:
+            active_config = current_app.config
+    except Exception:
+        pass
+
+    if engine is None:
+        engine = active_config.get('DB_ENGINE') if hasattr(active_config, 'get') else getattr(active_config, 'DB_ENGINE', None)
+
     target_engine = (engine or getattr(Config, 'DB_ENGINE', 'mysql') or 'mysql').strip().lower()
 
     if target_engine == 'sqlite':
-        sqlite_path = getattr(Config, 'SQLITE_PATH', SQLITE_DB_PATH)
+        sqlite_path = (
+            (active_config.get('SQLITE_PATH') if hasattr(active_config, 'get') else getattr(active_config, 'SQLITE_PATH', None))
+            or getattr(Config, 'SQLITE_PATH', SQLITE_DB_PATH)
+        )
         dir_name = os.path.dirname(sqlite_path)
         if dir_name:
             os.makedirs(dir_name, exist_ok=True)
@@ -78,12 +92,18 @@ def get_db_connection(engine=None):
         if not MYSQL_AVAILABLE:
             raise DatabaseConnectionError("MySQL driver (mysql-connector-python) is not installed in the Python environment.")
         try:
+            db_host = active_config.get('DB_HOST') if hasattr(active_config, 'get') else getattr(active_config, 'DB_HOST', Config.DB_HOST)
+            db_user = active_config.get('DB_USER') if hasattr(active_config, 'get') else getattr(active_config, 'DB_USER', Config.DB_USER)
+            db_pass = active_config.get('DB_PASSWORD') if hasattr(active_config, 'get') else getattr(active_config, 'DB_PASSWORD', Config.DB_PASSWORD)
+            db_name = active_config.get('DB_NAME') if hasattr(active_config, 'get') else getattr(active_config, 'DB_NAME', Config.DB_NAME)
+            db_port = active_config.get('DB_PORT') if hasattr(active_config, 'get') else getattr(active_config, 'DB_PORT', Config.DB_PORT)
+
             conn = mysql.connector.connect(
-                host=Config.DB_HOST,
-                user=Config.DB_USER,
-                password=Config.DB_PASSWORD,
-                database=Config.DB_NAME,
-                port=Config.DB_PORT,
+                host=db_host,
+                user=db_user,
+                password=db_pass,
+                database=db_name,
+                port=int(db_port),
                 autocommit=True,
                 use_pure=True,
                 connection_timeout=3
@@ -293,6 +313,13 @@ def init_db(engine=None):
     Automatically runs on application startup.
     Supports MySQL (via schema.sql) and full SQLite compatibility.
     """
+    if engine is None:
+        try:
+            from flask import current_app, has_app_context
+            if has_app_context() and current_app:
+                engine = current_app.config.get('DB_ENGINE')
+        except Exception:
+            pass
     conn, db_type = get_db_connection(engine=engine)
     try:
         if db_type == 'mysql':
@@ -718,24 +745,23 @@ def init_db(engine=None):
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """, stocks_data)
 
+            try:
+                cursor.execute("""
+                    UPDATE users 
+                    SET password_hash = password 
+                    WHERE (password_hash IS NULL OR password_hash = '') AND password IS NOT NULL AND password != ''
+                """)
+                cursor.execute("""
+                    UPDATE users 
+                    SET password = password_hash 
+                    WHERE (password IS NULL OR password = '') AND password_hash IS NOT NULL AND password_hash != ''
+                """)
+            except Exception as sync_err:
+                logger.warning(f"Password column synchronization notice: {sync_err}")
+
             conn.commit()
             cursor.close()
             conn.close()
-
-        # Synchronize password and password_hash columns safely to guarantee user access
-        try:
-            execute_db("""
-                UPDATE users 
-                SET password_hash = password 
-                WHERE (password_hash IS NULL OR password_hash = '') AND password IS NOT NULL AND password != ''
-            """)
-            execute_db("""
-                UPDATE users 
-                SET password = password_hash 
-                WHERE (password IS NULL OR password = '') AND password_hash IS NOT NULL AND password_hash != ''
-            """)
-        except Exception as sync_err:
-            logger.warning(f"Password column synchronization notice: {sync_err}")
 
     except Exception as e:
         logger.error(f"init_db error: {e}")

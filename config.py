@@ -144,16 +144,29 @@ class Config:
     WTF_CSRF_TIME_LIMIT = int(os.environ.get('WTF_CSRF_TIME_LIMIT', 14400))  # 4 hours
     WTF_CSRF_CHECK_DEFAULT = True
 
+    # Reverse Proxy / Load Balancer Configuration (Werkzeug ProxyFix)
+    # Number of trusted upstream proxies (e.g., 1 for Render / Heroku / Nginx)
+    PROXY_FIX_NUM_PROXIES = int(os.environ.get('PROXY_FIX_NUM_PROXIES', 1 if (os.environ.get('RENDER') or os.environ.get('FLASK_ENV') == 'production') else 0))
+
     # Rate Limiting Configuration
     RATELIMIT_STORAGE_URI = os.environ.get('RATELIMIT_STORAGE_URI', 'memory://').strip()
     RATELIMIT_STRATEGY = os.environ.get('RATELIMIT_STRATEGY', 'fixed-window').strip()
     RATELIMIT_DEFAULT = os.environ.get('RATELIMIT_DEFAULT', '200 per day; 60 per hour').strip()
+    RATELIMIT_LOGIN = os.environ.get('RATELIMIT_LOGIN', '10 per minute; 30 per hour').strip()
+    RATELIMIT_REGISTER = os.environ.get('RATELIMIT_REGISTER', '5 per minute; 15 per hour').strip()
 
     # Database Engine Selection ('mysql' is primary default, 'sqlite' is supported for demo/offline)
     DB_ENGINE = os.environ.get('DB_ENGINE', 'mysql').strip().lower()
 
     # SQLite Database Config (used when DB_ENGINE=sqlite or in tests)
-    SQLITE_PATH = os.environ.get('SQLITE_PATH', os.path.join(basedir, 'database', 'financial_manager.db'))
+    # Automatically resolves Render Persistent Disk at /var/data if attached and not overridden
+    _RENDER_DISK_DIR = '/var/data'
+    _DEFAULT_SQLITE_PATH = (
+        os.path.join(_RENDER_DISK_DIR, 'financial_manager.db')
+        if (os.path.exists(_RENDER_DISK_DIR) and os.path.isdir(_RENDER_DISK_DIR))
+        else os.path.join(basedir, 'database', 'financial_manager.db')
+    )
+    SQLITE_PATH = os.environ.get('SQLITE_PATH', _DEFAULT_SQLITE_PATH)
 
     # MySQL Database Config
     DB_HOST = os.environ.get('DB_HOST', 'localhost')

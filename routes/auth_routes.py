@@ -2,7 +2,8 @@ import logging
 from functools import wraps
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
-from database import query_db, execute_db
+from config import Config
+from database import query_db, execute_db, DatabaseError
 from extensions import limiter
 
 logger = logging.getLogger("finora")
@@ -40,8 +41,28 @@ from services.auth_helper import (
 )
 
 
+def get_register_rate_limit():
+    try:
+        from flask import current_app, has_app_context
+        if has_app_context() and current_app and 'RATELIMIT_REGISTER' in current_app.config:
+            return current_app.config['RATELIMIT_REGISTER']
+    except Exception:
+        pass
+    return getattr(Config, 'RATELIMIT_REGISTER', '5 per minute; 15 per hour')
+
+
+def get_login_rate_limit():
+    try:
+        from flask import current_app, has_app_context
+        if has_app_context() and current_app and 'RATELIMIT_LOGIN' in current_app.config:
+            return current_app.config['RATELIMIT_LOGIN']
+    except Exception:
+        pass
+    return getattr(Config, 'RATELIMIT_LOGIN', '10 per minute; 30 per hour')
+
+
 @auth_bp.route('/register', methods=['GET', 'POST'])
-@limiter.limit("5 per minute; 15 per hour", methods=["POST"])
+@limiter.limit(get_register_rate_limit, methods=["POST"])
 def register():
     if 'user_id' in session:
         if session.get('user_role') == 'admin':
@@ -53,6 +74,16 @@ def register():
         email = request.form.get('email', '').strip().lower()
         password = request.form.get('password', '')
         confirm_password = request.form.get('confirm_password', '')
+
+        # Capture optional user profile metadata from registration form
+        age_raw = request.form.get('age', '25').strip()
+        try:
+            age = int(age_raw) if age_raw else 25
+        except (ValueError, TypeError):
+            age = 25
+        occupation = request.form.get('occupation', 'Student / Professional').strip() or 'Student / Professional'
+        financial_exp = request.form.get('financial_exp', 'Beginner').strip() or 'Beginner'
+        investment_exp = request.form.get('investment_exp', 'None').strip() or 'None'
 
         if not name or not email or not password:
             flash('Please fill in all mandatory fields.', 'danger')
@@ -67,37 +98,41 @@ def register():
             flash(pwd_error, 'danger')
             return render_template('register.html')
 
-        existing_user = query_db(
-            "SELECT id FROM users WHERE email = %s",
-            (email,),
-            one=True
-        )
+        try:
+            existing_user = query_db(
+                "SELECT id FROM users WHERE email = %s",
+                (email,),
+                one=True
+            )
+        except DatabaseError as db_err:
+            logger.error(f"Database error checking existing user '{email}': {db_err}")
+            flash('Database service is temporarily unavailable. Please try again shortly.', 'danger')
+            return render_template('register.html')
 
         if existing_user:
             flash(
-                'If an account with this email address already exists, please sign in. Otherwise check your credentials.',
+                'An account with this email address already exists. Please sign in or use another email.',
                 'warning'
             )
             return redirect(url_for('auth.login'))
 
         password_hash = generate_password_hash(password)
 
-        user_id = execute_db("""
-            INSERT INTO users (name, email, password, password_hash, role)
-            VALUES (%s, %s, %s, %s, 'user')
-        """, (name, email, password_hash, password_hash))
-
-        if not user_id:
+        try:
             user_id = execute_db("""
-                INSERT INTO users (name, email, password_hash, role)
-                VALUES (%s, %s, %s, 'user')
-            """, (name, email, password_hash))
+                INSERT INTO users (name, email, password, password_hash, age, occupation, financial_exp, investment_exp, role)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, 'user')
+            """, (name, email, password_hash, password_hash, age, occupation, financial_exp, investment_exp))
 
-        if not user_id:
-            user_id = execute_db("""
-                INSERT INTO users (name, email, password, role)
-                VALUES (%s, %s, %s, 'user')
-            """, (name, email, password_hash))
+            if not user_id:
+                user_id = execute_db("""
+                    INSERT INTO users (name, email, password, password_hash, role)
+                    VALUES (%s, %s, %s, %s, 'user')
+                """, (name, email, password_hash, password_hash))
+        except DatabaseError as db_err:
+            logger.error(f"Database error during user registration for '{email}': {db_err}")
+            flash('Failed to create account due to a database error. Please try again.', 'danger')
+            return render_template('register.html')
 
         if not user_id:
             flash('Failed to create account. Please try again.', 'danger')
@@ -110,7 +145,7 @@ def register():
 
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
-@limiter.limit("5 per minute; 20 per hour", methods=["POST"])
+@limiter.limit(get_login_rate_limit, methods=["POST"])
 def login():
     if 'user_id' in session:
         if session.get('user_role') == 'admin':
@@ -125,11 +160,16 @@ def login():
             flash('Please provide both email and password.', 'danger')
             return render_template('login.html')
 
-        user = query_db(
-            "SELECT * FROM users WHERE email = %s",
-            (email,),
-            one=True
-        )
+        try:
+            user = query_db(
+                "SELECT * FROM users WHERE email = %s",
+                (email,),
+                one=True
+            )
+        except DatabaseError as db_err:
+            logger.error(f"Database error during user login for '{email}': {db_err}")
+            flash('Database service is temporarily unavailable. Please try again shortly.', 'danger')
+            return render_template('login.html')
 
         password_matches = False
         if user:

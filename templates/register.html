@@ -233,43 +233,79 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Password Strength Meter
+  // 1. Password Strength Meter (Synchronized with Backend NIST SP 800-63B Minimum 12-char Policy)
   const pwd = document.getElementById('regPassword');
+  const confPwd = document.getElementById('confirm_password');
   const bar = document.getElementById('strengthBar');
   const text = document.getElementById('strengthText');
 
   if (pwd && bar && text) {
     pwd.addEventListener('input', () => {
       const val = pwd.value;
-      let score = 0;
-      if (val.length >= 6) score += 25;
-      if (val.length >= 8) score += 25;
-      if (/[A-Z]/.test(val)) score += 25;
-      if (/[0-9!@#$%^&*]/.test(val)) score += 25;
-
-      bar.style.width = score + '%';
-      if (score === 0) {
+      
+      if (val.length === 0) {
+        bar.style.width = '0%';
         bar.style.background = 'transparent';
-        text.innerText = 'Enter password';
+        text.innerText = 'Minimum 12 characters required';
         text.style.color = 'var(--text-muted)';
-      } else if (score <= 25) {
+        return;
+      }
+
+      // Explicitly reject and flag passwords shorter than the mandatory 12 characters
+      if (val.length < 12) {
+        const remaining = 12 - val.length;
+        const progress = Math.round((val.length / 12) * 40);
+        bar.style.width = progress + '%';
         bar.style.background = '#ef4444';
-        text.innerText = 'Weak';
+        text.innerText = `Too short (${remaining} more char${remaining > 1 ? 's' : ''} needed)`;
         text.style.color = '#ef4444';
-      } else if (score <= 50) {
+        return;
+      }
+
+      // Base score for meeting the 12-character minimum policy threshold
+      let score = 50;
+      if (val.length >= 14) score += 15;
+      if (val.length >= 16) score += 10;
+      if (/[A-Z]/.test(val) && /[a-z]/.test(val)) score += 15;
+      if (/[0-9]/.test(val)) score += 10;
+      if (/[^A-Za-z0-9]/.test(val)) score += 15;
+
+      if (score > 100) score = 100;
+      bar.style.width = score + '%';
+
+      if (score < 65) {
         bar.style.background = '#f59e0b';
-        text.innerText = 'Moderate';
+        text.innerText = 'Fair (Meets minimum 12 chars)';
         text.style.color = '#f59e0b';
-      } else if (score <= 75) {
+      } else if (score < 85) {
         bar.style.background = '#0284c7';
         text.innerText = 'Good';
         text.style.color = '#0284c7';
       } else {
         bar.style.background = '#10b981';
-        text.innerText = 'Strong';
+        text.innerText = 'Strong (Passphrase)';
         text.style.color = '#10b981';
       }
     });
+
+    // Frontend Form Validation on Submit
+    const form = pwd.closest('form');
+    if (form) {
+      form.addEventListener('submit', (e) => {
+        if (pwd.value.length < 12) {
+          e.preventDefault();
+          alert('Password must be at least 12 characters long to ensure account security.');
+          pwd.focus();
+          return false;
+        }
+        if (confPwd && pwd.value !== confPwd.value) {
+          e.preventDefault();
+          alert('Passwords do not match. Please verify your password confirmation.');
+          confPwd.focus();
+          return false;
+        }
+      });
+    }
   }
 
   // 2. Show / Hide Password Toggles
