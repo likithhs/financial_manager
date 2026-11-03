@@ -53,3 +53,16 @@ test_*.db
 # Local Developer Scripts & Logs
 view_db.py
 *.log
+
+database/backup_*.sql
+backup_*.sql
+
+# Project Reports and Document Generation (Local Only)
+docs/
+build_report/
+report_diagrams.py
+capture_live_screenshots.py
+build_attractive_diagrams.py
+build_chen_erd.py
+build_textbook_erd.py
+build_use_case_diagram.py

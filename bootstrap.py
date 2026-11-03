@@ -102,13 +102,13 @@ def verify_table_integrity():
 def ensure_admin_account():
     log_step("Ensuring administrator account exists...", "INFO")
     try:
-        admin_email = os.environ.get('DEFAULT_ADMIN_EMAIL', 'admin@test.com')
+        admin_email = os.environ.get('DEFAULT_ADMIN_EMAIL', 'admin@finora.com')
         existing = query_db("SELECT id, email FROM users WHERE role = 'admin' OR email = %s", (admin_email,), one=True)
         if existing:
             log_step(f"Administrator account active: {existing.get('email')}", "OK")
         else:
             admin_pwd = os.environ.get('DEFAULT_ADMIN_PASSWORD', 'Admin@123456')
-            admin_id = create_admin_user('Platform Administrator', admin_email, admin_pwd)
+            admin_id = create_admin_user(admin_email, admin_pwd, name='Platform Administrator')
             if admin_id:
                 log_step(f"Created default administrator account: {admin_email}", "OK")
             else:
